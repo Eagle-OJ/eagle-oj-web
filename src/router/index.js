@@ -7,7 +7,6 @@ const router = new Router({
     routes: [
         {
             path: '/',
-            name: 'IndexMain',
             component: () => import('@/components/index/Main'),
             children: [
                 {
@@ -15,6 +14,13 @@ const router = new Router({
                     component: () => import('@/components/index/dashboard/Dashboard'),
                     meta: {
                         title: '主页'
+                    }
+                },
+                {
+                    path: '/contest',
+                    component: () => import('@/components/index/contest/Contest'),
+                    meta: {
+                        title: '比赛'
                     }
                 },
                 {

@@ -6,10 +6,10 @@
 			</div>
 			<ul>
 				<li>
-					<router-link to="#" class="active">主页</router-link>
+					<router-link to="/" class="active">主页</router-link>
 				</li>
 				<li>
-					<router-link to="#">比赛</router-link>
+					<router-link to="/contest">比赛</router-link>
 				</li>
 				<li>
 					<router-link to="#">题目</router-link>
@@ -39,6 +39,7 @@ export default {
         background white
         height 70px
         box-shadow 8px 1px 3px 0 rgba(0,34,77,.1)
+        margin-bottom 20px
         .logo
             margin-right 50px
             height 70px
