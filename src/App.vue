@@ -1,12 +1,12 @@
 <template>
-  <div id="app">
-    <router-view/>
-  </div>
+    <div id="app">
+        <router-view/>
+    </div>
 </template>
 
 <script>
 export default {
-  name: 'app'
+    name: 'app'
 }
 </script>
 
@@ -14,4 +14,7 @@ export default {
 #app
 	width	100%
 	height 100%
+	#container
+		max-width 1200px
+		margin 0 auto
 </style>
