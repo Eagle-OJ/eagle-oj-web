@@ -1,6 +1,7 @@
 <template>
+	<div class="wrapper">
     <div class="login">
-        <h1>提升自己的编程技能</h1>
+        <h1>welcome to eagle OJ</h1>
         <div class="choose">
             <router-link to="/register">注册</router-link>
             <span>|</span>
@@ -17,7 +18,8 @@
                 <Button type="info" @click="handleSubmit()" long>登 入</Button>
             </FormItem>
         </Form>
-    </div>	
+    </div>
+	</div>
 </template>
 
 <script>
@@ -54,26 +56,31 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
-    .login
-        text-align center
-        width 350px
-        margin 50px auto
-        border 1px solid #dddee1
-        background #f8f8f9
-        padding 10px
-        border-radius 5px
-        h1
-            font-weight 400
-            margin-bottom 15px
-        .choose
-            margin-bottom 15px
-            span
-                margin 0 10px
-                font-size 23px
-            a
-                font-size 20px
-                &.active
-                    color #495060
+	.wrapper
+		height 590px
+		background url("/src/assets/login.jpg") no-repeat
+		padding-top 130px
+		padding-left 870px
+		.login
+			text-align center
+			width 350px
+			margin 0 auto
+			border 1px solid #dddee1
+			background #f8f8f9
+			padding 10px
+			border-radius 5px
+			h1
+				font-weight 400
+				margin-bottom 15px
+			.choose
+				margin-bottom 15px
+				span
+					margin 0 10px
+					font-size 23px
+				a
+					font-size 20px
+					&.active
+						color #495060
 </style>
 
 

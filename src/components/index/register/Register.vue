@@ -1,4 +1,5 @@
 <template>
+	<div class="wrapper">
 	<div class="register">
         <h1>提升自己的编程技能</h1>
         <div class="choose">
@@ -20,7 +21,8 @@
                 <Button type="info" @click="handleSubmit()" long>注 册</Button>
             </FormItem>
         </Form>
-    </div>	
+	</div>
+    </div>
 </template>
 
 <script>
@@ -62,26 +64,31 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
-    .register
-        text-align center
-        width 350px
-        margin 50px auto
-        border 1px solid #dddee1
-        background #f8f8f9
-        padding 10px
-        border-radius 5px
-        h1
-            font-weight 400
-            margin-bottom 15px
-        .choose
-            margin-bottom 15px
-            span
-                margin 0 10px
-                font-size 23px
-            a
-                font-size 20px
-                &.active
-                    color #495060
+	.wrapper
+		height 590px
+		background url("/src/assets/login.jpg") no-repeat
+		padding-top 100px
+		padding-left 870px
+		.register
+			text-align center
+			width 350px
+			margin 10px auto
+			border 1px solid #dddee1
+			background #f8f8f9
+			padding 10px
+			border-radius 5px
+			h1
+				font-weight 400
+				margin-bottom 15px
+			.choose
+				margin-bottom 15px
+				span
+					margin 0 10px
+					font-size 23px
+				a
+					font-size 20px
+					&.active
+						color #495060
 </style>
 
 
