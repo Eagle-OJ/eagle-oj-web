@@ -25,14 +25,16 @@ const router = new Router({
                 },
                 {
                     path: '/register',
-                    component: () => import('@/components/index/register/Register'),
+                    component: () => import('@/components/index/account/Account'),
+                    name: 'register',
                     meta: {
                         title: '用户注册',                        
                     },
                 },
                 {
                     path: '/login',
-                    component: () => import('@/components/index/login/Login'),
+                    component: () => import('@/components/index/account/Account'),
+                    name: 'login',
                     meta: {
                         title: '用户登入'
                     }
