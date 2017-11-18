@@ -6,10 +6,10 @@
 </template>
 
 <script>
-import Navgation from '@/components/index/Navigation'
+import Navigation from '@/components/index/Navigation'
 export default {
 	components: {
-		'v-nav': Navgation
+		'v-nav': Navigation
 	}
 }
 </script>
