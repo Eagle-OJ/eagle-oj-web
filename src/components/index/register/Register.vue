@@ -1,27 +1,27 @@
 <template>
 	<div class="wrapper">
-	<div class="register">
-        <h1>提升自己的编程技能</h1>
-        <div class="choose">
-            <router-link to="/register" class="active">注册</router-link>
-            <span>|</span>
-            <router-link to="/login">登入</router-link>
+        <div class="register">
+            <h1>提升自己的编程技能</h1>
+            <div class="choose">
+                <router-link to="/register" class="active">注册</router-link>
+                <span>|</span>
+                <router-link to="/login">登入</router-link>
+            </div>
+            <Form ref="form" :model="form" :rules="ruleValidate">
+                <FormItem prop="nickname">
+                    <Input v-model="form.nickname" placeholder="昵称"></Input>
+                </FormItem>
+                <FormItem prop="email">
+                    <Input v-model="form.email" placeholder="邮箱"></Input>
+                </FormItem>
+                <FormItem prop="password">
+                    <Input v-model="form.password" placeholder="密码"></Input>
+                </FormItem>
+                <FormItem style="margin-bottom: 0">
+                    <Button type="info" @click="handleSubmit()" long>注 册</Button>
+                </FormItem>
+            </Form>
         </div>
-        <Form ref="form" :model="form" :rules="ruleValidate">
-            <FormItem prop="nickname">
-                <Input v-model="form.nickname" placeholder="昵称"></Input>
-            </FormItem>
-            <FormItem prop="email">
-                <Input v-model="form.email" placeholder="邮箱"></Input>
-            </FormItem>
-            <FormItem prop="password">
-                <Input v-model="form.password" placeholder="密码"></Input>
-            </FormItem>
-            <FormItem style="margin-bottom: 0">
-                <Button type="info" @click="handleSubmit()" long>注 册</Button>
-            </FormItem>
-        </Form>
-	</div>
     </div>
 </template>
 
@@ -69,6 +69,7 @@ export default {
 		background url("/src/assets/login.jpg") no-repeat
 		padding-top 100px
 		padding-left 870px
+        margin-top -20px
 		.register
 			text-align center
 			width 350px
