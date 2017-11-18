@@ -11,10 +11,24 @@ const router = new Router({
             component: () => import('@/components/index/Main'),
             children: [
                 {
+                    path: '/',
+                    component: () => import('@/components/index/dashboard/Dashboard'),
+                    meta: {
+                        title: '主页'
+                    }
+                },
+                {
                     path: '/register',
                     component: () => import('@/components/index/register/Register'),
                     meta: {
                         title: '用户注册',                        
+                    },
+                },
+                {
+                    path: '/login',
+                    component: () => import('@/components/index/login/Login'),
+                    meta: {
+                        title: '用户登入'
                     }
                 }
             ]

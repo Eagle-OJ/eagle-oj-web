@@ -1,15 +1,12 @@
 <template>
-	<div class="register">
+    <div class="login">
         <h1>提升自己的编程技能</h1>
         <div class="choose">
-            <router-link to="/register" class="active">注册</router-link>
+            <router-link to="/register">注册</router-link>
             <span>|</span>
-            <router-link to="/login">登入</router-link>
+            <router-link to="/login" class="active">登入</router-link>
         </div>
         <Form ref="form" :model="form" :rules="ruleValidate">
-            <FormItem prop="nickname">
-                <Input v-model="form.nickname" placeholder="昵称"></Input>
-            </FormItem>
             <FormItem prop="email">
                 <Input v-model="form.email" placeholder="邮箱"></Input>
             </FormItem>
@@ -17,7 +14,7 @@
                 <Input v-model="form.password" placeholder="密码"></Input>
             </FormItem>
             <FormItem style="margin-bottom: 0">
-                <Button type="info" @click="handleSubmit()" long>注 册</Button>
+                <Button type="info" @click="handleSubmit()" long>登 入</Button>
             </FormItem>
         </Form>
     </div>	
@@ -28,15 +25,10 @@ export default {
     data() {
         return {
             form: {
-                'nickname': '',
-                'eamil': '',
-                'password': ''
+                email: '',
+                password: '',
             },
             ruleValidate: {
-                nickname: [
-                    { required: true, message: '请输入昵称' },
-                    { type: 'string', max: 20, message: '最大不要超出20个字', trigger: 'blur' }
-                ],
                 email: [
                     { required: true, message: '请输入邮箱' },
                     { type: 'email', message: '非法邮箱格式'}
@@ -51,18 +43,18 @@ export default {
         handleSubmit() {
             this.$refs['form'].validate((valid) => {
                 if (valid) {
-                    this.$Message.success('注册成功');
+                    this.$Message.success('登入成功');
                 } else {
                     this.$Message.error('请按照规则填写');
                 }
             })
-        },
+        }
     }
 }
 </script>
 
 <style lang="stylus" scoped>
-    .register
+    .login
         text-align center
         width 350px
         margin 50px auto
