@@ -7,26 +7,48 @@ const router = new Router({
     routes: [
         {
             path: '/',
-            name: 'IndexMain',
             component: () => import('@/components/index/Main'),
             children: [
                 {
-                    path: '/',
+                    path: '/dashboard',
                     component: () => import('@/components/index/dashboard/Dashboard'),
                     meta: {
                         title: '主页'
                     }
                 },
                 {
+                    path: '/contest',
+                    component: () => import('@/components/index/contest/Contest'),
+                    meta: {
+                        title: '比赛'
+                    }
+                },
+                {
+                    path: '/problem',
+                    component: () => import('@/components/index/problem/Problem'),
+                    meta: {
+                        title: '题目'
+                    }
+                },
+                {
+                    path: '/leaderboard',
+                    component: () => import('@/components/index/leaderboard/Leaderboard'),
+                    meta: {
+                        title: '排行榜'
+                    }
+                },
+                {
                     path: '/register',
-                    component: () => import('@/components/index/register/Register'),
+                    component: () => import('@/components/index/account/Account'),
+                    name: 'register',
                     meta: {
                         title: '用户注册',                        
                     },
                 },
                 {
                     path: '/login',
-                    component: () => import('@/components/index/login/Login'),
+                    component: () => import('@/components/index/account/Account'),
+                    name: 'login',
                     meta: {
                         title: '用户登入'
                     }

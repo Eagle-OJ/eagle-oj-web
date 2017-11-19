@@ -12,7 +12,7 @@ export default {
 
 <style lang="stylus">
 #app
-	width	100%
+	width 100%
 	height 100%
 	#container
 		max-width 1000px

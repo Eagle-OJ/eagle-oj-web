@@ -1,7 +1,7 @@
 <template>
-    <div id="container" style="max-width: 1000px; padding-top: 20px">
+    <div id="container">
         <Row>
-            <Col span="12" class="left">
+            <Col span="16" class="left">
                 <div class="sloved">
                     <Row>
                         <Col span="3" class="img">
@@ -61,18 +61,59 @@
                     </Row>
                 </div>
             </Col>
-            <Col span="12" class="right">
+            <Col span="8" class="right">
+                <div class="user">
+                    <Avatar class="avatar" shape="square" size="large" src="/static/avatar.jpg" />
+                    <div class="detail">
+                        <h3><router-link to="#">尼古拉斯赵四</router-link></h3>
+                        <p>
+                            <span>提交 123</span>
+                            <span>通过 11</span>
+                            <span>AC 56%</span>
+                        </p>
+                    </div>
+                </div>
+                <div class="random">
+                    <Button icon="shuffle" long type="ghost">随机做题</Button>
+                </div>
                 <div class="announcement">
-                    <div class="header">公告</div>
+                    <div class="header"><Icon type="information-circled"></Icon>公告</div>
+                    <ul>
+                        <li v-for="(index, i) in 5" :key="i" @click="showAnnouncement(index)">
+                            <span>{{index}}.</span>低级赛季隆重开始发而发而非爱我发呢阿瑟发
+                        </li>
+                    </ul>
                 </div>
             </Col>
         </Row>
+        <Modal v-model="announcement.switch" title="这个是网站公告" class="announcement-detail">
+            <p class="time">发布时间：1990-12-12</p>
+            <p class="content">这里是公告哈哈哈哈哈哈，的发哦飞啊飞发疯爱妃啊法恩莎阿瑟发额啊发。</p>
+            <div slot="footer">
+                <Button type="success" size="large" long @click="closeAnnouncement">我知道了</Button>
+            </div>
+        </Modal>
     </div>
 </template>
 
 <script>
 export default {
-  
+    data() {
+        return {
+            announcement: {
+                title: '',
+                switch: false
+            }
+        }
+    },
+    methods: {
+        showAnnouncement() {
+            this.announcement.switch = true
+        },
+        closeAnnouncement() {
+            this.announcement.switch = false
+        }
+    }
 }
 </script>
 

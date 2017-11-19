@@ -13,4 +13,49 @@
         .time
             color: #80848f
             font-size: 12px
+.right
+    padding: 10px
+    .user
+        margin-bottom: 15px
+        .avatar
+            float: left
+            margin-right: 10px
+        .detail
+            h3
+                a
+                    color: #495060
+            span
+                margin-right: 8px
+                font-size: 13px
+    .random
+        margin-bottom: 15px
+    .announcement
+        border: 1px solid #dddee1
+        .header
+            text-align: center
+            font-size: 20px
+            font-weight: bold
+            background: #ff9900
+            padding: 10px 0
+            color: #fff
+            i
+                margin-right: 8px
+        ul
+            li
+                padding: 5px 10px
+                font-size: 15px
+                cursor: pointer
+                &:hover
+                    color: #1c2438
+                    background: #f8f8f9
+                span
+                    font-weight: bold
+                    margin-right: 5px
+                    font-size: 18px
+.announcement-detail
+    .time
+        margin-bottom: 5px
+    .content
+        font-size: 14px
+    
 

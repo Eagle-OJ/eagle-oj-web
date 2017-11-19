@@ -2,20 +2,22 @@
 	<div class="navigation">
 		<div id="container">
 			<div class="logo">
-				<img src="../../assets/logo.png" style="height: 60px; margin-top: 6px"/>
+                <router-link to="/">
+                	<img src="../../assets/logo.png" style="height: 60px; margin-top: 6px"/>
+                </router-link>
 			</div>
 			<ul>
 				<li>
-					<router-link to="#" class="active">主页</router-link>
+					<router-link to="/dashboard" active-class="active">主页</router-link>
 				</li>
 				<li>
-					<router-link to="#">比赛</router-link>
+					<router-link to="/contest" active-class="active">比赛</router-link>
 				</li>
 				<li>
-					<router-link to="#">题目</router-link>
+					<router-link to="/problem" active-class="active">题目</router-link>
 				</li>
 				<li>
-					<router-link to="#">排行榜</router-link>
+					<router-link to="/leaderboard" active-class="active">排行榜</router-link>
 				</li>
 			</ul>
 			<div>
@@ -39,6 +41,7 @@ export default {
         background white
         height 70px
         box-shadow 8px 1px 3px 0 rgba(0,34,77,.1)
+        margin-bottom 20px
         .logo
             margin-right 50px
             height 70px
