@@ -2,7 +2,9 @@
 	<div class="navigation">
 		<div id="container">
 			<div class="logo">
-				<img src="../../assets/logo.png" style="height: 60px; margin-top: 6px"/>
+                <router-link to="/">
+                	<img src="../../assets/logo.png" style="height: 60px; margin-top: 6px"/>
+                </router-link>
 			</div>
 			<ul>
 				<li>
