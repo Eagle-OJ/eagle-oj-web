@@ -113,7 +113,7 @@ export default {
 		margin-top -20px
 		.account
 			text-align center
-			width 350px
+			width 300px
 			margin 10px auto
 			border 1px solid #dddee1
 			background #f8f8f9

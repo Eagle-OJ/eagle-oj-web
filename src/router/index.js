@@ -10,7 +10,7 @@ const router = new Router({
             component: () => import('@/components/index/Main'),
             children: [
                 {
-                    path: '/',
+                    path: '/dashboard',
                     component: () => import('@/components/index/dashboard/Dashboard'),
                     meta: {
                         title: '主页'
@@ -21,6 +21,20 @@ const router = new Router({
                     component: () => import('@/components/index/contest/Contest'),
                     meta: {
                         title: '比赛'
+                    }
+                },
+                {
+                    path: '/problem',
+                    component: () => import('@/components/index/problem/Problem'),
+                    meta: {
+                        title: '题目'
+                    }
+                },
+                {
+                    path: '/leaderboard',
+                    component: () => import('@/components/index/leaderboard/Leaderboard'),
+                    meta: {
+                        title: '排行榜'
                     }
                 },
                 {
