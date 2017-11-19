@@ -6,28 +6,29 @@
 				<router-link to="/login" active-class="active" class="login">登入</router-link>
 			</div>
 			<Form v-if="getSwitch=='register'" ref="register_form" :model="register_form" :rules="register_form.ruleValidate" key="register">
+
 				<FormItem prop="nickname">
-					<Input v-model="register_form.nickname" placeholder="昵称"></Input>
+					<Input v-model="register_form.nickname" placeholder="昵称"><Icon type="ios-person-outline" slot="prepend"></Icon></Input>
 				</FormItem>
 				<FormItem prop="email">
-					<Input v-model="register_form.email" placeholder="邮箱"></Input>
+					<Input v-model="register_form.email" placeholder="邮箱"><Icon type="email" slot="prepend"></Icon></Input>
 				</FormItem>
 				<FormItem prop="password">
-					<Input v-model="register_form.password" placeholder="密码"></Input>
+					<Input v-model="register_form.password" placeholder="密码"> <Icon type="ios-locked-outline" slot="prepend"></Icon></Input>
 				</FormItem>
 				<FormItem style="margin-bottom: 0">
-					<Button type="info" @click="handleRegister()" long>注 册</Button>
+					<Button type="error" @click="handleRegister()" long>注 册</Button>
 				</FormItem>
 			</Form>
 			<Form v-else ref="login_form" :model="login_form" :rules="login_form.ruleValidate" key="login">
 				<FormItem prop="email">
-					<Input v-model="login_form.email" placeholder="邮箱"></Input>
+					<Input v-model="login_form.email" placeholder="邮箱"><Icon type="ios-person-outline" slot="prepend"></Icon></Input>
 				</FormItem>
 				<FormItem prop="password">
-					<Input v-model="login_form.password" placeholder="密码"></Input>
+					<Input v-model="login_form.password" placeholder="密码"><Icon type="email" slot="prepend"></Icon></Input>
 				</FormItem>
 				<FormItem style="margin-bottom: 0">
-					<Button type="info" @click="handleLogin()" long>登 入</Button>
+					<Button type="error" @click="handleLogin()" long>登 入</Button>
 				</FormItem>
 			</Form>
 		</div>
@@ -37,7 +38,7 @@
 <script>
 export default {
 	created() {
-		
+
 	},
 	data() {
 		return {
@@ -72,7 +73,7 @@ export default {
 					]
 				}
 			}
-			
+
 		}
 	},
 	computed: {
@@ -108,8 +109,6 @@ export default {
 	.wrapper
 		height 590px
 		background url("/static/background.jpg") no-repeat
-		padding-top 100px
-		padding-left 870px
 		margin-top -20px
 		.account
 			text-align center
@@ -119,6 +118,8 @@ export default {
 			background #f8f8f9
 			padding 10px
 			border-radius 5px
+			position: relative
+			top 20%
 			.choose
 				margin-bottom 15px
 				display flex
