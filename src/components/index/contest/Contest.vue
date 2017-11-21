@@ -22,7 +22,7 @@
 					<tr>
 						<td><Icon type="locked"></Icon></td>
 						<td><a href="#" class="official">红鹰杯</a></td>
-						<td> <Tag color="yellow" style="cursor: default">进行中</Tag></td>
+						<td><Tag color="yellow" style="cursor: default">进行中</Tag></td>
 						<td><a href="#">宁波大红鹰</a></td>
 						<td>2017-01-01</td>
 						<td><a href="#">参加</a></td>

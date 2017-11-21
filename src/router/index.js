@@ -45,6 +45,13 @@ const router = new Router({
                     }
                 },
                 {
+                    path: '/profile/:uid',
+                    component: () => import('@/components/index/profile/Profile'),
+                    meta: {
+                        title: '资料卡'
+                    }
+                },
+                {
                     path: '/register',
                     component: () => import('@/components/index/account/Account'),
                     name: 'register',
@@ -58,6 +65,19 @@ const router = new Router({
                     name: 'login',
                     meta: {
                         title: '用户登入'
+                    }
+                }
+            ]
+        },
+        {
+            path: '/user',
+            component: () => import('@/components/user/Main'),
+            children: [
+                {
+                    path: '/',
+                    component: () => import('@/components/user/profile/Profile'),
+                    meta: {
+                        title: '个人资料'
                     }
                 }
             ]
