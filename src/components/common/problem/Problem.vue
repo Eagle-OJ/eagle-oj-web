@@ -20,20 +20,27 @@
             </router-link>
         </div>
         <div class="content">
-            <v-description>xx</v-description>
+            <keep-alive>
+                <v-description v-if="$route.params.action=='description'"></v-description>
+            </keep-alive>
+            <keep-alive>
+                <v-submission v-if="$route.params.action=='submission'"></v-submission>
+            </keep-alive>
         </div>
     </div>
 </template>
 
 <script>
 import Description from './Description.vue'
+import Submission from './Submission.vue'
 
 export default {
     created() {
         console.log(this.$route.params)
     },
     components: {
-        'v-description': Description
+        'v-description': Description,
+        'v-submission': Submission
     }
 }
 </script>
