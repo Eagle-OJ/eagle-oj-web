@@ -1,0 +1,71 @@
+.left
+    .header
+        margin-bottom: 10px
+        height: 32px
+        .sort
+            div
+                float: left
+                font-size: 16px
+                line-height: 32px
+                &.tags
+                    float: right
+                    span
+                        float: left
+                        margin-right: 5px
+                        font-size: 13px
+    .problems
+        .page
+            margin-top: 20px
+            text-align: right
+.right
+    .user_info
+        text-align: center
+        position: relative
+        margin-bottom: 10px
+        .detail
+            h1
+                color: #3f414d
+                font-size: 28px
+                font-weight: normal
+            p
+                color: #657180
+                font-size: 14px
+                margin: 10px 0 15px
+            span
+                display: block
+                padding-top: 15px
+                color: #657180
+                font-size: 14px
+                &:before
+                    content: ''
+                    display: block
+                    width: 50px
+                    height: 1px
+                    margin: 0 auto
+                    background: #e0e3e6
+                    position: relative
+                    top: -15px
+                i
+                    color: #3f414d;
+                    font-style: normal
+        .cover
+            height: 100%
+            width: 100%
+            z-index: 1
+            position: absolute
+            top: 0
+            left: 0
+            transition: background .5s
+            p
+                color: #fff
+                font-size: 18px
+                position: absolute
+                top: 50%
+                left: 50%
+                margin-left: -50px
+                margin-top: -10px
+                display: none
+            &:hover
+                background: rgba(0, 0, 0, .7)
+                p
+                    display: inline

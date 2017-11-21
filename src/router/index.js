@@ -31,6 +31,13 @@ const router = new Router({
                     }
                 },
                 {
+                    path: '/problem/:pid/:action',
+                    component: () => import('@/components/index/problem/ProblemDetail'),
+                    meta: {
+                        title: '题目详情'
+                    }
+                },
+                {
                     path: '/leaderboard',
                     component: () => import('@/components/index/leaderboard/Leaderboard'),
                     meta: {

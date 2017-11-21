@@ -1,0 +1,49 @@
+.header
+    height: 36px
+    line-height: 36px
+    margin-bottom: 10px
+    h1
+        float: left
+        margin-right: 5px
+    .budget
+        font-size: 13px
+        padding: 4px 8px
+        color: #fff
+        background: red
+        border-radius: 3px
+    .favorite
+        float: right
+.tags
+    margin-bottom: 10px
+    font-size: 14px
+    span
+        color: #80848f
+    a
+        color: #495060
+        &:after
+            content: "/"
+            margin: 0 3px
+            color: #e0e0e0
+        &:last-child:after
+            content: ""
+        &:hover
+            color: #5cadff
+.nav
+    border-bottom: 1px solid #dddee1
+    a
+        display: block
+        float: left
+        font-size: 18px
+        padding: 10px 20px
+        color: #495060
+        &.active
+            border: 1px solid #dddee1
+            border-bottom: 1px solid #fff
+            z-index: 2
+            margin: -1px
+    &:after
+        content: ""
+        display: block
+        clear: both
+.content
+    margin-top: 10px
