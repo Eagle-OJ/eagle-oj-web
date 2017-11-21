@@ -3,7 +3,7 @@
 		<div id="container">
 			<div class="logo">
                 <router-link to="/">
-                	<img src="../../assets/logo.png" style="height: 60px; margin-top: 6px"/>
+                	<img src="/static/logo.png" style="height: 60px; margin-top: 6px"/>
                 </router-link>
 			</div>
 			<ul>
@@ -22,7 +22,7 @@
 			</ul>
 			<div>
 				<router-link to="/login" class="button-style">登录</router-link>
-				<router-link to="/register" class="button-style">注册</router-link>
+				<router-link to="/register" class="button-style" style="margin-right: 30px">注册</router-link>
 			</div>
 		</div>
 
@@ -74,7 +74,6 @@ export default {
             color #ed3f14
             float  right
             margin-top 20px
-            margin-right 30px
             cursor  pointer
             &:hover
                 background  #ed3f14

@@ -31,10 +31,24 @@ const router = new Router({
                     }
                 },
                 {
+                    path: '/problem/:pid/:action',
+                    component: () => import('@/components/index/problem/ProblemDetail'),
+                    meta: {
+                        title: '题目详情'
+                    }
+                },
+                {
                     path: '/leaderboard',
                     component: () => import('@/components/index/leaderboard/Leaderboard'),
                     meta: {
                         title: '排行榜'
+                    }
+                },
+                {
+                    path: '/profile/:uid',
+                    component: () => import('@/components/index/profile/Profile'),
+                    meta: {
+                        title: '资料卡'
                     }
                 },
                 {
@@ -51,6 +65,19 @@ const router = new Router({
                     name: 'login',
                     meta: {
                         title: '用户登入'
+                    }
+                }
+            ]
+        },
+        {
+            path: '/user',
+            component: () => import('@/components/user/Main'),
+            children: [
+                {
+                    path: '/',
+                    component: () => import('@/components/user/profile/Profile'),
+                    meta: {
+                        title: '个人资料'
                     }
                 }
             ]
