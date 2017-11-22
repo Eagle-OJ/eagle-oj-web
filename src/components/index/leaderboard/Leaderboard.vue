@@ -32,8 +32,8 @@
 					<div style="flex: 2">积分</div>
 					<div style="flex: 2">通过率</div>
 				</div>
-				<div class="rank-body" v-for="i in 10">
-					<div class="rank-sequence">1</div>
+				<div class="rank-body" v-for="i in 12">
+					<div class="rank-sequence">{{i}}</div>
 					<div class="rank-nickname"><a href="#" title="查看资料">狗蛋</a></div>
 					<div class="rank-credit">2300</div>
 					<div class="rank-percent">80%</div>
@@ -61,7 +61,7 @@ export default {
 				margin-top 50px
 				border-radius 20px
 				height 590px
-				width 530px
+				width 520px
 				box-shadow: 0px 0px 50px 0px rgba(0, 0, 0, 0.15)
 				font-size 18px
 				padding-top 20px
@@ -107,7 +107,6 @@ export default {
 				box-shadow: 0px 0px 50px 0px rgba(0, 0, 0, 0.15)
 				width 450px
 				font-size 15px
-				height 500px
 				.rank-head
 					height 34px
 					display flex
@@ -139,6 +138,7 @@ export default {
 					transform scale(1.25,1.25)
 					box-shadow 1px 2px 10px rgba(0, 0, 0, 0.3)
 					border-bottom none
+					padding-left 10px
 			.tips
 				margin-left 40px
 				height 100px
