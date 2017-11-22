@@ -18,18 +18,22 @@ export default {
 
 <style lang="stylus" scoped>
     .footer
-        margin-top: 50px
-        border-top: 1px solid #dddee1
-        box-shadow: 8px -1px 3px 0 rgba(0,34,77,0.1)
+
+        margin-top 50px
+        border-top 1px solid #dddee1
+        box-shadow 8px -1px 3px 0 rgba(0,34,77,0.1)
 		ul
-			font-size 12px
+			font-size 13px
 			position: absolute;
 			left 35%
 			li
 				float  left
 				margin-left 30px
-			li:hover
+			a
+				color  #464c5b
+			a:hover
 				text-decoration underline
+				color #2d8cf0
 </style>
 
 
