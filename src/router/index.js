@@ -25,17 +25,10 @@ const router = new Router({
                     }
                 },
                 {
-                    path: '/problem',
+                    path: '/problems',
                     component: () => import('@/components/index/problem/Problem'),
                     meta: {
                         title: '题目'
-                    }
-                },
-                {
-                    path: '/problem/add',
-                    component: () => import('@/components/user/problem/AddProblem'),
-                    meta: {
-                        title: '添加问题'
                     }
                 },
                 {
@@ -43,6 +36,24 @@ const router = new Router({
                     component: () => import('@/components/index/problem/ProblemDetail'),
                     meta: {
                         title: '题目详情'
+                    }
+                },
+                {
+                    path: '/problem/add',
+                    component: () => import('@/components/user/problem/AddProblem'),
+                    meta: {
+                        title: '创建题目'
+                    }
+                },
+                {
+                    path: '/problem/:pid',
+                    redirect: '/problem/:pid/description'
+                },
+                {
+                    path: '/problem/:pid/edit/:action',
+                    component: () => import('@/components/user/problem/AddProblem'),
+                    meta: {
+                        title: '题目编辑'
                     }
                 },
                 {

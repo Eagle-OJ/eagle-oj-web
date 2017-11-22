@@ -14,7 +14,7 @@
 					<router-link to="/contest" active-class="active">比赛</router-link>
 				</li>
 				<li>
-					<router-link to="/problem" active-class="active">题目</router-link>
+					<router-link to="/problems" active-class="active">题目</router-link>
 				</li>
 				<li>
 					<router-link to="/leaderboard" active-class="active">排行榜</router-link>
