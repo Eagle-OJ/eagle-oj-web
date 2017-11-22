@@ -71,11 +71,11 @@ output</pre>
             <div class="body">
                 <div class="line" v-for="(item,index) of test_case.data">
                     <div class="input">      
-                        <Input :value="item.input" placeholder="输入字符串"></Input>           
+                        <Input v-model="item.input" placeholder="输入字符串"></Input>           
                     </div>
                     <div class="space"></div>
                     <div class="output">
-                        <Input :value="item.output" placeholder="期望结果"></Input>           
+                        <Input v-model="item.output" placeholder="期望结果"></Input>           
                     </div>
                     <div class="trash">
                         <Icon type="trash-b" @click.native="deleteTestCase(index)" />
