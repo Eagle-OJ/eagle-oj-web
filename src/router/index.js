@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Config from '@/env.js'
+import iView from 'iview'
 Vue.use(Router)
 
 const router = new Router({
@@ -24,7 +25,14 @@ const router = new Router({
                     }
                 },
                 {
-                    path: '/problem',
+                    path: '/contest/1',
+                    component: () => import('@/components/index/contest/ContestDetail'),
+                    meta: {
+                        title: '加入比赛'
+                    }
+                },
+                {
+                    path: '/problems',
                     component: () => import('@/components/index/problem/Problem'),
                     meta: {
                         title: '题目'
@@ -35,6 +43,24 @@ const router = new Router({
                     component: () => import('@/components/index/problem/ProblemDetail'),
                     meta: {
                         title: '题目详情'
+                    }
+                },
+                {
+                    path: '/problem/add',
+                    component: () => import('@/components/user/problem/AddProblem'),
+                    meta: {
+                        title: '创建题目'
+                    }
+                },
+                {
+                    path: '/problem/:pid',
+                    redirect: '/problem/:pid/description'
+                },
+                {
+                    path: '/problem/:pid/edit/:action',
+                    component: () => import('@/components/user/problem/AddProblem'),
+                    meta: {
+                        title: '题目编辑'
                     }
                 },
                 {
@@ -79,6 +105,34 @@ const router = new Router({
                     meta: {
                         title: '个人资料'
                     }
+                }, 
+                {
+                    path: 'history',
+                    component: () => import('@/components/user/history/History'),
+                    meta: {
+                        title: '我的记录'
+                    }
+                },
+                {
+                    path: 'problem',
+                    component: () => import('@/components/user/problem/Problem'),
+                    meta: {
+                        title: '问题管理'
+                    }
+                },
+                {
+                    path: 'contest',
+                    component: () => import('@/components/user/contest/Contest'),
+                    meta: {
+                        title: '比赛管理'
+                    }
+                },
+                {
+                    path: 'group',
+                    component: () => import('@/components/user/group/Group'),
+                    meta: {
+                        title: '小组管理'
+                    }
                 }
             ]
         },
@@ -111,7 +165,11 @@ const router = new Router({
 
 router.beforeEach((to, from, next) => {
     document.title = to.meta.title+Config.TITLE
+    iView.LoadingBar.start();    
     next()
 })
 
+router.afterEach(route => {
+    iView.LoadingBar.finish();
+})
 export default router
