@@ -25,10 +25,17 @@ const router = new Router({
                     }
                 },
                 {
-                    path: '/contest/1',
+                    path: '/contest/:cid',
                     component: () => import('@/components/index/contest/ContestDetail'),
                     meta: {
                         title: '加入比赛'
+                    }
+                },
+                {
+                    path: '/contest/:cid/problems',
+                    component: () => import('@/components/index/contest/problems/ContestProblems.vue'),
+                    meta: {
+                        title: 'xxx比赛'
                     }
                 },
                 {
