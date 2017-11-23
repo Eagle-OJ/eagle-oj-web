@@ -30,8 +30,8 @@
 							2017-01-01
 						</td>
 						<td width="200px">
-							<Tag checkable color="green"  style="margin-right: 20px">java</Tag>
-							<Tag checkable color="red" >Fail</Tag>
+							<Tag  color="green"  style="margin-right: 20px">java</Tag>
+							<Tag  color="red" >Fail</Tag>
 						</td>
 					</tr>
 					<tr>
@@ -40,8 +40,8 @@
 							2017-01-01
 						</td>
 						<td width="200px">
-							<Tag checkable color="green" style="margin-right: 20px">java</Tag>
-							<Tag checkable color="blue">Accpet</Tag>
+							<Tag  color="green" style="margin-right: 20px">java</Tag>
+							<Tag  color="blue">Accpet</Tag>
 						</td>
 					</tr>
 				</table>

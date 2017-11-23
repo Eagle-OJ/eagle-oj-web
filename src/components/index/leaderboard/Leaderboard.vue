@@ -95,6 +95,7 @@ export default {
 				a
 					color white
 				a:hover
+					color white
 					text-decoration underline
 			.join-contest:hover
 				cursor pointer
