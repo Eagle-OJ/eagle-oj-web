@@ -58,7 +58,7 @@ const router = new Router({
                 },
                 {
                     path: '/problem/:pid/edit/:action',
-                    component: () => import('@/components/user/problem/AddProblem'),
+                    component: () => import('@/components/user/problem/problem_edit/ProblemEdit'),
                     meta: {
                         title: '题目编辑'
                     }
