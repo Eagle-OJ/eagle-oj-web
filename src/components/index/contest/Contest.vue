@@ -22,7 +22,7 @@
 					<tr>
 						<td><Icon type="locked"></Icon></td>
 						<td><a href="#" class="official">红鹰杯</a></td>
-						<td><Tag color="yellow" style="cursor: default">进行中</Tag></td>
+						<td><Tag color="yellow" style="cursor: default" type="dot">进行中</Tag></td>
 						<td><a href="#">宁波大红鹰</a></td>
 						<td>2017-01-01</td>
 						<td><a href="#">参加</a></td>
@@ -30,7 +30,7 @@
 					<tr>
 						<td></td>
 						<td><a href="#">红鹰杯</a></td>
-						<td> <Tag color="red" style="cursor: default">已结束</Tag></td>
+						<td> <Tag color="red" style="cursor: default" type="dot">已结束</Tag></td>
 						<td><a href="#">宁波大红鹰</a></td>
 						<td>2017-01-01</td>
 						<td><a href="#">参加</a></td>
@@ -38,7 +38,7 @@
 					<tr>
 						<td></td>
 						<td><a href="#">红鹰杯</a></td>
-						<td> <Tag color="green" style="cursor: default">即将开始</Tag></td>
+						<td> <Tag color="green" style="cursor: default" type="dot">即将开始</Tag></td>
 						<td><a href="#">宁波大红鹰</a></td>
 						<td>2017-01-01</td>
 						<td><a href="#">参加</a></td>
@@ -46,7 +46,7 @@
 					<tr>
 						<td><Icon type="locked"></Icon></td>
 						<td><a href="#">红鹰杯</a></td>
-						<td> <Tag color="yellow" style="cursor: default" >进行中</Tag></td>
+						<td> <Tag color="yellow" style="cursor: default" type="dot">进行中</Tag></td>
 						<td><a href="#">宁波大红鹰</a></td>
 						<td>2017-01-01</td>
 						<td><a href="#">参加</a></td>
@@ -54,7 +54,7 @@
 					<tr v-for="i in 10">
 						<td></td>
 						<td><a href="#">红鹰杯</a></td>
-						<td> <Tag color="red" style="cursor: default">已结束</Tag></td>
+						<td> <Tag color="red" style="cursor: default" type="dot">已结束</Tag></td>
 						<td><a href="#">宁波大红鹰</a></td>
 						<td>2017-01-01</td>
 						<td><a href="#">参加</a></td>
