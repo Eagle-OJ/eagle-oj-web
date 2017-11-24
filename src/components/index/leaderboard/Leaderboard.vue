@@ -80,6 +80,7 @@ export default {
 				a:hover
 					color #2d8cf0
 					text-decoration underline
+
 			.medals img
 				width 50px
 				height 50px
