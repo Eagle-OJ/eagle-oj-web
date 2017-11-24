@@ -22,14 +22,26 @@ export default {
                 },
                 {
                     title: '操作',
-                    key: 'handle'
+                    key: 'handle',
+                    render: (h, params) => {
+                        return h('Button', {
+                            props: {
+                                type: 'ghost',
+                                size: 'small'
+                            },
+                            on: {
+                                click: () => {
+                                    this.$router.push('/problem/1/edit/description')
+                                }
+                            }
+                        }, '管理')
+                    }
                 }
             ],
             data: [
                 {
                     title: 'A+B problem',
                     status: '123',
-                    handle: 'xx'
                 }
             ]
         }

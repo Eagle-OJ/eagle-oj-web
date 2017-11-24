@@ -25,6 +25,13 @@ const router = new Router({
                     }
                 },
                 {
+                    path: '/contest/add',
+                    component: () => import('@/components/user/contest/AddContest'),
+                    meta: {
+                        title: '创建比赛'
+                    }
+                },
+                {
                     path: '/contest/:cid',
                     component: () => import('@/components/index/contest/ContestDetail'),
                     meta: {
