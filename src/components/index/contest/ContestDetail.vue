@@ -9,7 +9,7 @@
 			</div>
 			<div style="margin: 0 auto;width: 160px;margin-top: 60px"><button class="join-btn">参加比赛<br>Sign up</button></div>
 		</div>
-        <div class="countdown"><count-down deadline="2018-11-22 22:00:00"></count-down></div>
+        <div class="countdown"><count-down deadline="2017-12-23 21:40:00"></count-down></div>
 		<div class="description">
 			<div class="des-title">比赛说明<div style="width: 70%;border: 2px gray solid;margin: 0 auto"></div></div>
 			<div class="des-body">

@@ -59,8 +59,8 @@
 					date = new Date( Date.UTC( dateParts[0], dateParts[1] - 1, dateParts[2], dateParts[3], dateParts[4], dateParts[5] ) );
 					return date.valueOf();
 				};
-				currentTimeStamp = ( new Date( Date.UTC ( now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(),
-					now.getUTCHours(), now.getUTCMinutes(), now.getUTCSeconds(), now.getUTCMilliseconds() ) ) ).valueOf();
+				currentTimeStamp = ( new Date(Date.UTC ( now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(),
+					now.getUTCHours(), now.getUTCMinutes(), now.getUTCSeconds(), now.getUTCMilliseconds() )) ).valueOf();
 				convertMilliseconds = function( ms ) {
 					let d, h, m, s, padNumber;
 					s = Math.floor( ms / 1000 );
@@ -78,7 +78,7 @@
 						seconds: padNumber( s % 60 ),
 					};
 				};
-				timeDifference = parseDate( eventDate ) - currentTimeStamp;
+				timeDifference = parseDate( eventDate ) - currentTimeStamp-8*3600*1000;
 				return convertMilliseconds( timeDifference );
 			},
 			initializeClock: function() {
