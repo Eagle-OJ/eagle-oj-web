@@ -62,8 +62,8 @@
 				</div>
 				<div style="margin-top: 18px">
 					<p style="font-size: 18px"><Icon type="help-circled" style="color: #19be6b;margin-right: 14px;font-size: 25px"></Icon>模式说明:</p>
-					<p style="font-size: 14px;margin-top: 10px;padding-left: 8px;line-height: 26px">
-						比赛一共有三种形式:ACM模式,普通模式,限时模式.
+					<p style="font-size: 14px;margin-top: 10px;padding-left: 35px;line-height: 26px">
+						比赛一共有三种形式:ACM模式,普通模式,限时模式,模式可以两两组合.
 						<br>
 						ACM模式：答题时一个测试点错误则全错.<br>
 						普通模式:答对所有测试点即可获得所有分数.<br>

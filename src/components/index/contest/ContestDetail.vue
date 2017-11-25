@@ -112,8 +112,7 @@
 				padding-left 15px
 				margin-top 30px
 			.thisTimeMode
-
-				margin-top 30px
+				margin-top 40px
 				font-size 18px
 				padding-left 15px
 		.mode-title,.des-title

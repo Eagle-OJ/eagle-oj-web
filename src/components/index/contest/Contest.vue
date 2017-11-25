@@ -53,11 +53,11 @@
 					</tr>
 					<tr v-for="i in 10">
 						<td></td>
-						<td><a href="#">红鹰杯</a></td>
+						<td><a href="#" title="查看比赛详情">红鹰杯</a></td>
 						<td> <Tag color="red" style="cursor: default" type="dot">已结束</Tag></td>
-						<td><a href="#">宁波大红鹰</a></td>
+						<td><a href="#" title="查看详细资料">宁波大红鹰</a></td>
 						<td>2017-01-01</td>
-						<td><a href="#">参加</a></td>
+						<td><a href="#" title="查看比赛详情">参加</a></td>
 					</tr>
 
 				</tbody>
