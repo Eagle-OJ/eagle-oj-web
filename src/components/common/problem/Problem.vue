@@ -12,19 +12,20 @@
             <router-link to="#">链表</router-link>
             </div>
         <div class="nav">
-            <router-link to="description" active-class="active"  class="description">
-                <Icon type="document-text"></Icon> 题目
-            </router-link>
-            <router-link to="submission" active-class="active" class="submission">
-                <Icon type="code"></Icon> 提交
-            </router-link>
+            <Menu mode="horizontal" :active-name="getActive" @on-select="goTo">
+                <MenuItem name="description">
+                    <Icon type="ios-paper"></Icon>
+                    题目
+                </MenuItem>
+                <MenuItem name="submission">
+                    <Icon type="code"></Icon>
+                    提交
+                </MenuItem>
+            </Menu>
         </div>
         <div class="content">
             <keep-alive>
-                <v-description v-if="$route.params.action=='description'"></v-description>
-            </keep-alive>
-            <keep-alive>
-                <v-submission v-if="$route.params.action=='submission'"></v-submission>
+                <component :is="getActive"></component>
             </keep-alive>
         </div>
     </div>
@@ -35,12 +36,23 @@ import Description from './Description.vue'
 import Submission from './Submission.vue'
 
 export default {
-    created() {
-        console.log(this.$route.params)
-    },
     components: {
-        'v-description': Description,
-        'v-submission': Submission
+        Description,
+        Submission
+    },
+    methods: {
+        goTo(name) {
+            this.$router.push('?action='+name)
+        }
+    },
+    computed: {
+        getActive() {
+            let action = this.$route.query.action
+            if (action == undefined)
+                return 'description'
+            else 
+                return action 
+        }
     }
 }
 </script>

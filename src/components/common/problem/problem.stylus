@@ -28,22 +28,5 @@
             content: ""
         &:hover
             color: #5cadff
-.nav
-    border-bottom: 1px solid #dddee1
-    a
-        display: block
-        float: left
-        font-size: 18px
-        padding: 10px 20px
-        color: #495060
-        &.active
-            border: 1px solid #dddee1
-            border-bottom: 1px solid #fff
-            z-index: 2
-            margin: -1px
-    &:after
-        content: ""
-        display: block
-        clear: both
 .content
     margin-top: 10px

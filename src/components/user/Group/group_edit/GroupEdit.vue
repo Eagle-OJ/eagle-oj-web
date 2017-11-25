@@ -3,23 +3,11 @@
         <Menu mode="horizontal" :active-name="getActive" @on-select="goTo">
             <MenuItem name="description">
                 <Icon type="ios-paper"></Icon>
-                内容管理
+                小组编辑
             </MenuItem>
-            <MenuItem name="testCase">
-                <Icon type="code"></Icon>
-                测试用例
-            </MenuItem>
-            <MenuItem name="moderator">
-                <Icon type="ios-people"></Icon>
-                编者管理
-            </MenuItem>
-            <MenuItem name="statistics">
-                <Icon type="stats-bars"></Icon>
-                题目统计
-            </MenuItem>
-            <MenuItem name="setting">
+            <MenuItem name="other">
                 <Icon type="settings"></Icon>
-                综合设置
+                其他
             </MenuItem>
             <MenuItem name="back">
                 <Icon type="android-arrow-back"></Icon>
@@ -37,42 +25,32 @@
 
 <script>
 import Description from './Description'
-import TestCase from './TestCase'
-import Moderator from './Moderator'
-import Statistics from './Statistics'
-import Setting from './Setting'
+import Other from './Other'
 export default {
-    data() {
-        return {
-
-        }
-    },
     methods: {
         goTo(name) {
             if (name == 'back') {
-                this.$router.push('/user/problem')
+                this.$router.push('/user/group')
             } else {
-                this.$router.push('/problem/:pid/edit?action='+name)
+                this.$router.push('/group/1/edit?action='+name)
             }
         }
     },
     components: {
         Description,
-        TestCase,
-        Moderator,
-        Statistics,
-        Setting
+        Other,
     },
     computed: {
         getActive() {
-            return this.$route.query.action
+            let action = this.$route.query.action
+            return action == undefined ? 'description' : action
         }
     }
 }
 </script>
 
-
 <style lang="stylus" scoped>
 
 </style>
+
 
