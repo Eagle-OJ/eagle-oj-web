@@ -17,11 +17,11 @@
                     题目管理
                 </MenuItem>
                 <MenuItem name="contest">
-                    <Icon type="heart"></Icon>
+                    <Icon type="compose"></Icon>
                     比赛管理
                 </MenuItem>
                 <MenuItem name="group">
-                    <Icon type="heart-broken"></Icon>
+                    <Icon type="ios-people"></Icon>
                     小组管理
                 </MenuItem>
             </MenuGroup>

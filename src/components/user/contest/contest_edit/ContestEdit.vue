@@ -3,23 +3,11 @@
         <Menu mode="horizontal" :active-name="getActive" @on-select="goTo">
             <MenuItem name="description">
                 <Icon type="ios-paper"></Icon>
-                内容管理
+                比赛管理
             </MenuItem>
-            <MenuItem name="test_case">
+            <MenuItem name="other">
                 <Icon type="code"></Icon>
-                测试用例
-            </MenuItem>
-            <MenuItem name="moderator">
-                <Icon type="ios-people"></Icon>
-                编者管理
-            </MenuItem>
-            <MenuItem name="statistics">
-                <Icon type="stats-bars"></Icon>
-                题目统计
-            </MenuItem>
-            <MenuItem name="setting">
-                <Icon type="settings"></Icon>
-                综合设置
+                其他
             </MenuItem>
             <MenuItem name="back">
                 <Icon type="android-arrow-back"></Icon>
@@ -37,10 +25,7 @@
 
 <script>
 import Description from './Description'
-import TestCase from './TestCase'
-import Moderator from './Moderator'
-import Statistics from './Statistics'
-import Setting from './Setting'
+import Other from './Other'
 export default {
     data() {
         return {
@@ -50,29 +35,27 @@ export default {
     methods: {
         goTo(name) {
             if (name == 'back') {
-                this.$router.push('/user/problem')
+                this.$router.push('/user/contest')
             } else {
-                this.$router.push('/problem/:pid/edit/'+name)
+                this.$router.push('/contest/1/edit?action='+name)
             }
         }
     },
     components: {
-        'description': Description,
-        'test_case': TestCase,
-        'moderator': Moderator,
-        'statistics': Statistics,
-        'setting': Setting
+        Description,
+        Other
     },
     computed: {
         getActive() {
-            return this.$route.params.action
+            let action = this.$route.query.action
+            return action == undefined ? 'description' : action
         }
     }
 }
 </script>
 
-
 <style lang="stylus" scoped>
 
 </style>
+
 
