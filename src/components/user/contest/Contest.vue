@@ -8,6 +8,7 @@
         </div>
         <div class="wrapper join">
             <h2>比赛加入</h2>
+            <Table :columns="user.columns" :data="user.data"></Table>
         </div>
     </div>
 </template>
@@ -33,7 +34,7 @@ export default {
                                 },
                                 on: {
                                     click: () => {
-                                        this.$router.push('#')
+                                        this.$router.push('/contest/1/edit')
                                     }
                                 }
                             }, '管理')
@@ -43,6 +44,19 @@ export default {
                 data: [
                     {
                         title: '大红鹰比赛',
+                    }
+                ]
+            },
+            user: {
+                columns: [
+                    {
+                        title: '比赛名称',
+                        key: 'title'
+                    },
+                ],
+                data: [
+                    {
+                        title: 'xxx'
                     }
                 ]
             }

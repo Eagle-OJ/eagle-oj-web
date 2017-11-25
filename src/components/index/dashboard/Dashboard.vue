@@ -10,7 +10,7 @@
                         <Col span="21" class="content">
                             <div class="time">14秒前</div>
                             <div class="detail">
-                                <router-link to="#">Danny</router-link>第一个解出了<router-link to="#">耳机里的问题</router-link>
+                                <router-link to="/profile/1">Danny</router-link>第一个解出了<router-link to="/problem/1">耳机里的问题</router-link>
                             </div>
                         </Col>
                     </Row>
@@ -23,7 +23,7 @@
                         <Col span="21" class="content">
                             <div class="time">14秒前</div>
                             <div class="detail">
-                                一起来看看<router-link to="#">大烘焙比赛</router-link>的<router-link to="#">排行榜</router-link>
+                                一起来看看<router-link to="/contest/1">大烘焙比赛</router-link>的<router-link to="#">排行榜</router-link>
                             </div>
                             <div class="description">
                                 前三名：
@@ -65,7 +65,7 @@
                 <div class="user">
                     <Avatar class="avatar" shape="square" size="large" src="/static/avatar.jpg" />
                     <div class="detail">
-                        <h3><router-link to="#">尼古拉斯赵四</router-link></h3>
+                        <h3><router-link to="/user">尼古拉斯赵四</router-link></h3>
                         <p>
                             <span>提交 123</span>
                             <span>通过 11</span>

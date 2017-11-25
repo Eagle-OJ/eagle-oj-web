@@ -40,9 +40,16 @@ const router = new Router({
                 },
                 {
                     path: '/contest/:cid/problems',
-                    component: () => import('@/components/index/contest/problems/ContestProblems.vue'),
+                    component: () => import('@/components/index/contest/problems/ContestProblems'),
                     meta: {
                         title: 'xxx比赛'
+                    }
+                },
+                {
+                    path: '/contest/:cid/edit',
+                    component: () => import('@/components/user/contest/contest_edit/ContestEdit'),
+                    meta: {
+                        title: 'xxx比赛编辑'
                     }
                 },
                 {
@@ -75,6 +82,13 @@ const router = new Router({
                     component: () => import('@/components/user/problem/problem_edit/ProblemEdit'),
                     meta: {
                         title: '题目编辑'
+                    }
+                },
+                {
+                    path: '/group/1',
+                    component: () => import('@/components/index/group/GroupDetail'),
+                    meta: {
+                        title: '加入小组'
                     }
                 },
                 {
@@ -146,6 +160,19 @@ const router = new Router({
                     component: () => import('@/components/user/group/Group'),
                     meta: {
                         title: '小组管理'
+                    }
+                }
+            ]
+        },
+        {
+            path: '/admin',
+            component: () => import('@/components/admin/Main'),
+            children: [
+                {
+                    path: '/',
+                    component: () => import('@/components/admin/index/Index'),
+                    meta: {
+                        title: '首页-管理中心'
                     }
                 }
             ]
