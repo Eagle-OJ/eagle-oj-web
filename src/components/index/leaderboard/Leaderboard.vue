@@ -17,7 +17,7 @@
 					<div class="other" style="margin-left: 210px"><embed src="/static/cuprum.svg" type="image/svg+xml" width="150px" height="150px">
 						<div class="other-img"><img src="/static/touxiang.jpg"><br><a href="#" title="查看资料">狗蛋</a></div></div>
 				</div>
-				<div class="join-contest"><a href="#">不甘心？赶紧做题吧！</a></div>
+				<div class="join-contest"><a href="#" title="跳转至题目页">不甘心？赶紧做题吧！</a></div>
 			</div>
 		</div>
 		<div class="right">
