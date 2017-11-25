@@ -37,7 +37,7 @@ export default {
             if (name == 'back') {
                 this.$router.push('/user/contest')
             } else {
-                this.$router.push('/contest/1/edit?action='+name)
+                this.$router.push('/user_admin/contest/1/edit?action='+name)
             }
         }
     },

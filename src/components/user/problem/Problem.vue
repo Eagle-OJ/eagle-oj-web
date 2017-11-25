@@ -1,6 +1,6 @@
 <template>
     <div>
-        <router-link to="/problem/add">
+        <router-link to="/user_admin/problem/add">
             <Button icon="plus" type="ghost">添加题目</Button>
         </router-link>
         <Table style="margin-top: 10px" :columns="column" :data="data"></Table>
@@ -31,7 +31,7 @@ export default {
                             },
                             on: {
                                 click: () => {
-                                    this.$router.push('/problem/1/edit/description')
+                                    this.$router.push('/user_admin/problem/1/edit')
                                 }
                             }
                         }, '管理')

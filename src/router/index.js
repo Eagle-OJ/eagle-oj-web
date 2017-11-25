@@ -138,43 +138,43 @@ const router = new Router({
             component: () => import('@/components/user_admin/Main'),
             children: [
                 {
-                    path: '/contest/add',
-                    component: () => import('@/components/user/contest/AddContest'),
-                    meta: {
-                        title: '创建比赛'
-                    }
-                },
-                {
-                    path: '/contest/:cid/edit',
-                    component: () => import('@/components/user/contest/contest_edit/ContestEdit'),
-                    meta: {
-                        title: 'xxx比赛编辑'
-                    }
-                },
-                {
-                    path: '/problem/:pid/edit',
-                    component: () => import('@/components/user/problem/problem_edit/ProblemEdit'),
-                    meta: {
-                        title: '题目编辑'
-                    }
-                },
-                {
-                    path: '/problem/add',
-                    component: () => import('@/components/user/problem/AddProblem'),
+                    path: 'problem/add',
+                    component: () => import('@/components/user_admin/problem/AddProblem'),
                     meta: {
                         title: '创建题目'
                     }
                 },
                 {
-                    path: '/group/add',
-                    component: () => import('@/components/user/group/AddGroup'),
+                    path: 'problem/:pid/edit',
+                    component: () => import('@/components/user_admin/problem/problem_edit/ProblemEdit'),
+                    meta: {
+                        title: '题目编辑'
+                    }
+                },
+                {
+                    path: 'contest/add',
+                    component: () => import('@/components/user_admin/contest/AddContest'),
+                    meta: {
+                        title: '创建比赛'
+                    }
+                },
+                {
+                    path: 'contest/:cid/edit',
+                    component: () => import('@/components/user_admin/contest/contest_edit/ContestEdit'),
+                    meta: {
+                        title: 'xxx比赛编辑'
+                    }
+                },
+                {
+                    path: 'group/add',
+                    component: () => import('@/components/user_admin/group/AddGroup'),
                     meta: {
                         title: '创建小组'
                     }
                 },
                 {
-                    path: '/group/:gid/edit',
-                    component: () => import('@/components/user/group/group_edit/GroupEdit'),
+                    path: 'group/:gid/edit',
+                    component: () => import('@/components/user_admin/group/group_edit/GroupEdit'),
                     meta: {
                         title: '编辑小组'
                     }

@@ -52,7 +52,7 @@ export default {
             if (name == 'back') {
                 this.$router.push('/user/problem')
             } else {
-                this.$router.push('/problem/:pid/edit?action='+name)
+                this.$router.push('/user_admin/problem/1/edit?action='+name)
             }
         }
     },
@@ -65,7 +65,8 @@ export default {
     },
     computed: {
         getActive() {
-            return this.$route.query.action
+            let action = this.$route.query.action
+            return action == undefined ? 'description' : action
         }
     }
 }

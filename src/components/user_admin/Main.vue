@@ -1,6 +1,6 @@
 <template>
     <div>
-        <v-top-nav></v-top-nav>
+        <v-nav></v-nav>
         <div id="container">
             <router-view/>
         </div>
@@ -14,7 +14,7 @@ import Footer from '@/components/index/Footer'
 
 export default {
     components: {
-        'v-nav': TopNavigation,
+        'v-nav': Navigation,
         'v-footer': Footer
     }
 }

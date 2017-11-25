@@ -32,7 +32,7 @@ export default {
             if (name == 'back') {
                 this.$router.push('/user/group')
             } else {
-                this.$router.push('/group/1/edit?action='+name)
+                this.$router.push('/user_admin/group/1/edit?action='+name)
             }
         }
     },

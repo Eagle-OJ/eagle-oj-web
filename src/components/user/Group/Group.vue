@@ -2,7 +2,7 @@
     <div class="group">
         <div class="wrapper admin">
             <h2>管理小组
-                <router-link to="/group/add"><Button style="float:right" size="small" icon="plus" type="success">创建比赛</Button></router-link>
+                <router-link to="/user_admin/group/add"><Button style="float:right" size="small" icon="plus" type="success">创建比赛</Button></router-link>
             </h2>
             <Table :columns="admin.column" :data="admin.data"></Table>
         </div>
@@ -34,7 +34,7 @@ export default {
                                 },
                                 on: {
                                     click: () => {
-                                        this.$router.push('/group/1/edit')
+                                        this.$router.push('/user_admin/group/1/edit')
                                     }
                                 }
                             }, '管理')
