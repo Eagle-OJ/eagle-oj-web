@@ -5,30 +5,30 @@
 				<router-link to="/register" active-class="active" class="register">注册</router-link>
 				<router-link to="/login" active-class="active" class="login">登入</router-link>
 			</div>
-			<Form v-if="getSwitch=='register'" ref="register_form" :model="register_form" :rules="register_form.ruleValidate" key="register">
+			<Form v-if="getSwitch=='register'" ref="registerForm" :model="registerForm" :rules="registerForm.ruleValidate" key="register">
 
 				<FormItem prop="nickname">
-					<Input v-model="register_form.nickname" placeholder="昵称"><Icon type="ios-person-outline" slot="prepend"></Icon></Input>
+					<Input v-model="registerForm.nickname" placeholder="昵称"><Icon type="ios-person-outline" slot="prepend"></Icon></Input>
 				</FormItem>
 				<FormItem prop="email">
-					<Input v-model="register_form.email" placeholder="邮箱"><Icon type="email" slot="prepend"></Icon></Input>
+					<Input v-model="registerForm.email" placeholder="邮箱"><Icon type="email" slot="prepend"></Icon></Input>
 				</FormItem>
 				<FormItem prop="password">
-					<Input v-model="register_form.password" placeholder="密码"> <Icon type="ios-locked-outline" slot="prepend"></Icon></Input>
+					<Input v-model="registerForm.password" type="password" placeholder="密码"> <Icon type="ios-locked-outline" slot="prepend"></Icon></Input>
 				</FormItem>
 				<FormItem style="margin-bottom: 0">
-					<Button type="error" @click="handleRegister()" long>注 册</Button>
+					<Button type="error" @click="handleRegister()" :loading="isLoading" long>注 册</Button>
 				</FormItem>
 			</Form>
-			<Form v-else ref="login_form" :model="login_form" :rules="login_form.ruleValidate" key="login">
+			<Form v-else ref="loginForm" :model="loginForm" :rules="loginForm.ruleValidate" key="login">
 				<FormItem prop="email">
-					<Input v-model="login_form.email" placeholder="邮箱"><Icon type="ios-person-outline" slot="prepend"></Icon></Input>
+					<Input v-model="loginForm.email" placeholder="邮箱"><Icon type="email" slot="prepend"></Icon></Input>
 				</FormItem>
 				<FormItem prop="password">
-					<Input v-model="login_form.password" placeholder="密码"><Icon type="email" slot="prepend"></Icon></Input>
+					<Input v-model="loginForm.password" placeholder="密码" type="password"><Icon type="ios-locked-outline" slot="prepend"></Icon></Input>
 				</FormItem>
 				<FormItem style="margin-bottom: 0">
-					<Button type="error" @click="handleLogin()" long>登 入</Button>
+					<Button type="error" @click="handleLogin()" :loading="isLoading" long>登 入</Button>
 				</FormItem>
 			</Form>
 		</div>
@@ -36,13 +36,16 @@
 </template>
 
 <script>
+import Cookie from 'js-cookie'
+
 export default {
 	created() {
 
 	},
 	data() {
 		return {
-			register_form: {
+            isLoading: false,
+			registerForm: {
 				nickname: '',
 				eamil: '',
 				password: '',
@@ -60,7 +63,7 @@ export default {
 					]
 				}
 			},
-			login_form: {
+			loginForm: {
 				email: '',
 				password: '',
 				ruleValidate: {
@@ -83,24 +86,45 @@ export default {
 	},
 	methods: {
 		handleRegister() {
-			this.$refs['register_form'].resetFields()
-			this.$refs['register_form'].validate((valid) => {
+			this.$refs['registerForm'].validate((valid) => {
 				if (valid) {
-					this.$Message.success('注册成功');
+                    this.$http.post('/register', {
+                        'email': this.registerForm.email,
+                        'nickname': this.registerForm.nickname,
+                        'password': this.registerForm.password
+                    }).then(res => {
+                        this.$Message.success(res.message)
+                        this.$router.push('/login')
+                    }).catch(res => {
+                        this.$Message.error(res.message);
+                    })
 				} else {
 					this.$Message.error('请按照规则填写');
 				}
 			})
 		},
 		handleLogin() {
-			this.$refs['login_form'].validate((valid) => {
+			this.$refs['loginForm'].validate((valid) => {
 				if (valid) {
-					this.$Message.success('登入成功');
+                    this.$http.post('/login', {
+                        'email': this.loginForm.email,
+                        'password': this.loginForm.password
+                    }).then(res => {
+                        // 保存token到cookie
+                        Cookie.set('token', res.data)
+                        // 保存信息到vuex中
+                        this.$store.dispatch('getUserInfo')
+                        // 跳转到dashboard
+                        this.$router.push('/dashboard')
+                        this.$Message.success(res.message)
+                    }).catch(res => {
+                        this.$Message.error(res.message)
+                    })
 				} else {
 					this.$Message.error('请按照规则填写');
 				}
 			})
-		}
+        }
 	},
 }
 </script>

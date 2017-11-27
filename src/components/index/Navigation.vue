@@ -6,7 +6,7 @@
                 	<img src="/static/logo.png" style="height: 60px; margin-top: 6px"/>
                 </router-link>
 			</div>
-			<ul>
+			<ul class="nav">
 				<li>
 					<router-link to="/dashboard" active-class="active">主页</router-link>
 				</li>
@@ -20,10 +20,23 @@
 					<router-link to="/leaderboard" active-class="active">排行榜</router-link>
 				</li>
 			</ul>
-			<div>
-				<router-link to="/login" class="button-style">登录</router-link>
-				<router-link to="/register" class="button-style" style="margin-right: 30px">注册</router-link>
+			<div class="account" v-if="! $store.state.userInfo.isLogin">
+				<router-link to="/login" class="button-style" style="margin-right: 30px">登录</router-link>
+				<router-link to="/register" class="button-style">注册</router-link>
 			</div>
+            <div class="account" v-else>
+                <Dropdown class="menu" @on-click="goTo" trigger="click">
+                    <a href="javascript:void(0)">
+                        {{$store.state.userInfo.nickname}}
+                        <Icon type="arrow-down-b"></Icon>
+                    </a>
+                    <DropdownMenu slot="list">
+                        <DropdownItem name="/user">个人中心</DropdownItem>
+                        <DropdownItem name="logout">退出</DropdownItem>
+                    </DropdownMenu>
+                </Dropdown>
+                <img class="avatar" :src="$getUrl('/default_avatar.jpg')"/>
+            </div>
 		</div>
 
 	</div>
@@ -31,7 +44,15 @@
 
 <script>
 export default {
-
+    methods: {
+        goTo(name) {
+            if (name == 'logout') {
+                this.$store.commit('logout')
+            } else {
+                this.$router.push(name)
+            }
+        }
+    }
 }
 </script>
 
@@ -47,7 +68,7 @@ export default {
             height 70px
             width 120px
             float left
-        ul
+        .nav
             line-height 70px
             li
                 float left
@@ -65,19 +86,33 @@ export default {
                         background #ed3f14
                     &.active
                         border-bottom  solid #ed3f14 4px
-        .button-style
-            padding 6px 15px
-            font-size 12px
-            border-radius 4px
-            border: 1px solid #ed3f14;
-            background  white
-            color #ed3f14
-            float  right
-            margin-top 20px
-            cursor  pointer
-            &:hover
-                background  #ed3f14
-                color white
+        .account
+            float right 
+            height 70px
+            line-height 70px            
+            .button-style
+                padding 6px 15px
+                font-size 12px
+                border-radius 4px
+                border: 1px solid #ed3f14;
+                background  white
+                color #ed3f14
+                margin-top 20px
+                cursor  pointer
+                &:hover
+                    background  #ed3f14
+                    color white
+            .avatar
+                height 50px
+                width 50px
+                border-radius 10px
+                float right 
+                margin-left 10px
+                margin-top 10px
+            .menu
+                line-height 0
+                height auto
+                float none
 </style>
 
 
