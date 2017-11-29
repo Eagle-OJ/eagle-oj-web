@@ -88,6 +88,7 @@ export default {
 		handleRegister() {
 			this.$refs['registerForm'].validate((valid) => {
 				if (valid) {
+                    this.isLoading = true
                     this.$http.post('/register', {
                         'email': this.registerForm.email,
                         'nickname': this.registerForm.nickname,
@@ -97,6 +98,8 @@ export default {
                         this.$router.push('/login')
                     }).catch(res => {
                         this.$Message.error(res.message);
+                    }).finally(() => {
+                        this.isLoading = false
                     })
 				} else {
 					this.$Message.error('请按照规则填写');
@@ -106,6 +109,7 @@ export default {
 		handleLogin() {
 			this.$refs['loginForm'].validate((valid) => {
 				if (valid) {
+                    this.isLoading = true
                     this.$http.post('/login', {
                         'email': this.loginForm.email,
                         'password': this.loginForm.password
@@ -114,11 +118,19 @@ export default {
                         Cookie.set('token', res.data)
                         // 保存信息到vuex中
                         this.$store.dispatch('getUserInfo')
-                        // 跳转到dashboard
-                        this.$router.push('/dashboard')
+                        // 判断是否有redirect，无跳转到dashboard
+                        let redirect = this.$route.query.redirect
+                        if (redirect) {
+                            this.$router.push(redirect)
+                        } else {
+                            // 跳转到dashboard
+                            this.$router.push('/dashboard')
+                        }
                         this.$Message.success(res.message)
                     }).catch(res => {
                         this.$Message.error(res.message)
+                    }).finally(() => {
+                        this.isLoading = false
                     })
 				} else {
 					this.$Message.error('请按照规则填写');

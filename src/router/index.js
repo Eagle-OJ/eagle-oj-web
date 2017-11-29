@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import Cookie from 'js-cookie'
 import Config from '@/env.js'
 import iView from 'iview'
 Vue.use(Router)
@@ -95,6 +96,9 @@ const router = new Router({
         {
             path: '/user',
             component: () => import('@/components/user/Main'),
+            meta: {
+                requireAuth: true
+            },
             children: [
                 {
                     path: '/',
@@ -136,6 +140,9 @@ const router = new Router({
         {
             path: '/user_admin',
             component: () => import('@/components/user_admin/Main'),
+            meta: {
+                requireAuth: true
+            },
             children: [
                 {
                     path: 'problem/add',
@@ -185,6 +192,9 @@ const router = new Router({
         {
             path: '/admin',
             component: () => import('@/components/admin/Main'),
+            meta: {
+                requireAuth: true
+            },
             children: [
                 {
                     path: '/',
@@ -225,7 +235,18 @@ const router = new Router({
 router.beforeEach((to, from, next) => {
     document.title = to.meta.title+Config.TITLE
     iView.LoadingBar.start();    
-    next()
+    if(to.matched.some(record => record.meta.requireAuth)) {
+        if (!Cookie.get('token')) {
+            next({
+                path: '/login',
+                query: { redirect: to.fullPath }
+            })
+        } else {
+            next()
+        }
+    } else {
+        next()
+    }
 })
 
 router.afterEach(route => {
