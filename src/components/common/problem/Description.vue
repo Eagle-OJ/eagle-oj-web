@@ -70,12 +70,12 @@ output</pre>
             <Alert>至少添加一组测试数据，输入字符串无可不填</Alert>
             <div class="body">
                 <div class="line" v-for="(item,index) of test_case.data">
-                    <div class="input">      
-                        <Input v-model="item.input" placeholder="输入字符串"></Input>           
+                    <div class="input">
+                        <Input v-model="item.input" placeholder="输入字符串"></Input>
                     </div>
                     <div class="space"></div>
                     <div class="output">
-                        <Input v-model="item.output" placeholder="期望结果"></Input>           
+                        <Input v-model="item.output" placeholder="期望结果"></Input>
                     </div>
                     <div class="trash">
                         <Icon type="trash-b" @click.native="deleteTestCase(index)" />
@@ -133,7 +133,7 @@ export default {
                     animateRotate: true
                 },
             }
-        }
+        };
         let myChart = new Chart(this.$refs.myChart, config)
 
        let editor = ace.edit('editor-container')
@@ -275,7 +275,7 @@ export default {
         .icon-loading
             animation: ani-icon-loading 1s linear infinite;
         @keyframes ani-icon-loading
-            from 
+            from
                 transform: rotate(0deg)
             50%
                 transform: rotate(180deg)
