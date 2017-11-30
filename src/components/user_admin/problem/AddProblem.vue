@@ -7,51 +7,53 @@
         
         <div class="form">
             <div class="each-line">
-                <label for="description">题目描述</label>
-                <Tooltip content="最多1000字">
+                <label for="title">标题</label>
+                <Tooltip content="最多100字">
                     <Icon type="help-circled"></Icon>
                 </Tooltip>
-                <div id="description"></div>
+                <div id="title">
+                    <Input v-model="form.title" :maxlength="100" required></Input>
+                </div>
+            </div>
+
+            <div class="each-line">
+                <label for="description">题目描述</label>
+                <Tooltip content="最多10000字">
+                    <Icon type="help-circled"></Icon>
+                </Tooltip>
+                <div id="description" class="editor"></div>
             </div>
             
             <div class="each-line">
                 <label for="input_format">输入规范</label>
-                <Tooltip content="最多1000字">
+                <Tooltip content="最多10000字">
                     <Icon type="help-circled"></Icon>
                 </Tooltip>
-                <div id="input_format"></div>
+                <div id="input_format" class="editor"></div>
             </div>
             
             <div class="each-line">
                 <label for="output_format">输出规范</label>
-                <Tooltip content="最多1000字">
+                <Tooltip content="最多10000字">
                     <Icon type="help-circled"></Icon>
                 </Tooltip>
-                <div id="output_format"></div>
-            </div>
-            
-            <div class="each-line">
-                <label for="constraint">题目约束</label>
-                <Tooltip content="最多1000字">
-                    <Icon type="help-circled"></Icon>
-                </Tooltip>
-                <div id="constraint"></div>
+                <div id="output_format" class="editor"></div>
             </div>
             
             <div class="each-line">
                 <label for="samples">结果样例</label>
-                <Tooltip content="最多1000字">
+                <Tooltip content="至少添加一组">
                     <Icon type="help-circled"></Icon>
                 </Tooltip>
                 <div id="samples">
                     <template v-for="(item, index) in form.samples">
                         <div class="line">
                             <div class="input">      
-                                <Input v-model="item.input" placeholder="输入"></Input>           
+                                <Input v-model="item.input" type="textarea" placeholder="输入"></Input>           
                             </div>
                             <div class="space"></div>
                             <div class="output">
-                                <Input v-model="item.output" placeholder="结果"></Input>           
+                                <Input v-model="item.output" type="textarea" placeholder="结果"></Input>           
                             </div>
                             <div class="trash">
                                 <Icon type="trash-b" @click.native="deleteSample(index)" />
@@ -65,13 +67,13 @@
             </div>
 
             <div class="each-line">
-                <label for="difficulty">难度</label>
-                <div id="difficulty">
-                    <RadioGroup id="difficulty" v-model="form.difficulty">
-                        <Radio label="easy">简单</Radio>
-                        <Radio label="medium">中等</Radio>
-                        <Radio label="hard">困难</Radio>
-                        <Radio label="expert">专家</Radio>
+                <label for="difficult">难度</label>
+                <div id="difficult">
+                    <RadioGroup id="difficult" v-model="form.difficult">
+                        <Radio label="0">简单</Radio>
+                        <Radio label="1">中等</Radio>
+                        <Radio label="2">困难</Radio>
+                        <Radio label="3">专家</Radio>
                     </RadioGroup>
                 </div>
             </div>
@@ -79,15 +81,16 @@
             <div class="each-line">
                 <label for="tags">标签</label>
                 <div id="tags">
-                    <Select v-model="form.tags" multiple style="width:400px">
-                        <Option value="item.value" key="item.value">123</Option>
-                        <Option value="item.value" key="item.value">123</Option>
+                    <Select v-model="form.tags" multiple style="width:400px" filterable>
+                        <template v-for="item in tags">
+                            <Option :value="item.name" :key="item.name"></Option>
+                        </template>
                     </Select>
                 </div>
             </div>
 
             <div class="each-line submit">
-                <Button type="success" @click="createProblem">创建题目</Button>
+                <Button type="success" @click="createProblem" :loading="loading">创建题目</Button>
             </div>
         </div>
     </div>
@@ -95,6 +98,9 @@
 
 <script>
 export default {
+    created() {
+        this.getTags()
+    },
     mounted() {
         let config = {
             theme: 'snow',
@@ -112,26 +118,74 @@ export default {
         this.editor.description = new Quill(document.getElementById('description'), config)
         this.editor.input_format = new Quill(document.getElementById('input_format'), config)
         this.editor.output_format = new Quill(document.getElementById('output_format'), config)
-        this.editor.constraint = new Quill(document.getElementById('constraint'), config)
     },
     data() {
         return {
+            loading: false,
             editor: {
                 description: null,
                 input_format: null,
                 output_format: null,
-                constraint: null
             },
             form: {
+                title: '',
                 samples: [],
-                difficulty: 'easy',
+                difficult: 0,
                 tags: []
-            }
+            },
+            tags: []
         }
     },
     methods: {
         createProblem() {
-            console.log(this.editor.description.getContents())
+            if (this.form.title.length == 0) {
+                this.$Message.warning('标题不得为空')
+                return
+            }
+
+            if(this.editor.description.getLength() <5 || this.editor.description.getLength()>10000) {
+                this.$Message.warning('描述长度不符合要求')
+                return
+            }
+
+            if(this.editor.input_format.getLength() <2 || this.editor.description.getLength()>10000) {
+                this.$Message.warning('输入规范长度不符合要求')
+                return
+            }
+
+            if(this.editor.output_format.getLength() <2 || this.editor.description.getLength()>10000) {
+                this.$Message.warning('输出规范长度不符合要求')
+                return
+            }
+
+            if(this.form.samples.length == 0) {
+                this.$Message.warning('至少要有一组样例')
+                return
+            }
+
+            if(this.form.tags.length == 0) {
+                this.$Message.warning('至少要有个标签')
+                return
+            }
+
+            let data = {
+                title: this.form.title,
+                description: this.editor.description.getContents(),
+                input_format: this.editor.input_format.getContents(),
+                output_format: this.editor.output_format.getContents(),
+                samples: this.form.samples,
+                difficult: this.form.difficult,
+                tags: this.form.tags
+            }
+            this.loading = true
+            this.$http.post('/user/problem', data).then(res => {
+                this.$Message.success(res.message)
+                this.$router.push('/user_admin/problem/'+res.data+"/edit")
+            }).catch(res => {
+                this.$Message.error(res.message)
+            }).finally(() => {
+                this.loading = false
+            })
         },
         addSample() {
             let obj = {
@@ -141,15 +195,18 @@ export default {
             this.form.samples.push(obj)
         },
         deleteSample(index) {
-            console.log(index)
             let newArray = []
             for(let i=0; i<this.form.samples.length; i++) {
                 if (i !== index) {
                     newArray.push(this.form.samples[i])
                 }
             }
-            console.log(newArray)
             this.form.samples = newArray
+        },
+        getTags() {
+            this.$http.get('/tags').then(res => {
+                this.tags = res.data
+            })
         }
     }
 }
@@ -167,6 +224,8 @@ export default {
     .form
         .each-line
             margin-bottom 15px
+            .editor
+                height 150px
             label
                 font-size 16px
                 margin-right 5px

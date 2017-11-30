@@ -29,7 +29,7 @@
 
         <div class="content" style="margin-top: 20px">
             <keep-alive>
-                <component :is="getActive"></component>
+                <component :is="getActive" :pid="getPid"></component>
             </keep-alive>
         </div>
     </div>
@@ -52,7 +52,7 @@ export default {
             if (name == 'back') {
                 this.$router.push('/user/problem')
             } else {
-                this.$router.push('/user_admin/problem/1/edit?action='+name)
+                this.$router.push('/user_admin/problem/'+this.getPid+'/edit?action='+name)
             }
         }
     },
@@ -67,6 +67,9 @@ export default {
         getActive() {
             let action = this.$route.query.action
             return action == undefined ? 'description' : action
+        },
+        getPid() {
+            return this.$route.params.pid
         }
     }
 }

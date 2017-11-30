@@ -4,19 +4,19 @@
             <Button icon="plus" type="success" @click="addTestCase">添加测试用例</Button>
         </div>
         <Table :columns="columns" :data="data"></Table>
-        <Modal class="modal" v-model="showAddModal" title="添加测试用例">
+        <Modal class="modal" v-model="showAddModal" title="添加测试用例" @on-ok="doAddTestCase()">
             <div class="each-line">
                 <label for="input">输入</label>
-                <Input v-model="test_case.stdin" type="textarea"></Input>
+                <Input id="input" v-model="test_case.stdin" type="textarea" :maxlength="1000"></Input>
             </div>
             <div class="each-line">
-                <label for="input">输入</label>
-                <Input v-model="test_case.stdout" type="textarea"></Input>
+                <label for="output">输出</label>
+                <Input id="output" v-model="test_case.stdout" type="textarea" :maxlength="1000"></Input>
             </div>
             <div class="each-line">
-                <label for="input">分值比</label>
+                <label for="strength">分值比</label>
                 <div>
-                    <InputNumber :max="10" :min="1" v-model="test_case.strength"></InputNumber>
+                    <InputNumber id="strength" :max="9" :min="1" v-model="test_case.strength"></InputNumber>
                 </div>
             </div>
         </Modal>
@@ -41,6 +41,10 @@
 
 <script>
 export default {
+    props: ['pid'],
+    created() {
+        this.getTestCases()
+    },
     data() {
         return {
             columns: [
@@ -86,7 +90,7 @@ export default {
                                 },
                                 on: {
                                     click: () => {
-                                        this.deleteTestCase(params.index)
+                                        this.deleteTestCase(params.row.tid)
                                     }
                                 }
                             }, '删除')
@@ -94,42 +98,81 @@ export default {
                     }
                 }
             ],
-            data: [
-                {
-                    stdin: 'hello',
-                    stdout: 'world',
-                    strength: 5,
-                    create_time: '123123'
-                }
-            ],
+            data: [],
             showAddModal: false,
             showEditModal: false,
             test_case: {
-                tid: 0,
-                pid: 0,
                 stdin: '',
                 stdout: '',
-                strength: 5
+                strength: 1
             }
         }
     },
     methods: {
         addTestCase() {
+            this.resetTestCase()
             this.showAddModal = true
         },
-        editTestCase(index) {
-            this.showEditModal = true
-            console.log(index)
+        doAddTestCase() {
+            if (this.test_case.stdout.length == 0) {
+                this.$Message.warning('输出不得为空')
+                return
+            }
+            this.$http.post('/user/problem/'+this.pid+"/test_cases", {
+                stdin: this.test_case.stdin,
+                stdout: this.test_case.stdout,
+                strength: this.test_case.strength
+            }).then(res => {
+                this.$Message.success(res.message)
+                this.showAddModal = false
+                this.getTestCases()
+            }).catch(res => {
+                this.$Message.error(res.message)
+            })
         },
-        deleteTestCase(index) {
-            console.log(index)
+        editTestCase(index) {
+            this.resetTestCase()
+            this.showEditModal = true
+            this.test_case.stdin = this.data[index].stdin
+            this.test_case.stdout = this.data[index].stdout
+            this.test_case.strength = this.data[index].strength
+        },
+        doEditTestCase(tid) {
+            this.$http.put('/user/problem/'+this.pid+'/test_case/'+tid, {
+                stdin: this.test_case.stdin,
+                stdout: this.test_case.stdout,
+                strength: this.test_case.strength
+            }).then(res => {
+                this.$Message.success(res.message)
+                this.showEditModal = false
+                this.getTestCases()
+            })
+        },
+        deleteTestCase(tid) {
             this.$Modal.confirm({
                 title: '确认删除',
                 content: '<p>删除此测试用例不会存在</p>',
                 onOk: () => {
-                    this.$Message.info('Clicked ok');
+                    this.$http.delete('/user/problem/'+this.pid+"/test_case/"+tid).then(res => {
+                        this.$Message.success(res.message)
+                        this.getTestCases()
+                    }).catch(res => {
+                        this.$Message.error(res.message)
+                    })
                 }
             });
+        },
+        getTestCases() {
+            this.$http.get('/user/problem/'+this.pid+'/test_cases').then(res => {
+                this.data = res.data
+            }).catch(res => {
+                this.$Message.error(res.message)
+            })
+        },
+        resetTestCase() {
+            this.test_case.stdin = ''
+            this.test_case.stdout = ''
+            this.test_case.strength = 1
         }
     }
 }
