@@ -20,7 +20,7 @@
                 </div>
             </div>
         </Modal>
-        <Modal class="modal" v-model="showEditModal" title="编辑测试用例" ok-text="更新">
+        <Modal class="modal" v-model="showEditModal" title="编辑测试用例" @on-ok="doEditTestCase()" ok-text="更新">
             <div class="each-line">
                 <label for="input">输入</label>
                 <Input v-model="test_case.stdin" type="textarea"></Input>
@@ -32,7 +32,7 @@
             <div class="each-line">
                 <label for="input">分值比</label>
                 <div>
-                    <InputNumber :max="10" :min="1" v-model="test_case.strength"></InputNumber>
+                    <InputNumber :max="9" :min="1" v-model="test_case.strength"></InputNumber>
                 </div>
             </div>
         </Modal>
@@ -102,6 +102,7 @@ export default {
             showAddModal: false,
             showEditModal: false,
             test_case: {
+                tid: 0,
                 stdin: '',
                 stdout: '',
                 strength: 1
@@ -133,12 +134,13 @@ export default {
         editTestCase(index) {
             this.resetTestCase()
             this.showEditModal = true
+            this.test_case.tid = this.data[index].tid
             this.test_case.stdin = this.data[index].stdin
             this.test_case.stdout = this.data[index].stdout
             this.test_case.strength = this.data[index].strength
         },
-        doEditTestCase(tid) {
-            this.$http.put('/user/problem/'+this.pid+'/test_case/'+tid, {
+        doEditTestCase() {
+            this.$http.put('/user/problem/'+this.pid+'/test_case/'+this.test_case.tid, {
                 stdin: this.test_case.stdin,
                 stdout: this.test_case.stdout,
                 strength: this.test_case.strength
@@ -146,6 +148,8 @@ export default {
                 this.$Message.success(res.message)
                 this.showEditModal = false
                 this.getTestCases()
+            }).catch(res => {
+                this.$Message.error(res.message)
             })
         },
         deleteTestCase(tid) {
@@ -170,9 +174,15 @@ export default {
             })
         },
         resetTestCase() {
+            this.test_case.tid = 0
             this.test_case.stdin = ''
             this.test_case.stdout = ''
             this.test_case.strength = 1
+        }
+    },
+    watch: {
+        pid: function() {
+            this.getTestCases()
         }
     }
 }

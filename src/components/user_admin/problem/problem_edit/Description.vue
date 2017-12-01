@@ -218,6 +218,11 @@ export default {
                 this.$Message.error(res.message)
             })
         }
+    },
+    watch: {
+        pid: function() {
+            this.getProblem()
+        }
     }
 }
 </script>
