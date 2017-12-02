@@ -5,15 +5,15 @@
             <Col span="20" class="right">
                 <Alert>输入邮箱将其添加到题目维护者中，他也将拥有修改题目的权限</Alert>
                 <div class="input">
-                    <Input v-model="input">
-                        <Button slot="append" icon="plus"></Button>
+                    <Input v-model="email">
+                        <Button slot="append" icon="plus" @click="addModerator()"></Button>
                     </Input>
                 </div>
                 <ul>
-                    <li>
-                        <Avatar src="/static/avatar.jpg" size="large" class="avatar" />
-                        <router-link to="/profile/1">Smith</router-link>
-                        <Button type="ghost" icon="trash-b" class="delete">删除</Button>
+                    <li v-for="item in moderators">
+                        <Avatar :src="$getUrl(item.avatar)" size="large" class="avatar" />
+                        <router-link :to="{path: '/profile/'+item.uid}">{{item.nickname}}</router-link>
+                        <Button type="ghost" icon="trash-b" class="delete" @click="deleteModerator(item.uid)">删除</Button>
                     </li>
                 </ul>
             </Col>
@@ -23,12 +23,54 @@
 
 <script>
 export default {
+    props: ['pid'],
+    created() {
+        this.getModerators()
+    },
     data() {
         return {
-            input: '',
-            list: {
+            email: '',
+            moderators: {
 
             }
+        }
+    },
+    methods: {
+        getModerators() {
+            this.$http.get('/problem/'+this.pid+"/moderators").then(res => {
+                this.moderators = res.data
+            }).catch(res => {
+                this.$Message.error(res.message)
+            })
+        },
+        deleteModerator(uid) {
+            this.$http.delete('/user/problem/'+this.pid+"/moderator/"+uid).then(res => {
+                this.$Message.success(res.message)
+                this.getModerators()
+            }).catch(res => {
+                this.$Message.error(res.message)
+            })
+        },
+        addModerator() {
+            if(this.email.length == 0) {
+                this.$Message.warning('请输入邮箱')
+                return
+            }
+
+            this.$http.put('/user/problem/'+this.pid+"/moderators", {
+                email: this.email
+            }).then(res => {
+                this.$Message.success(res.message)
+                this.email = ''
+                this.getModerators()
+            }).catch(res => {
+                this.$Message.error(res.message)
+            })
+        }
+    },
+    watch: {
+        pid: function() {
+            this.getModerators()
         }
     }
 }

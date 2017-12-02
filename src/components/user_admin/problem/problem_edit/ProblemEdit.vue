@@ -42,11 +42,6 @@ import Moderator from './Moderator'
 import Statistics from './Statistics'
 import Setting from './Setting'
 export default {
-    data() {
-        return {
-
-        }
-    },
     methods: {
         goTo(name) {
             if (name == 'back') {
@@ -54,7 +49,7 @@ export default {
             } else {
                 this.$router.push('/user_admin/problem/'+this.getPid+'/edit?action='+name)
             }
-        }
+        },
     },
     components: {
         Description,

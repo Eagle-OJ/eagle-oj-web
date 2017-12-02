@@ -12,6 +12,13 @@ const router = new Router({
             component: () => import('@/components/index/Main'),
             children: [
                 {
+                    path: '/',
+                    component: () => import('@/components/index/Index'),
+                    meta: {
+                        title: '登入中'
+                    },
+                },
+                {
                     path: '/dashboard',
                     component: () => import('@/components/index/dashboard/Dashboard'),
                     meta: {
