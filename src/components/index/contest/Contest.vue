@@ -21,43 +21,73 @@
 				<tbody>
 					<tr>
 						<td><Icon type="locked"></Icon></td>
-						<td><a href="#" class="official">红鹰杯</a></td>
+						<td>
+                            <router-link to="/contest/1" class="official">红鹰杯</router-link>
+                        </td>
 						<td><Tag color="yellow" style="cursor: default" type="dot">进行中</Tag></td>
-						<td><a href="#">宁波大红鹰</a></td>
+						<td>
+                            <router-link to="/profile/1">宁波大红鹰</router-link>
+                        </td>
 						<td>2017-01-01</td>
-						<td><a href="#">参加</a></td>
+						<td>
+                            <router-link to="/contest/1">参加</router-link>
+                        </td>
 					</tr>
 					<tr>
 						<td></td>
-						<td><a href="#">红鹰杯</a></td>
+						<td>
+                            <router-link to="/contest/1" class="official">红鹰杯</router-link>
+                        </td>
 						<td> <Tag color="red" style="cursor: default" type="dot">已结束</Tag></td>
-						<td><a href="#">宁波大红鹰</a></td>
+						<td>
+                            <router-link to="/profile/1">宁波大红鹰</router-link>
+                        </td>
 						<td>2017-01-01</td>
-						<td><a href="#">参加</a></td>
+						<td>
+                            <router-link to="/contest/1">参加</router-link>
+                        </td>
 					</tr>
 					<tr>
 						<td></td>
-						<td><a href="#">红鹰杯</a></td>
+						<td>
+                            <router-link to="/contest/1">红鹰杯</router-link>
+                        </td>
 						<td> <Tag color="green" style="cursor: default" type="dot">即将开始</Tag></td>
-						<td><a href="#">宁波大红鹰</a></td>
+						<td>
+                            <router-link to="/profile/1">宁波大红鹰</router-link>
+                        </td>
 						<td>2017-01-01</td>
-						<td><a href="#">参加</a></td>
+						<td>
+                            <router-link to="/contest/1">参加</router-link>
+                        </td>
 					</tr>
 					<tr>
 						<td><Icon type="locked"></Icon></td>
-						<td><a href="#">红鹰杯</a></td>
+						<td>
+                            <router-link to="/contest/1" class="official">红鹰杯</router-link>
+                        </td>
 						<td> <Tag color="yellow" style="cursor: default" type="dot">进行中</Tag></td>
-						<td><a href="#">宁波大红鹰</a></td>
+						<td>
+                            <router-link to="/profile/1">宁波大红鹰</router-link>
+                        </td>
 						<td>2017-01-01</td>
-						<td><a href="#">参加</a></td>
+						<td>
+                            <router-link to="/contest/1">参加</router-link>
+                        </td>
 					</tr>
 					<tr v-for="i in 10">
 						<td></td>
-						<td><a href="#" title="查看比赛详情">红鹰杯</a></td>
+						<td>
+                            <router-link to="/contest/1">红鹰杯</router-link>
+                        </td>
 						<td> <Tag color="red" style="cursor: default" type="dot">已结束</Tag></td>
-						<td><a href="#" title="查看详细资料">宁波大红鹰</a></td>
+						<td>
+                            <router-link to="/profile/1">宁波大红鹰</router-link>
+                        </td>
 						<td>2017-01-01</td>
-						<td><a href="#" title="查看比赛详情">参加</a></td>
+						<td>
+                            <router-link to="/contest/1">参加</router-link>
+                        </td>
 					</tr>
 
 				</tbody>

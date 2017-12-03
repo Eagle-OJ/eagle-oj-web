@@ -23,13 +23,13 @@
                         <Col span="21" class="content">
                             <div class="time">14秒前</div>
                             <div class="detail">
-                                一起来看看<router-link to="/contest/1">大烘焙比赛</router-link>的<router-link to="#">排行榜</router-link>
+                                一起来看看<router-link to="/contest/1">大烘焙比赛</router-link>的<router-link to="/leadboard">排行榜</router-link>
                             </div>
                             <div class="description">
                                 前三名：
-                                <Icon type="ribbon-a" color="#c37e00"></Icon><router-link to="#">Danny</router-link>
-                                <Icon type="ribbon-a" color="#a1a3a6"></Icon><router-link to="#">Danny</router-link>
-                                <Icon type="ribbon-a" color="#78331e"></Icon><router-link to="#">Danny</router-link>
+                                <Icon type="ribbon-a" color="#c37e00"></Icon><router-link to="/profile/1">Danny</router-link>
+                                <Icon type="ribbon-a" color="#a1a3a6"></Icon><router-link to="/profile/1">Danny</router-link>
+                                <Icon type="ribbon-a" color="#78331e"></Icon><router-link to="/profile/1">Danny</router-link>
                             </div>
                         </Col>
                     </Row>
@@ -42,7 +42,7 @@
                         <Col span="21" class="content">
                             <div class="time">14秒前</div>
                             <div class="detail">
-                                <router-link to="#">大烘焙比赛</router-link>已经结束，你获得了第5名，查看<router-link to="#">排行榜</router-link>
+                                <router-link to="/contest/1">大烘焙比赛</router-link>已经结束，你获得了第5名，查看<router-link to="/leaderboard">排行榜</router-link>
                             </div>
                         </Col>
                     </Row>
@@ -55,7 +55,7 @@
                         <Col span="21" class="content">
                             <div class="time">14秒前</div>
                             <div class="detail">
-                                你的组长<router-link to="#">Smith</router-link>把你拉入了<router-link to="#">红英被</router-link>
+                                你的组长<router-link to="/profile/1">Smith</router-link>把你拉入了<router-link to="/contest/1">红英被</router-link>
                             </div>
                         </Col>
                     </Row>
@@ -74,7 +74,7 @@
                     </div>
                 </div>
                 <div class="random">
-                    <Button icon="shuffle" long type="ghost">随机做题</Button>
+                    <Button icon="shuffle" long type="ghost" @click="randomDoProblem()">随机做题</Button>
                 </div>
                 <div class="announcement">
                     <div class="header"><Icon type="information-circled"></Icon>公告</div>
@@ -112,6 +112,9 @@ export default {
         },
         closeAnnouncement() {
             this.announcement.switch = false
+        },
+        randomDoProblem() {
+            this.$router.push('/problem/1')
         }
     }
 }

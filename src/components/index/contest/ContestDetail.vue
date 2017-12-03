@@ -7,7 +7,7 @@
 				<br><br>
 				比赛开始时间:<span>2017-10-10</span>
 			</div>
-			<div style="margin: 0 auto;width: 160px;margin-top: 60px"><button class="join-btn">参加比赛<br>Sign up</button></div>
+			<div style="margin: 0 auto;width: 160px;margin-top: 60px"><button class="join-btn" @click="goContest()">参加比赛<br>Sign up</button></div>
 		</div>
         <div class="countdown"><count-down deadline="2017-12-23 21:40:00"></count-down></div>
 		<div class="description">
@@ -42,6 +42,11 @@
 				mode: 1
 			}
 		},
+        methods: {
+            goContest() {
+                this.$router.push('/contest/1/problems')
+            }
+        },
 	  	components: {
 	  		CountDown
 		}

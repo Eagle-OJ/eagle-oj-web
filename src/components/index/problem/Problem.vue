@@ -113,7 +113,7 @@ export default {
                         render: (h, params) => {
                             return h('router-link', {
                                 props: {
-                                    to: '#'
+                                    to: '/problem/1'
                                 }
                             }, params.row.title)
                         }

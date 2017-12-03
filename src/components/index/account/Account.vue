@@ -5,7 +5,7 @@
 				<router-link to="/register" active-class="active" class="register">注册</router-link>
 				<router-link to="/login" active-class="active" class="login">登入</router-link>
 			</div>
-			<Form v-if="getSwitch=='register'" ref="registerForm" :model="registerForm" :rules="registerForm.ruleValidate" key="register">
+			<Form v-if="getSwitch=='register'" ref="registerForm" :model="registerForm" :rules="registerForm.ruleValidate" @keyup.enter.native="handleRegister()">
 
 				<FormItem prop="nickname">
 					<Input v-model="registerForm.nickname" placeholder="昵称"><Icon type="ios-person-outline" slot="prepend"></Icon></Input>
@@ -20,7 +20,7 @@
 					<Button type="error" @click="handleRegister()" :loading="isLoading" long>注 册</Button>
 				</FormItem>
 			</Form>
-			<Form v-else ref="loginForm" :model="loginForm" :rules="loginForm.ruleValidate" key="login">
+			<Form v-else ref="loginForm" :model="loginForm" :rules="loginForm.ruleValidate" @keyup.enter.native="handleLogin()">
 				<FormItem prop="email">
 					<Input v-model="loginForm.email" placeholder="邮箱"><Icon type="email" slot="prepend"></Icon></Input>
 				</FormItem>

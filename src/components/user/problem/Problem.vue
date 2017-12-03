@@ -70,7 +70,7 @@ export default {
                             },
                             on: {
                                 click: () => {
-                                    this.$router.push('/user_admin/problem/1/edit')
+                                    this.$router.push('/user_admin/problem/'+params.row.pid+'/edit')
                                 }
                             }
                         }, '管理')

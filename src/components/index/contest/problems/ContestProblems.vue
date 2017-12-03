@@ -19,7 +19,9 @@
 						<td>
 							<Icon type="checkmark" style="color: #19be6b"></Icon>
 						</td>
-						<td><a href="#">A+B problem<a/></a></td>
+						<td>
+                            <router-link to="/problem/1">A+B problem</router-link>
+                        </td>
 						<td>
 							<Tag color="blue">中等</Tag>
 						</td>

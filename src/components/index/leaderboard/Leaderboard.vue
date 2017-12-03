@@ -5,19 +5,21 @@
 				<div style="width: 100%;text-align: center" class="contest-title"><p style="color: #FF5722;font-size: 40px;text-shadow: -1px -1px 0 rgba(200, 0, 0, .7)">公 开 排 行榜</p></div>
 				<div style="margin-left: 35px;margin-top: 10px">
 					<embed src="/static/gold.svg" type="image/svg+xml" width="150px" height="150px" style="margin-left: 150px"/>
-					<div class="first"><img src="/static/touxiang.jpg"><br><a href="#" title="查看资料">狗蛋</a></div>
+					<div class="first"><img src="/static/touxiang.jpg"><br><router-link to="/profile/1" title="查看资料">狗蛋</router-link></div>
 
 				</div>
 				<div style="height: 300px">
 
 					<div class="other"><embed src="/static/silver.svg" type="image/svg+xml" width="150px" height="150px"/>
-						<div class="other-img"><img src="/static/touxiang.jpg"><br><a href="#" title="查看资料">狗蛋</a></div></div>
+						<div class="other-img"><img src="/static/touxiang.jpg"><br><router-link to="/profile/1" title="查看资料">狗蛋</router-link></div>
+                    </div>
 
 
 					<div class="other" style="margin-left: 210px"><embed src="/static/cuprum.svg" type="image/svg+xml" width="150px" height="150px">
-						<div class="other-img"><img src="/static/touxiang.jpg"><br><a href="#" title="查看资料">狗蛋</a></div></div>
+						<div class="other-img"><img src="/static/touxiang.jpg"><br><router-link to="/profile/1" title="查看资料">狗蛋</router-link></div>
+                    </div>
 				</div>
-				<div class="join-contest"><a href="#" title="跳转至题目页">不甘心？赶紧做题吧！</a></div>
+				<div class="join-contest"><a to="#" title="跳转至题目页">不甘心？赶紧做题吧！</a></div>
 			</div>
 		</div>
 		<div class="right">
@@ -34,7 +36,7 @@
 				</div>
 				<div class="rank-body" v-for="i in 12">
 					<div class="rank-sequence">{{i}}</div>
-					<div class="rank-nickname"><a href="#" title="查看资料">狗蛋</a></div>
+					<div class="rank-nickname"><router-link to="/profile/1" title="查看资料">狗蛋</router-link></div>
 					<div class="rank-credit">2300</div>
 					<div class="rank-percent">80%</div>
 				</div>

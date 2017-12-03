@@ -17,7 +17,7 @@
 
         <div class="content" style="margin-top: 20px">
             <keep-alive>
-                <component :is="getActive"></component>
+                <component :is="getActive" :cid="getCid"></component>
             </keep-alive>
         </div>
     </div>
@@ -49,6 +49,9 @@ export default {
         getActive() {
             let action = this.$route.query.action
             return action == undefined ? 'description' : action
+        },
+        getCid() {
+            return this.$route.params.cid
         }
     }
 }
