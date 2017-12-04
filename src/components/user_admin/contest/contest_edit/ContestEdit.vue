@@ -5,9 +5,13 @@
                 <Icon type="ios-paper"></Icon>
                 比赛管理
             </MenuItem>
-            <MenuItem name="other">
-                <Icon type="code"></Icon>
-                其他
+            <MenuItem name="problems">
+                <Icon type="document-text"></Icon>
+                题目管理
+            </MenuItem>
+            <MenuItem name="setting">
+                <Icon type="settings"></Icon>
+                设置
             </MenuItem>
             <MenuItem name="back">
                 <Icon type="android-arrow-back"></Icon>
@@ -25,7 +29,8 @@
 
 <script>
 import Description from './Description'
-import Other from './Other'
+import Problems from './Problems'
+import Setting from './Setting'
 export default {
     data() {
         return {
@@ -37,13 +42,14 @@ export default {
             if (name == 'back') {
                 this.$router.push('/user/contest')
             } else {
-                this.$router.push('/user_admin/contest/1/edit?action='+name)
+                this.$router.push('/user_admin/contest/'+this.getCid+'/edit?action='+name)
             }
         }
     },
     components: {
         Description,
-        Other
+        Setting,
+        Problems
     },
     computed: {
         getActive() {

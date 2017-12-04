@@ -83,7 +83,7 @@
                 <div id="tags">
                     <Select v-model="form.tags" multiple style="width:400px" filterable>
                         <template v-for="item in tags">
-                            <Option :value="item.name" :key="item.name"></Option>
+                            <Option :value="item.tid">{{item.name}}</Option>
                         </template>
                     </Select>
                 </div>

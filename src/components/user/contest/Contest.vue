@@ -15,13 +15,36 @@
 
 <script>
 export default {
+    created() {
+        this.getUserContests(1)
+    },
     data() {
         return {
             admin: {
                 column: [
                     {
                         title: '比赛名称',
-                        key: 'title'
+                        key: 'name'
+                    },
+                    {
+                        title: '模式',
+                        render: (h, params) => {
+                            return h('div', [
+                                h('Tag', {
+                                    style: {
+                                        marginRight: '5px'
+                                    },
+                                    props: {
+                                        color: 'blue'
+                                    }
+                                }, this.getTimeType(params.row.type)),
+                                h('Tag', {
+                                    props: {
+                                        color: 'green'
+                                    }
+                                }, this.getContestType(params.row.type))
+                            ])
+                        }
                     },
                     {
                         title: '操作',
@@ -34,7 +57,7 @@ export default {
                                 },
                                 on: {
                                     click: () => {
-                                        this.$router.push('/user_admin/contest/1/edit')
+                                        this.$router.push('/user_admin/contest/'+params.row.cid+'/edit')
                                     }
                                 }
                             }, '管理')
@@ -59,6 +82,29 @@ export default {
                         title: 'xxx'
                     }
                 ]
+            }
+        }
+    },
+    methods: {
+        getUserContests(page) {
+            this.$http.get('/user/contest?page='+page+'&page_size=5').then(res => {
+                this.admin.data = res.data
+            }).catch(res => {
+                this.$Message.error(res.message)
+            })
+        },
+        getTimeType(type) {
+            if (type == 1 || type == 4) {
+                return '限时'
+            } else {
+                return '不限时'
+            }
+        },
+        getContestType(type) {
+            if (type == 0 || type == 3) {
+                return '普通比赛'
+            } else {
+                return 'ACM比赛'
             }
         }
     }

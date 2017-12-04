@@ -19,7 +19,7 @@
             </MenuItem>
             <MenuItem name="setting">
                 <Icon type="settings"></Icon>
-                综合设置
+                设置
             </MenuItem>
             <MenuItem name="back">
                 <Icon type="android-arrow-back"></Icon>

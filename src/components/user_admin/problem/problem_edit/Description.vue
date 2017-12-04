@@ -78,7 +78,7 @@
                 <div id="tags">
                     <Select v-model="form.tags" multiple style="width:400px" filterable>
                         <template v-for="item in tags">
-                            <Option :value="item.name" :key="item.name"></Option>
+                            <Option :value="item.tid">{{item.name}}</Option>
                         </template>
                     </Select>
                 </div>
@@ -210,10 +210,22 @@ export default {
                 this.form.title = res.data.title
                 this.form.samples = res.data.samples
                 this.form.difficult = res.data.difficult
-                this.form.tags = res.data.tags
                 this.editor.description.setContents(JSON.parse(res.data.description))
                 this.editor.input_format.setContents(JSON.parse(res.data.input_format))
                 this.editor.output_format.setContents(JSON.parse(res.data.output_format))
+                this.getProblemTags()
+            }).catch(res => {
+                this.$Message.error(res.message)
+            })
+        },
+        getProblemTags() {
+            let pid = this.pid
+            this.$http.get('/problem/'+pid+'/tags').then(res => {
+                let temp = []
+                for(let i=0; i<res.data.length; i++) {
+                    temp.push(res.data[i].tid)
+                }
+                this.form.tags = temp
             }).catch(res => {
                 this.$Message.error(res.message)
             })
