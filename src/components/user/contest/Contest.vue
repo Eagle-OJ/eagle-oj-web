@@ -24,7 +24,13 @@ export default {
                 column: [
                     {
                         title: '比赛名称',
-                        key: 'name'
+                        render: (h, params) => {
+                            return h('router-link', {
+                                props: {
+                                    to: '/contest/'+params.row.cid
+                                }
+                            }, params.row.name)
+                        }
                     },
                     {
                         title: '模式',

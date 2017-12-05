@@ -6,7 +6,10 @@
 
 <script>
 export default {
-    name: 'app'
+    name: 'app',
+    mounted() {
+        document.body.removeChild(document.getElementsByClassName("loading")[0]); 
+    }
 }
 </script>
 

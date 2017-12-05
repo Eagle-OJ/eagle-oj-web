@@ -93,6 +93,10 @@ export default {
                 if (valid) {
                     let password = null
                     if (! this.form.isShare) {
+                        if (this.form.password.length == 0) {
+                            this.$Message.warning('密码不得为空')
+                            return
+                        }
                         password = this.form.password
                     }
                     

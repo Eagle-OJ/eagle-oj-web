@@ -5,7 +5,7 @@
                 <Icon type="ios-paper"></Icon>
                 小组编辑
             </MenuItem>
-            <MenuItem name="other">
+            <MenuItem name="setting">
                 <Icon type="settings"></Icon>
                 其他
             </MenuItem>
@@ -17,7 +17,7 @@
 
         <div class="content" style="margin-top: 20px">
             <keep-alive>
-                <component :is="getActive"></component>
+                <component :is="getActive" :gid="getGid"></component>
             </keep-alive>
         </div>
     </div>
@@ -25,7 +25,7 @@
 
 <script>
 import Description from './Description'
-import Other from './Other'
+import Setting from './Setting'
 export default {
     methods: {
         goTo(name) {
@@ -38,12 +38,15 @@ export default {
     },
     components: {
         Description,
-        Other,
+        Setting,
     },
     computed: {
         getActive() {
             let action = this.$route.query.action
             return action == undefined ? 'description' : action
+        },
+        getGid() {
+            return this.$route.params.gid
         }
     }
 }
