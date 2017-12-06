@@ -210,9 +210,9 @@ export default {
                 this.form.title = res.data.title
                 this.form.samples = res.data.samples
                 this.form.difficult = res.data.difficult
-                this.editor.description.setContents(JSON.parse(res.data.description))
-                this.editor.input_format.setContents(JSON.parse(res.data.input_format))
-                this.editor.output_format.setContents(JSON.parse(res.data.output_format))
+                this.editor.description.setContents(res.data.description)
+                this.editor.input_format.setContents(res.data.input_format)
+                this.editor.output_format.setContents(res.data.output_format)
                 this.getProblemTags()
             }).catch(res => {
                 this.$Message.error(res.message)

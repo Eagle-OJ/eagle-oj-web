@@ -19,86 +19,71 @@
 					<td>操作</td>
 				</thead>
 				<tbody>
-					<tr>
-						<td><Icon type="locked"></Icon></td>
+                    <tr v-for="item in data">
+                        <td><Icon v-if="item.password" type="locked"></Icon></td>
 						<td>
-                            <router-link to="/contest/1" class="official">红鹰杯</router-link>
+                            <router-link :to="{path: '/contest/'+item.cid}" :class="{official: item.official==1}">{{item.name}}</router-link>
                         </td>
-						<td><Tag color="yellow" style="cursor: default" type="dot">进行中</Tag></td>
 						<td>
-                            <router-link to="/profile/1">宁波大红鹰</router-link>
+                            <Tag v-if="getContestStatus(item.startTime, item.endTime) == 0" color="yellow" style="cursor: default" type="dot">进行中</Tag>
+                            <Tag v-else-if="getContestStatus(item.startTime, item.endTime) == 1" color="green" style="cursor: default" type="dot">即将开始</Tag>
+                            <Tag v-else color="red" style="cursor: default" type="dot">已结束</Tag>
                         </td>
-						<td>2017-01-01</td>
 						<td>
-                            <router-link to="/contest/1">参加</router-link>
+                            <router-link :to="{path: '/profile/'+item.owner}">{{item.nickname}}</router-link>
                         </td>
-					</tr>
-					<tr>
-						<td></td>
+						<td>{{getTime(item.startTime)}}</td>
 						<td>
-                            <router-link to="/contest/1" class="official">红鹰杯</router-link>
+                            <router-link :to="{path: '/contest/'+item.cid}">参加</router-link>
                         </td>
-						<td> <Tag color="red" style="cursor: default" type="dot">已结束</Tag></td>
-						<td>
-                            <router-link to="/profile/1">宁波大红鹰</router-link>
-                        </td>
-						<td>2017-01-01</td>
-						<td>
-                            <router-link to="/contest/1">参加</router-link>
-                        </td>
-					</tr>
-					<tr>
-						<td></td>
-						<td>
-                            <router-link to="/contest/1">红鹰杯</router-link>
-                        </td>
-						<td> <Tag color="green" style="cursor: default" type="dot">即将开始</Tag></td>
-						<td>
-                            <router-link to="/profile/1">宁波大红鹰</router-link>
-                        </td>
-						<td>2017-01-01</td>
-						<td>
-                            <router-link to="/contest/1">参加</router-link>
-                        </td>
-					</tr>
-					<tr>
-						<td><Icon type="locked"></Icon></td>
-						<td>
-                            <router-link to="/contest/1" class="official">红鹰杯</router-link>
-                        </td>
-						<td> <Tag color="yellow" style="cursor: default" type="dot">进行中</Tag></td>
-						<td>
-                            <router-link to="/profile/1">宁波大红鹰</router-link>
-                        </td>
-						<td>2017-01-01</td>
-						<td>
-                            <router-link to="/contest/1">参加</router-link>
-                        </td>
-					</tr>
-					<tr v-for="i in 10">
-						<td></td>
-						<td>
-                            <router-link to="/contest/1">红鹰杯</router-link>
-                        </td>
-						<td> <Tag color="red" style="cursor: default" type="dot">已结束</Tag></td>
-						<td>
-                            <router-link to="/profile/1">宁波大红鹰</router-link>
-                        </td>
-						<td>2017-01-01</td>
-						<td>
-                            <router-link to="/contest/1">参加</router-link>
-                        </td>
-					</tr>
-
+                    </tr>
 				</tbody>
 			</table>
 		</div>
-		<Page :total="40" size="small" show-total style="text-align: right; margin-top: 40px"></Page>
+		<Page :total="this.total" size="small" show-total style="text-align: right; margin-top: 40px"></Page>
     </div>
 </template>
 
 <script>
+import util from '@/util'
 export default {
+    created() {
+        this.getContests(1)
+    },
+    data() {
+        return {
+            pageSize: 10,
+            total: 0,
+            data: []
+        }
+    },
+    methods: {
+        getContests(page) {
+            this.$http.get('/contest?page='+page+'&page_size='+this.pageSize).then(res => {
+                res = res.data
+                this.total = res.total
+                this.data = res.data
+            }).catch(res => {
+                this.$Message.error(res.message)
+            })
+        },
+        getContestStatus(startTime, endTime) {
+            let time = new Date().valueOf()
+            if (time < startTime) {
+                // 即将开始
+                return 0;
+            } else if (time > endTime) {
+                // 已经结束
+                return 2
+            } else {
+                // 正在进行
+                return 1
+            }
+        },
+        getTime(time) {
+            return util.getFormatTime(time)
+        }
+    }
 }
 </script>
 
@@ -136,8 +121,6 @@ export default {
 			background #f0f0f4
 	.contests:hover
 		box-shadow: 0px 0px 50px 0px rgba(0, 0, 0, 0.4)
-
-
 </style>
 
 

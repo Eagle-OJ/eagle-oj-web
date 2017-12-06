@@ -35,7 +35,9 @@
                         <DropdownItem name="logout">退出</DropdownItem>
                     </DropdownMenu>
                 </Dropdown>
-                <img class="avatar" :src="$getUrl($store.state.userInfo.avatar)"/>
+                <router-link to="/user">
+                    <img class="avatar" :src="$getUrl($store.state.userInfo.avatar)"/>
+                </router-link>
             </div>
 		</div>
 
