@@ -4,7 +4,7 @@
             <Button icon="plus" type="success" @click="addTestCase">添加测试用例</Button>
         </div>
         <Table :columns="columns" :data="data"></Table>
-        <Modal class="modal" v-model="showAddModal" title="添加测试用例" @on-ok="doAddTestCase()">
+        <Modal class="modal" v-model="showAddModal" title="添加测试用例" @on-ok="doAddTestCase()" :mask-closable="false">
             <div class="each-line">
                 <label for="input">输入</label>
                 <Input id="input" v-model="test_case.stdin" type="textarea" :maxlength="1000"></Input>
@@ -20,7 +20,7 @@
                 </div>
             </div>
         </Modal>
-        <Modal class="modal" v-model="showEditModal" title="编辑测试用例" @on-ok="doEditTestCase()" ok-text="更新">
+        <Modal class="modal" v-model="showEditModal" title="编辑测试用例" @on-ok="doEditTestCase()" ok-text="更新" :mask-closable="false">
             <div class="each-line">
                 <label for="input">输入</label>
                 <Input v-model="test_case.stdin" type="textarea"></Input>
@@ -40,6 +40,8 @@
 </template>
 
 <script>
+import distanceInWordsToNow from 'date-fns/distance_in_words_to_now'
+import cn from 'date-fns/locale/zh_cn'
 export default {
     props: ['pid'],
     created() {
@@ -50,11 +52,13 @@ export default {
             columns: [
                 {
                     title: '输入',
-                    key: 'stdin'
+                    key: 'stdin',
+                    ellipsis: true
                 },
                 {
                     title: '结果',
-                    key: 'stdout'
+                    key: 'stdout',
+                    ellipsis: true
                 },
                 {
                     title: '分值比',
@@ -62,7 +66,11 @@ export default {
                 },
                 {
                     title: '创建时间',
-                    key: 'create_time'
+                    key: 'create_time',
+                    render: (h, params) => {
+                        return h('span', {
+                        }, this.getTime(params.row.create_time))
+                    }
                 },
                 {
                     title: '操作',
@@ -110,6 +118,9 @@ export default {
         }
     },
     methods: {
+        getTime(time) {
+            return distanceInWordsToNow(new Date(time), {locale: cn})
+        },
         addTestCase() {
             this.resetTestCase()
             this.showAddModal = true

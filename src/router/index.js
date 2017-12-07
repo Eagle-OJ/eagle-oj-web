@@ -130,16 +130,30 @@ const router = new Router({
                 },
                 {
                     path: 'contest',
-                    component: () => import('@/components/user/contest/Contest'),
+                    component: () => import('@/components/user/contest_admin/ContestAdmin'),
                     meta: {
                         title: '比赛管理'
                     }
                 },
                 {
+                    path: 'my_contest',
+                    component: () => import('@/components/user/my_contest/MyContest'),
+                    meta: {
+                        title: '我的比赛'
+                    }
+                },
+                {
                     path: 'group',
-                    component: () => import('@/components/user/group/Group'),
+                    component: () => import('@/components/user/group_admin/GroupAdmin'),
                     meta: {
                         title: '小组管理'
+                    }
+                },
+                {
+                    path: 'my_group',
+                    component: () => import('@/components/user/my_group/MyGroup'),
+                    meta: {
+                        title: '我的小组'
                     }
                 }
             ]

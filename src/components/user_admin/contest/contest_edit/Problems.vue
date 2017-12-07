@@ -11,8 +11,10 @@
             <p slot="title">已添加题目</p>
             <Table :columns="columns" :data="data"></Table>
         </Card>
-        <Modal v-model="modal" width="360" title="添加题目">
+        <Modal v-model="modal" title="添加题目">
             <div style="text-align:center">
+                <span>显示题号 </span>
+                <InputNumber style="margin-right: 10px" v-model="displayId" :min="1"></InputNumber>
                 <span>题号 </span>
                 <InputNumber style="margin-right: 10px" v-model="pid" :min="1"></InputNumber>
                 <span>分值 </span>
@@ -22,8 +24,10 @@
                 <Button type="success" size="large" long :loading="loading" @click="addProblem">添加题目</Button>
             </div>
         </Modal>
-        <Modal v-model="editModal" width="20" title="修改分值" >
+        <Modal v-model="editModal" title="修改分值" >
             <div style="text-align:center">
+                <span>显示题号 </span>
+                <InputNumber style="margin-right: 10px" v-model="displayId" :min="1"></InputNumber>
                 <span>题号 </span>
                 <InputNumber style="margin-right: 10px" v-model="pid" :min="1" disabled></InputNumber>
                 <span>分值 </span>
@@ -46,13 +50,18 @@ export default {
         return {
             loading: false,
             score: 1,
+            displayId: null,
             pid: null,
             modal: false,
             editModal: false,
             data: [],
             columns: [
                 {
-                    title: '编号',
+                    title: '显示题号',
+                    key: 'display_id'
+                },
+                {
+                    title: '题号',
                     key: 'pid'
                 },
                 {
@@ -110,14 +119,19 @@ export default {
             this.modal = true
         },
         addProblem() {
+            if (this.displayId == null) {
+                this.$Message.warning('请输入显示题号')
+                return
+            }
             if (this.pid == null) {
-                this.$Message.warning('请输入题目编号')
+                this.$Message.warning('请输入添加题目编号')
                 return
             }
             this.loading = true
             this.$http.post('/user/contest/'+this.cid+"/problem", {
                 pid: this.pid,
-                score: this.score
+                score: this.score,
+                display_id: this.displayId
             }).then(res => {
                 this.$Message.success(res.message)
                 this.resetInput()
@@ -138,23 +152,27 @@ export default {
         },
         showEditProblem(index) {
             this.resetInput()
+            this.displayId = this.data[index].display_id
             this.pid = this.data[index].pid
             this.score = this.data[index].score
             this.editModal = true
         },
         doEditProblem() {
-            this.$http.put('/user/contest/'+this.cid+'/problem/'+this.pid, {score: this.score}).then(res => {
+            this.$http.put('/user/contest/'+this.cid+'/problem/'+this.pid, {
+                score: this.score,
+                display_id: this.displayId
+            }).then(res => {
                 this.$Message.success(res.message)
                 this.getProblems()
+                this.editModal = false
             }).catch(res => {
                 this.$Message.error(res.message)
             })
-            this.editModal = false
         },
         deleteProblem(title, pid) {
             this.$Modal.confirm({
                 title: '确认删除',
-                content: '<p>确认删除['+title+']？</p>',
+                content: '<p>确认删除 <b>'+title+'</b> ？</p>',
                 onOk: () => {
                     this.doDeleteProblem(pid)
                 }
@@ -170,6 +188,7 @@ export default {
         },
         resetInput() {
             this.score = 1
+            this.displayId = null
             this.pid = null
         }
     }

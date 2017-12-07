@@ -1,16 +1,16 @@
 export default {
-    getFormatTime: function getFormatTime(time) {
-        let date = new Date(time)
-        return date.getFullYear()+'-'+date.getMonth()+'-'+date.getDate()
+    getContestTimeType(type) {
+        if (type == 1 || type == 4) {
+            return '限时'
+        } else {
+            return '不限时'
+        }
     },
-    getStandardTime: function getStandardTime(time) {
-        let date = new Date(time)
-        let year = date.getFullYear()
-        let month = date.getMonth()
-        let day = date.getDate()
-        let hour = date.getHours()
-        let minutes = date.getMinutes()
-        let seconds = date.getSeconds()
-        return year+'-'+month+'-'+day+' '+hour+':'+minutes+':'+seconds
-    },
+    getContestType(type) {
+        if (type == 0 || type == 3) {
+            return '普通比赛'
+        } else {
+            return 'ACM比赛'
+        }
+    }
 }

@@ -11,6 +11,8 @@
 </template>
 
 <script>
+import distanceInWordsToNow from 'date-fns/distance_in_words_to_now'
+import cn from 'date-fns/locale/zh_cn'
 export default {
     created() {
         this.getProblems(1)
@@ -20,7 +22,7 @@ export default {
             column: [
                 {
                     title: '标题',
-                    key: 'title',
+                    ellipsis: true,
                     render: (h, params) => {
                         return h('router-link', {
                             props: {
@@ -45,7 +47,6 @@ export default {
                 },
                 {
                     title: '难度',
-                    key: 'difficult',
                     render: (h, params) => {
                         let difficult = params.row.difficult
                         if (difficult == 0) {
@@ -57,6 +58,13 @@ export default {
                         } else {
                             return '专家'
                         }
+                    }
+                },
+                {
+                    title: '创建时间',
+                    render: (h, params) => {
+                        return h('span', {
+                        }, this.getTime(params.row.create_time))
                     }
                 },
                 {
@@ -92,7 +100,10 @@ export default {
             }).catch(res => {
                 this.$Message.error(res.message)
             })
-        }
+        },
+        getTime(time) {
+            return distanceInWordsToNow(new Date(time), {locale: cn})
+        },
     }
 }
 </script>

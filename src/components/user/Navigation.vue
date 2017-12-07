@@ -10,6 +10,14 @@
                     <Icon type="chatbubbles"></Icon>
                     我的记录
                 </MenuItem>
+                <MenuItem name="my_contest">
+                    <Icon type="compose"></Icon>
+                    我的比赛
+                </MenuItem>
+                <MenuItem name="my_group">
+                    <Icon type="ios-people"></Icon>
+                    我的小组
+                </MenuItem>
             </MenuGroup>
             <MenuGroup title="相关管理">
                 <MenuItem name="problem">

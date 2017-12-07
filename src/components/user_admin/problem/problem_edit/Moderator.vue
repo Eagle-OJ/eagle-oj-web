@@ -1,5 +1,6 @@
 <template>
     <div class="moderator">
+        <Alert type="warning"><span style="margin-right: 10px">当前维护地址</span>{{getModeratorUrl()}}</Alert>
         <Row :gutter="10">
             <Col span="4" class="left"><h2>维护名单</h2></Col>
             <Col span="20" class="right">
@@ -66,6 +67,9 @@ export default {
             }).catch(res => {
                 this.$Message.error(res.message)
             })
+        },
+        getModeratorUrl() {
+            return window.location.host+'/#/user_admin/problem/'+this.pid
         }
     },
     watch: {

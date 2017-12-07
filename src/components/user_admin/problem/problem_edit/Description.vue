@@ -44,11 +44,11 @@
                     <template v-for="(item, index) in form.samples">
                         <div class="line">
                             <div class="input">      
-                                <Input v-model="item.input" type="textarea" placeholder="输入"></Input>           
+                                <Input v-model="item.input" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="输入"></Input>           
                             </div>
                             <div class="space"></div>
                             <div class="output">
-                                <Input v-model="item.output" type="textarea" placeholder="结果"></Input>           
+                                <Input v-model="item.output" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="结果"></Input>           
                             </div>
                             <div class="trash">
                                 <Icon type="trash-b" @click.native="deleteSample(index)" />
