@@ -33,18 +33,18 @@ export default {
                     render: (h, params) => {
                         return h('div', [
                             h('Tag', {
+                                props: {
+                                    color: 'green'
+                                }
+                            }, this.getContestType(params.row.type)),
+                            h('Tag', {
                                 style: {
                                     marginRight: '5px'
                                 },
                                 props: {
                                     color: 'blue'
                                 }
-                            }, this.getTimeType(params.row.type)),
-                            h('Tag', {
-                                props: {
-                                    color: 'green'
-                                }
-                            }, this.getContestType(params.row.type))
+                            }, this.getTimeType(params.row.type, params.row.total_time)),
                         ])
                     }
                 },
@@ -59,7 +59,8 @@ export default {
                         } else {
                             return '已关闭'
                         }
-                    }
+                    },
+                    width: 100
                 },
                 {
                     title: '操作',
@@ -76,7 +77,8 @@ export default {
                                 }
                             }
                         }, '管理')
-                    }
+                    },
+                    width: 100
                 }
             ],
             data: [
@@ -94,8 +96,8 @@ export default {
                 this.$Message.error(res.message)
             })
         },
-        getTimeType(type) {
-            return util.getContestTimeType(type)
+        getTimeType(type, totalTime) {
+            return util.getContestTimeType(type, totalTime)
         },
         getContestType(type) {
             return util.getContestType(type)

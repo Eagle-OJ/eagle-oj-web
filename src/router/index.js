@@ -44,8 +44,17 @@ const router = new Router({
                     path: '/contest/:cid/problems',
                     component: () => import('@/components/index/contest/problems/ContestProblems'),
                     meta: {
-                        title: 'xxx比赛'
+                        title: 'xxx比赛',
+                        requireAuth: true
                     }
+                },
+                {
+                    path: '/contest/:cid/problem/:pid',
+                    component: () => import('@/components/index/problem/ProblemDetail'),
+                    meta: {
+                        title: 'xx比赛的题目',
+                        requireAuth: true
+                    }                    
                 },
                 {
                     path: '/problems',

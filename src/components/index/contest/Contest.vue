@@ -15,18 +15,21 @@
 					</td>
 					<td>状态</td>
 					<td>举办者</td>
-					<td>时间</td>
+					<td>开始时间</td>
 					<td>操作</td>
 				</thead>
 				<tbody>
+                    <tr v-if="data.length==0">
+                        <td colspan="6" style="text-align:center;color: #80848f">暂无比赛</td>
+                    </tr>
                     <tr v-for="item in data">
                         <td><Icon v-if="item.password" type="locked"></Icon></td>
 						<td>
                             <router-link :to="{path: '/contest/'+item.cid}" :class="{official: item.official==1}">{{item.name}}</router-link>
                         </td>
 						<td>
-                            <Tag v-if="getContestStatus(item.startTime, item.endTime) == 0" color="yellow" style="cursor: default" type="dot">进行中</Tag>
-                            <Tag v-else-if="getContestStatus(item.startTime, item.endTime) == 1" color="green" style="cursor: default" type="dot">即将开始</Tag>
+                            <Tag v-if="getContestStatus(item.startTime, item.endTime) == 0" color="yellow" style="cursor: default" type="dot">即将开始</Tag>
+                            <Tag v-else-if="getContestStatus(item.startTime, item.endTime) == 1" color="green" style="cursor: default" type="dot">进行中</Tag>
                             <Tag v-else color="red" style="cursor: default" type="dot">已结束</Tag>
                         </td>
 						<td>
@@ -46,6 +49,8 @@
 
 <script>
 import util from '@/util'
+import format from 'date-fns/format'
+
 export default {
     created() {
         this.getContests(1)
@@ -81,7 +86,7 @@ export default {
             }
         },
         getTime(time) {
-            return util.getFormatTime(time)
+            return format(new Date(time), 'YYYY-MM-DD HH:mm:ss')
         }
     }
 }

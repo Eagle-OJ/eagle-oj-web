@@ -32,7 +32,8 @@
                 </RadioGroup>
             </FormItem>
             <FormItem label="限时设置" v-if="form.timeType==1">
-                <TimePicker v-model="form.totalTime" :steps="[1, 15, 60]" placeholder="选择时长" style="width: 200px"></TimePicker>
+                <InputNumber v-model="form.totalTime.h" :min="0"></InputNumber> 时
+                <InputNumber v-model="form.totalTime.m" :min="0" :max="60"></InputNumber> 分
             </FormItem>
             <FormItem label="有效时间">
                 <DatePicker type="datetimerange" format="yyyy-MM-dd HH:mm" style="width: 300px" :options="disabledDate" v-model="form.timeRange"></DatePicker>
@@ -56,7 +57,10 @@ export default {
                 isShare: true,
                 password: '',
                 timeRange: null,
-                totalTime: null,
+                totalTime: {
+                    h: 0,
+                    m: 0,
+                },
                 contestType: 0,
                 timeType: 0
             },
@@ -98,7 +102,7 @@ export default {
                     
                     let totalTime = null
                     if (this.form.timeType == 1) {
-                        totalTime = Date.parse(this.form.totalTime)
+                        totalTime = this.getTotalTime()
                     }
                     let startTime = Date.parse(this.form.timeRange[0])
                     let endTime = Date.parse(this.form.timeRange[1])
@@ -143,6 +147,11 @@ export default {
                     this.$Message.error('请按照要求填写');
                 }
             })
+        },
+        getTotalTime() {
+            let hour = this.form.totalTime.h
+            let minute = this.form.totalTime.m
+            return hour*60*60*1000+minute*60*1000
         }
     }
 }

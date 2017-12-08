@@ -30,7 +30,7 @@
             <div class="contest-mode">
                 本次比赛：
                 <Tag color="blue">{{getContestType(data.type)}}</Tag>
-                <Tag color="green">{{getContestTimeType(data.type)}}</Tag>
+                <Tag color="green">{{getContestTimeType(data.type, data.total_time)}}</Tag>
             </div>
             <div class="mode-des">
                 <p><b>ACM模式</b> 如果题目的一个测试点错误，则判整体都是错误</p>
@@ -93,16 +93,19 @@ export default {
                     })
                 }
             } else {
-                this.$router.push('/contest/1/problems')
+                this.redirectToContest()
             }
         },
         enterContest() {
             this.$http.post('/user/contest/'+this.getCid+'/enter', {password: this.password}).then(res => {
                 this.$Message.success(res.message)
-                this.$router.push('/contest/1/problems')
+                this.redirectToContest()
             }).catch(res => {
                 this.$Message.error(res.message)
             })
+        },
+        redirectToContest() {
+            this.$router.push('/contest/'+this.getCid+'/problems')
         },
         getContest() {
             this.$http.get('/contest/'+this.getCid).then(res => {
@@ -114,12 +117,10 @@ export default {
         },
         getContestUserInfo() {
             if (this.$store.state.userInfo.isLogin) {
-                this.$http.get('contest/'+this.getCid+'/user/'+this.$store.state.userInfo.uid).then(res => {
-                    if (res.data) {
-                        this.isEnter = true
-                    }
+                this.$http.get('/user/contest/'+this.getCid+'/data').then(res => {
+                    this.isEnter = true
                 }).catch(res => {
-                    this.$Message.error(res.message)
+                    this.isEnter = false
                 })
             }
         },
@@ -135,8 +136,8 @@ export default {
                 return 'closed'
             }
         },
-        getContestTimeType(type) {
-            return util.getContestTimeType(type)
+        getContestTimeType(type, totalTime) {
+            return util.getContestTimeType(type, totalTime)
         },
         getContestType(type) {
             return util.getContestType(type)
