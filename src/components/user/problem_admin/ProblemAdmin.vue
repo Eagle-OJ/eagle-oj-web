@@ -5,7 +5,7 @@
         </router-link>
         <Table style="margin-top: 10px" :columns="column" :data="data"></Table>
         <div style="margin-top: 10px; text-align: center">
-            <Page :current="1" :total="page.page_count" @on-change="getProblems" simple></Page>
+            <Page :current="1" :total="page.page_count" :page-size="page.page_size" @on-change="getProblems" simple></Page>
         </div>
     </div>
 </template>

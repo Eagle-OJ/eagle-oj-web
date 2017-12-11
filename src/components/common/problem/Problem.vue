@@ -36,6 +36,7 @@ import Description from './Description.vue'
 import Submission from './Submission.vue'
 
 export default {
+    props: ['pid', 'cid'],
     components: {
         Description,
         Submission

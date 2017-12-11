@@ -132,7 +132,7 @@ const router = new Router({
                 },
                 {
                     path: 'problem',
-                    component: () => import('@/components/user/problem/Problem'),
+                    component: () => import('@/components/user/problem_admin/ProblemAdmin'),
                     meta: {
                         title: '问题管理'
                     }

@@ -4,15 +4,9 @@
         height: 32px
         .sort
             div
-                float: left
+                float: right
                 font-size: 16px
                 line-height: 32px
-                &.tags
-                    float: right
-                    span
-                        float: left
-                        margin-right: 5px
-                        font-size: 13px
     .problems
         .page
             margin-top: 20px
@@ -69,3 +63,26 @@
                 background: rgba(0, 0, 0, .7)
                 p
                     display: inline
+    .tags
+        .tag
+            padding 3px 10px
+            margin-right: 5px
+            margin-bottom: 10px
+            cursor: pointer
+            border 1px solid #ccc
+            transition: all .4s
+            border-radius: 5px
+            display inline-block
+            &.active,&:hover
+                color #333
+                background-color #e6e6e6
+                border-color #adadad
+            .name
+                color: #5a5a5a
+            .number
+                background: #17807d
+                opacity: .85
+                color: #fff
+                padding: 1px 4px
+                font-size: 10px
+                border-radius: 3px

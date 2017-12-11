@@ -1,57 +1,52 @@
 <template>
     <div id="container">
         <Row :gutter="10">
-            <Col span="18" class="left">
+            <Col span="16" class="left">
                 <Row class="header">
                     <Col span="10">
                         <Input v-model="searchQuery" placeholder="输入题目编号"></Input>
                     </Col>
                     <Col span="14" class="sort">
                         <div class="difficulty">
-                            <Dropdown trigger="click" style="margin-left: 20px">
+                            <Dropdown trigger="click" style="margin-left: 20px" @on-click="changeDifficult">
                                 <a href="javascript:void(0)">
                                     难度
                                     <Icon type="arrow-down-b"></Icon>
                                 </a>
                                 <DropdownMenu slot="list">
-                                    <DropdownItem>简单</DropdownItem>
-                                    <DropdownItem>中等</DropdownItem>
-                                    <DropdownItem>困难</DropdownItem>
-                                    <DropdownItem>专家</DropdownItem>
+                                    <DropdownItem name="-1">不限</DropdownItem>
+                                    <DropdownItem name="0">简单</DropdownItem>
+                                    <DropdownItem name="1">中等</DropdownItem>
+                                    <DropdownItem name="2">困难</DropdownItem>
+                                    <DropdownItem name="3">专家</DropdownItem>
                                 </DropdownMenu>
                             </Dropdown>
-                        </div>
-                        <div class="status">
-                            <Dropdown trigger="click" style="margin-left: 20px">
-                                <a href="javascript:void(0)">
-                                    状态
-                                    <Icon type="arrow-down-b"></Icon>
-                                </a>
-                                <DropdownMenu slot="list">
-                                    <DropdownItem>未做</DropdownItem>
-                                    <DropdownItem>失败</DropdownItem>
-                                    <DropdownItem>成功</DropdownItem>
-                                </DropdownMenu>
-                            </Dropdown>
-                        </div>
-                        <div class="tags">
-                            <span>标签</span>
-                            <Select v-model="tags" style="width: 120px">
-                                <OptionGroup label="Hot Cities">
-                                    <Option v-for="item in tags" :value="item.id" :key="item.id">链表</Option>
-                                </OptionGroup>
-                            </Select>
                         </div>
                     </Col>
                 </Row>
                 <div class="problems">
                     <Table :columns="problems.colums" :data="problems.data"></Table>
                     <div class="page">
-                        <Page :total="40" size="small" show-total></Page>
+                        <Page :total="problems.total" :page-size="problems.pageSize" size="small" show-total></Page>
                     </div>
                 </div>
             </Col>
-            <Col span="6" class="right">
+            <Col span="8" class="right">
+                <Card class="tags">
+                    <p slot="title">
+                        <Icon type="navicon-round"></Icon>
+                        标签云
+                    </p>
+                    <router-link class="tag" :exact="true" active-class="active"
+                    :to="{path: '/problems', query: {difficult: getDifficult}}">
+                        <span class="text">不限</span>
+                    </router-link>
+                    <router-link class="tag" v-for="item in tags" :key="item.tid" :exact="true" active-class="active"
+                    :to="{path: '/problems', query: {difficult: getDifficult, tag: item.name}}">
+                        <span class="text">{{item.name}}</span>
+                        <span class="number">{{item.used}}</span>
+                    </router-link>
+                </Card>
                 <Card class="user_info">
                     <i-circle :size="200" :percent="75">
                         <div class="detail">
@@ -76,112 +71,155 @@
 </template>
 
 <script>
+import Difficult from '@/components/common/Difficult'
 export default {
+    created() {
+        this.getProblems(1)
+        this.getTags()
+    },
     data() {
         return {
             searchQuery: '',
-            tags: [
-                {
-                    id: 1,
-                },
-                {
-                    id: 1,
-                },
-                {
-                    id: 1,
-                },
-                {
-                    id: 1,
-                }
-            ],
+            tags: [],
             problems: {
                 colums: [
                     {
                         title: '状态',
-                        key: 'status',
                         render: (h, params) => {
-                            return h('Icon', {
-                                props: {
-                                    type: 'checkmark'
-                                }
-                            }, 'xx')
-                        }
+                            if(params.row.status == undefined) {
+
+                            } else if (params.row.status == 'AC') {
+                                return h('Icon', {
+                                    props: {
+                                        type: 'checkmark',
+                                        color: '#19be6b'
+                                    }
+                                })
+                            } else {
+                                return h('Icon', {
+                                    props: {
+                                        type: 'minus-round',
+                                        color: '#ff9900'
+                                    }
+                                })
+                            }
+                            
+                        },
+                        width: 60
                     },
                     {
                         title: '标题',
-                        key: 'title',
                         render: (h, params) => {
                             return h('router-link', {
                                 props: {
-                                    to: '/problem/1'
+                                    to: '/problem/'+params.row.pid
                                 }
                             }, params.row.title)
                         }
                     },
                     {
+                        title: '提交',
+                        key: 'submit_times',
+                        width: 60
+                    },
+                    {
                         title: '通过率',
-                        key: 'acceptance'
+                        render: (h, params) => {
+                            if (params.row.submit_times == 0) {
+                                return '0.00%'
+                            } else {
+                                return ((params.row.ac_times / params.row.submit_times)*100).toFixed(2)+'%'
+                            }
+                        },
+                        width: 100
                     },
                     {
                         title: '难度',
-                        key: 'difficulty',
                         render: (h, params) => {
-                            return h('Tag', {
+                            return h(Difficult, {
                                 props: {
-                                    color: this.getDifficultyColor(params.row.difficulty)
+                                    difficult: params.row.difficult
                                 }
-                            }, this.getDifficultyText(params.row.difficulty))
-                        }
+                            })
+                        },
+                        width: 100
                     },
                 ],
-                data: [
-                    {
-                        title: 'A+B problems',
-                        acceptance: '19.5%',
-                        difficulty: 1,
-                    },
-                    {
-                        title: 'A+B problems',
-                        acceptance: '19.5%',
-                        difficulty: 1,
-                    },
-                    {
-                        title: 'A+B problems',
-                        acceptance: '19.5%',
-                        difficulty: 1,
-                    },
-                    {
-                        title: 'A+B problems',
-                        acceptance: '19.5%',
-                        difficulty: 1,
-                    },
-                ]
-            }
+                data: [],        
+                total: 0,
+                pageSize: 10,
+                uid: -1,
+            },
         }
     },
     methods: {
-        getDifficultyColor(name) {
-            if(name == 0)
-                return 'green'
-            else if (name == 1) 
-                return 'blue'
-            else if (name == 2)
-                return 'yellow'
-            else
-                return 'red'
+        getProblems(page) {
+            if (this.$store.state.userInfo.isLogin) {
+                this.problems.uid = this.$store.state.userInfo.uid
+            }
+            this.$http.get('/problem', {
+                params: {
+                    page: page,
+                    page_size: this.problems.pageSize,
+                    difficult: this.getDifficult,
+                    tag: this.getTag,
+                    uid: this.problems.uid
+                }
+            }).then(res => {
+                this.problems.data = res.data.problems
+                this.problems.total = res.data.total
+            })
         },
-        getDifficultyText(name) {
-            if(name == 0)
-                return '简单'
-            else if (name == 1) 
-                return '中等'
-            else if (name == 2)
-                return '困难'
-            else
-                return '专家'
+        getTags() {
+            this.$http.get('/tags').then(res => {
+                this.tags = res.data
+            })
+        },
+        changeDifficult(item) {
+            this.$router.push({path: '/problems', query: {
+                difficult: item,
+                tag: this.getTag
+            }})
+        },
+        changeTag(name) {
+            this.$router.push({path: '/problems', query: {
+                difficult: this.getDifficult,
+                tag: name
+            }})
         }
     },
-    
+    components: {
+        Difficult
+    },
+    computed: {
+        getDifficult() {
+            let difficult = this.$route.query.difficult
+            if (difficult == undefined) {
+                return -1
+            } else {
+                return difficult
+            }
+        },
+        getTag() {
+            let tag = this.$route.query.tag
+            if (tag == undefined) {
+                return 'null'
+            } else {
+                return tag
+            }
+        }
+    },
+    watch: {
+        '$store.state.userInfo.isLogin': function() {
+            this.getProblems(1)
+        },
+        'getTag': function() {
+            this.getProblems(1)
+        },
+        'getDifficult': function() {
+            this.getProblems(1)
+        }
+    }
 }
 </script>
 
