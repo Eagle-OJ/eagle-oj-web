@@ -1,15 +1,65 @@
 <template>
-    <div id="app">
-        <router-view/>
-    </div>
+	<div id="app">
+		<div id="global-submission">
+			<div class="each" v-for="(item,index) in getSubmissions">
+				<h2>
+					<router-link :to="item.path">
+						{{item.title}}
+					</router-link>
+				</h2>
+				<a class="close" @click="removeNotice(index)">
+					<Icon type="close-round" />
+				</a>
+				<div class="content">
+					<Spin v-if="item.response == null">
+						<Icon type="load-c" size=18 class="icon-loading"></Icon>
+						<div>{{converJudgingStatus(item.status)}}</div>
+					</Spin>
+					<div class="response" v-else>
+						<Tag :style="{background: getProblemStatusColor(item.response.result), color: '#fff'}">
+							{{convertProblemStatus(item.response.result)}}
+						</Tag>
+						<Tag color="green">{{item.response.memory}} M</Tag>
+						<Tag color="green">{{item.response.time}} S</Tag>
+						<router-link to="#">
+							<Button type="primary" size="small">查看详情</Button>
+						</router-link>
+					</div>
+				</div>
+			</div>
+		</div>
+		<router-view/>
+	</div>
 </template>
 
 <script>
+import Util from '@/util'
 export default {
-    name: 'app',
-    mounted() {
-        document.body.removeChild(document.getElementsByClassName("loading")[0]); 
-    }
+	name: 'app',
+	mounted() {
+		if (document.getElementsByClassName("loading")[0]) {
+			document.body.removeChild(document.getElementsByClassName("loading")[0])
+		}
+	},
+	methods: {
+		removeNotice(index) {
+			this.$store.commit('deleteSubmission', index)
+		},
+		convertProblemStatus(status) {
+			return Util.convertProblemStatus(status)
+		},
+		converJudgingStatus(status) {
+			return Util.converJudgingStatus(status)
+		},
+		getProblemStatusColor(status) {
+			return Util.getProblemStatusColor(status)
+		}
+	},
+	computed: {
+		getSubmissions() {
+			return this.$store.state.submissions
+		}
+	}
 }
 </script>
 
@@ -17,6 +67,53 @@ export default {
 #app
 	width 100%
 	height 100%
+	#global-submission
+		position fixed
+		top 24px
+		right 0
+		margin-right 24px
+		width 335px
+		z-index 1000
+		.each
+			box-shadow 0 1px 6px rgba(0,0,0,.2)
+			padding 10px 16px
+			background #fff
+			border-radius 4px
+			overflow hidden
+			margin-bottom 10px
+			position relative
+			&:after
+				background #2d8cf0
+				content: ''
+				display block
+				width 4px
+				position absolute
+				top 0
+				left 0
+				bottom 0
+			h2
+				padding-right 10px
+				overflow hidden
+				text-overflow ellipsis
+				white-space nowrap
+				font-size 14px
+				a
+					color #495060
+			.close
+				position absolute
+				top 14px
+				right 16px
+			.content
+				text-align center
+				.icon-loading
+					animation: ani-icon-loading 1s linear infinite;
+				@keyframes ani-icon-loading
+					from
+						transform: rotate(0deg)
+					50%
+						transform: rotate(180deg)
+					to
+						transform: rotate(360deg)
 	#container
 		max-width 1000px
 		margin 0 auto

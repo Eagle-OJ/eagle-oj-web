@@ -13,7 +13,20 @@ export default new Vuex.Store({
         },
         setting: {
             oss_url: ''
-        }
+        },
+        submissions: [
+            // {
+            //     title: 'A+B problem',                
+            //     path: 'afea',                
+            //     id: 'xxxxxxxx',
+            //     status: null,
+            //     response: {
+            //         status: 'TLE',
+            //         memory: '123',
+            //         time: '3s'
+            //     }
+            // }
+        ]
 	},
 	mutations: {
         setWebsite(state, payload) {
@@ -28,6 +41,59 @@ export default new Vuex.Store({
             state.userInfo.isLogin = false
             router.push('/login')
             Cookie.remove('token')
+        },
+        addSubmission(state, data) {
+            let title = data.title
+            let path = data.url            
+            let id = data.id
+            state.submissions.push({
+                path: path,
+                title: title,
+                id: id,
+                status: 'InQueue',
+                response: null
+            })
+            this.commit('getSubmission', id)
+        },
+        getSubmission(state, id) {
+            let clock = setInterval(() => {
+                Axios.get('/code/'+id).then(res => {
+                    let data = res.data
+                    let index = 0
+                    for (let i=0; i<state.submissions.length; i++) {
+                        if (state.submissions[i].id == id) {
+                            index = i
+                        }
+                    }
+                    let newArray = []
+                    for (let i=0; i<state.submissions.length; i++) {
+                        let obj = state.submissions[i]                        
+                        if (index == i) {
+                            obj.status = data.status
+                            obj.response = data.response
+                        } 
+                        newArray.push(obj)                        
+                    }
+                    state.submissions = newArray
+                    console.log(newArray)  
+                    console.log(state.submissions)                  
+                    if (data.status == 'Finished' || data.status == 'Error') {
+                        clearInterval(clock)
+                    }
+                }).catch((res) => {
+                    let index = 0
+                    for (let i=0; i<state.submissions.length; i++) {
+                        if (state.submissions[i].id == id) {
+                            index = i
+                        }
+                    }
+                    state.submissions(index, 1)
+                    clearInterval(clock)
+                })
+            }, 1000)
+        },
+        deleteSubmission(state, index) {
+            state.submissions.splice(index, 1)
         }
     },
     actions: {
