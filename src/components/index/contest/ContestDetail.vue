@@ -164,7 +164,7 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
-    @import 'ContestDetail.stylus'
+    @import 'ContestDetail.styl'
 </style>
 
 

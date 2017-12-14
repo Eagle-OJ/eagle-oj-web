@@ -13,15 +13,13 @@
 				<div class="content">
 					<Spin v-if="item.response == null">
 						<Icon type="load-c" size=18 class="icon-loading"></Icon>
-						<div>{{converJudgingStatus(item.status)}}</div>
+						<div>{{item.status}}</div>
 					</Spin>
 					<div class="response" v-else>
-						<Tag :style="{background: getProblemStatusColor(item.response.result), color: '#fff'}">
-							{{convertProblemStatus(item.response.result)}}
-						</Tag>
+                        <ProblemResult :result="item.response.result"></ProblemResult>
 						<Tag color="green">{{item.response.memory}} M</Tag>
 						<Tag color="green">{{item.response.time}} S</Tag>
-						<router-link to="#">
+						<router-link :to="{path: '/submission/'+item.id}">
 							<Button type="primary" size="small">查看详情</Button>
 						</router-link>
 					</div>
@@ -33,33 +31,28 @@
 </template>
 
 <script>
-import Util from '@/util'
+import ProblemResult from '@/components/common/ProblemResult'
 export default {
 	name: 'app',
 	mounted() {
 		if (document.getElementsByClassName("loading")[0]) {
 			document.body.removeChild(document.getElementsByClassName("loading")[0])
 		}
-	},
+    },
 	methods: {
 		removeNotice(index) {
 			this.$store.commit('deleteSubmission', index)
 		},
-		convertProblemStatus(status) {
-			return Util.convertProblemStatus(status)
-		},
-		converJudgingStatus(status) {
-			return Util.converJudgingStatus(status)
-		},
-		getProblemStatusColor(status) {
-			return Util.getProblemStatusColor(status)
-		}
+
 	},
 	computed: {
 		getSubmissions() {
 			return this.$store.state.submissions
 		}
-	}
+    },
+    components: {
+        ProblemResult
+    }
 }
 </script>
 

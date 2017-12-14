@@ -17,7 +17,6 @@ export default {
         }
     },
     convertProblemStatus(text) {
-        console.log(text)
         switch(text) {
             case 'AC':
                 return 'Accepted'

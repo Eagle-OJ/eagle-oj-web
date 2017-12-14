@@ -32,7 +32,13 @@ const router = new Router({
                         title: '比赛'
                     }
                 },
-                
+                {
+                    path: '/submission/:id',
+                    component: () => import('@/components/index/submission/Submission'),
+                    meta: {
+                        title: '判卷详情'
+                    }
+                },
                 {
                     path: '/contest/:cid',
                     component: () => import('@/components/index/contest/ContestDetail'),

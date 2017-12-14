@@ -121,7 +121,7 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
-    @import './Dashboard.stylus'
+    @import './Dashboard.styl'
 </style>
 
 

@@ -225,7 +225,7 @@ export default {
 
 
 <style lang="stylus" scoped>
-    @import 'problem.stylus'
+    @import 'problem.styl'
 </style>
 
 

@@ -75,9 +75,7 @@ export default new Vuex.Store({
                         newArray.push(obj)                        
                     }
                     state.submissions = newArray
-                    console.log(newArray)  
-                    console.log(state.submissions)                  
-                    if (data.status == 'Finished' || data.status == 'Error') {
+                    if (data.status == '完成' || data.status == '错误') {
                         clearInterval(clock)
                     }
                 }).catch((res) => {
