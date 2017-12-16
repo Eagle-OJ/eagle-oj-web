@@ -26,18 +26,16 @@
 export default {
     props: ['pid'],
     created() {
-        this.getModerators()
+        this.setModerators()
     },
     data() {
         return {
             email: '',
-            moderators: {
-
-            }
+            moderators: []
         }
     },
     methods: {
-        getModerators() {
+        setModerators() {
             this.$http.get('/problem/'+this.pid+"/moderators").then(res => {
                 this.moderators = res.data
             }).catch(res => {

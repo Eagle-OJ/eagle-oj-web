@@ -93,7 +93,7 @@
 
 <script>
 export default {
-    props: ['pid'],
+    props: ['pid', 'problem'],
     created() {
         this.getTags()
     },
@@ -114,7 +114,7 @@ export default {
         this.editor.description = new Quill(document.getElementById('description'), config)
         this.editor.input_format = new Quill(document.getElementById('input_format'), config)
         this.editor.output_format = new Quill(document.getElementById('output_format'), config)
-        this.getProblem()
+        this.setProblem()
     },
     data() {
         return {
@@ -204,19 +204,15 @@ export default {
                 this.tags = res.data
             })
         },
-        getProblem() {
-            let pid = this.pid
-            this.$http.get('/user/problem/'+pid).then(res => {
-                this.form.title = res.data.title
-                this.form.samples = res.data.samples
-                this.form.difficult = res.data.difficult
-                this.editor.description.setContents(res.data.description)
-                this.editor.input_format.setContents(res.data.input_format)
-                this.editor.output_format.setContents(res.data.output_format)
-                this.getProblemTags()
-            }).catch(res => {
-                this.$Message.error(res.message)
-            })
+        setProblem() {
+            let problem = this.problem
+            this.form.title = problem.title
+            this.form.samples = problem.samples
+            this.form.difficult = problem.difficult
+            this.editor.description.setContents(problem.description)
+            this.editor.input_format.setContents(problem.input_format)
+            this.editor.output_format.setContents(problem.output_format)
+            this.getProblemTags()
         },
         getProblemTags() {
             let pid = this.pid
@@ -231,11 +227,6 @@ export default {
             })
         }
     },
-    watch: {
-        pid: function() {
-            this.getProblem()
-        }
-    }
 }
 </script>
 

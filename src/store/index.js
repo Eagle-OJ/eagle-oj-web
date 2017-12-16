@@ -12,7 +12,8 @@ export default new Vuex.Store({
             isLogin: false,
         },
         setting: {
-            oss_url: ''
+            oss_url: '',
+            lang: {}
         },
         submissions: [
             // {
@@ -26,7 +27,8 @@ export default new Vuex.Store({
             //         time: '3s'
             //     }
             // }
-        ]
+        ],
+        judgingList: []
 	},
 	mutations: {
         setWebsite(state, payload) {
@@ -75,7 +77,9 @@ export default new Vuex.Store({
                         newArray.push(obj)                        
                     }
                     state.submissions = newArray
+                    // 判卷完成
                     if (data.status == '完成' || data.status == '错误') {
+                        Cookie.remove()
                         clearInterval(clock)
                     }
                 }).catch((res) => {
@@ -85,7 +89,7 @@ export default new Vuex.Store({
                             index = i
                         }
                     }
-                    state.submissions(index, 1)
+                    state.submissions.splice(index, 1)
                     clearInterval(clock)
                 })
             }, 1000)

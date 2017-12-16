@@ -67,6 +67,12 @@ Vue.prototype.$getUrl = function(url) {
     return store.state.setting.oss_url+url
 }
 
+Vue.prototype.$getLang = function(text) {
+    console.log(text)
+    console.log(store.state.setting.lang[text])
+    return store.state.setting.lang[text]
+}
+
 /* eslint-disable no-new */
 new Vue({
     el: '#app',

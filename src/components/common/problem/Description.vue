@@ -40,7 +40,7 @@
 		<Row class="editor">
 			<div class="toolbar">
 				<Select v-model="lang" @on-change="changeLang" style="width:150px;margin-right:10px">
-					<Option v-for="item in langList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+					<Option v-for="item in langList" :value="item" :key="item">{{$getLang(item)}}</Option>
 				</Select>
 				<Tooltip content="使用以前代码" placement="top">
 					<Button type="ghost" icon="android-time">回退</Button>
@@ -82,13 +82,16 @@
 <script>
 import Chart from 'chart.js'
 import Util from '@/util'
+import Cookie from 'js-cookie'
 export default {
-	props: ['cid', 'pid', 'problem'],
+    props: ['cid', 'pid', 'problem'],
+    created() {
+        this.langList = this.problem.lang
+    },
 	mounted() {
 	   	this.mountEditor()
 		this.mountQuill()
 		this.mountChart()
-		this.langList = this.getLangList(this.problem.lang)
 	},
 	data() {
 		return {
@@ -99,55 +102,15 @@ export default {
 				outputFormat: null
 			},
 			lang: null,
-			langList: [
-				{
-					label: 'Java1.8',
-					value: '1'
-				},
-				{
-					label: 'Java1.8',
-					value: '1'
-				},
-				{
-					label: 'Java1.8',
-					value: '1'
-				},
-				{
-					label: 'Java1.8',
-					value: '1'
-				}
-			],
+			langList: [],
 			testCases: {
 				isOpen: false,
 				data: []
-			},
-			isSubmit: false
+            },
+            isSubmit: false
 		}
 	},
 	methods: {
-		getLangList(lang) {
-            let list = new Array()
-            if (lang.length == 0) {
-                for(let i=0; i<Util.langList.length; i++) {
-                    let key = Util.langList[i]
-                    let obj = {
-                        value: key,
-                        label: Util.parseLang(key)
-					}
-					list.push(obj)
-                }
-            } else {
-                for (let i=0; i<lang.length; i++) {
-                    let key = lang[i]
-                    let obj = {
-                        value: key,
-                        label: Util.parseLang(key)
-                    }
-                    list.append(obj)
-                }
-            }
-            return list
-		},
 		changeLang(value) {
 			let editor = this.editor
 			switch(value) {
@@ -184,7 +147,8 @@ export default {
 				if (this.testCases.data.length==0) {
 					this.$Message.warning('请输入测试数据')
 					return
-				}
+                }
+                this.isSubmit = true
 				this.$http.post('/code', {
 					lang: this.lang,
 					source_code: code,
@@ -195,9 +159,33 @@ export default {
 						url: path,
 						id: res.data
 					})
-				})
+				}).catch(res => {
+                    this.$Message.error(res.message)
+                }).finally(() => {
+                    this.isSubmit = false
+                })
 			} else {
-				console.log('submit')
+                if (! this.$store.state.userInfo.isLogin) {
+                    this.$Message.warning('请先进行登入')
+                    return
+                }
+                this.isSubmit = true
+				this.$http.post('/user/code', {
+                    contest_id: this.cid,
+                    problem_id: this.pid,
+                    lang: this.lang,
+                    source_code: code,
+                }).then(res => {
+                    this.$store.commit('addSubmission', {
+                        title: title,
+                        url: path,
+                        id: res.data
+                    })
+                }).catch(res => {
+                    this.$Message.error(res.message)
+                }).finally(() => {
+                    this.isSubmit = false
+                })
 			}
 		},
 		addTestCase() {
@@ -290,7 +278,7 @@ export default {
 			editor.setShowPrintMargin(false)
 			document.getElementById('editor-container').style.fontSize='14px';
 		}
-	},
+    },
 }
 </script>
 

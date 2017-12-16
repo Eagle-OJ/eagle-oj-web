@@ -27,9 +27,10 @@
             </MenuItem>
         </Menu>
 
-        <div class="content" style="margin-top: 20px">
-            <keep-alive>
-                <component :is="getActive" :pid="getPid"></component>
+        <div class="content" style="margin-top: 20px; position: relative">
+            <Spin size="large" fix v-if="loading"></Spin>
+            <keep-alive >
+                <component :is="getActive" :pid="getPid" :problem="problem" v-if="! loading"></component>
             </keep-alive>
         </div>
     </div>
@@ -42,6 +43,15 @@ import Moderator from './Moderator'
 import Statistics from './Statistics'
 import Setting from './Setting'
 export default {
+    created() {
+        this.getProblem()
+    },
+    data() {
+        return {
+            problem: null,
+            loading: false
+        }
+    },
     methods: {
         goTo(name) {
             if (name == 'back') {
@@ -50,6 +60,16 @@ export default {
                 this.$router.push('/user_admin/problem/'+this.getPid+'/edit?action='+name)
             }
         },
+        getProblem() {
+            this.loading = true
+            this.$http.get('/user/problem/'+this.getPid).then(res => {
+                this.problem = res.data
+            }).catch(res => {
+                this.$Message.error(res.message)
+            }).finally(() => {
+                this.loading = false
+            })
+        }
     },
     components: {
         Description,

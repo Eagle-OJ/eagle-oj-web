@@ -4,6 +4,7 @@
         <div class="content">
             <div class="each">判卷状态：{{data.status}}</div>
         </div>
+        <Alert show-icon>本页的详细结果不会永久保存</Alert>
         <div class="result" v-if="data.response">
             <div class="main">
                 <ProblemResult :result="data.response.result"></ProblemResult>

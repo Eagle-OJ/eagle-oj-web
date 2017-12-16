@@ -13,6 +13,7 @@
 <script>
 import distanceInWordsToNow from 'date-fns/distance_in_words_to_now'
 import cn from 'date-fns/locale/zh_cn'
+import Difficult from '@/components/common/Difficult'
 export default {
     created() {
         this.getProblems(1)
@@ -48,16 +49,11 @@ export default {
                 {
                     title: '难度',
                     render: (h, params) => {
-                        let difficult = params.row.difficult
-                        if (difficult == 0) {
-                            return '简单'
-                        } else if (difficult == 1) {
-                            return '中等'
-                        } else if (difficult == 2) {
-                            return '困难'
-                        } else {
-                            return '专家'
-                        }
+                        return h(Difficult, {
+                            props: {
+                                difficult: params.row.difficult
+                            }
+                        })
                     }
                 },
                 {

@@ -62,19 +62,4 @@ export default {
                 return '错误'
         }
     },
-    parseLang(text) {
-        switch(text) {
-            case 'C':
-                return 'C'
-            case 'CPP':
-                return 'C++'
-            case 'JAVA8':
-                return 'Java8'
-            case 'PYTHON27':
-                return 'Python2.7'
-            case 'PYTHON36':
-                return 'Python3.6'
-        }
-    },
-    langList: ['JAVA8', 'PYTHON36', 'PYTHON27', 'CPP', 'C']
 }
