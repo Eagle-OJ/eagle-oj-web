@@ -1,5 +1,9 @@
 <template>
     <div class="submission">
+        <Spin fix v-if="loading"></Spin>
+        <p class="refresh">
+            <Button @click="getSubmissions(1)" type="primary" icon="refresh" shape="circle">刷新</Button>
+        </p>
         <Table :columns="column" :data="data"></Table>
         <div style="text-align:center; margin-top:10px">
             <Page :current="1" :total="total" :page-size="pageSize" @on-change="getSubmissions" simple></Page>
@@ -72,7 +76,8 @@ export default {
             ],
             data: [],
             pageSize: 5,
-            total: 0
+            total: 0,
+            loading: false,
         }
     },
     methods: {
@@ -81,6 +86,7 @@ export default {
                 this.$Message.warning('请先登入')
                 return
             }
+            this.loading = true
             this.$http.get('/user/code', {
                 params: {
                     cid: this.cid,
@@ -93,6 +99,8 @@ export default {
                 this.total = res.data.total
             }).catch(res => {
                 this.$Message.error('获取失败')
+            }).finally(() => {
+                this.loading = false
             })
         },
         parseTime(time) {
@@ -108,7 +116,11 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
-
+    .submission
+        position relative
+        .refresh
+            text-align right
+            margin-bottom 10px
 </style>
 
 

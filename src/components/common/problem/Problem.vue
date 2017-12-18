@@ -23,7 +23,9 @@
             </Menu>
         </div>
         <div class="content" v-if="! loading">
-            <component :is="getActive" :cid="getCid" :pid="getPid" :problem="problem"></component>
+            <keep-alive>
+                <component :is="getActive" :cid="getCid" :pid="getPid" :problem="problem"></component>
+            </keep-alive>
         </div>
     </div>
 </template>

@@ -68,8 +68,6 @@ Vue.prototype.$getUrl = function(url) {
 }
 
 Vue.prototype.$getLang = function(text) {
-    console.log(text)
-    console.log(store.state.setting.lang[text])
     return store.state.setting.lang[text]
 }
 
