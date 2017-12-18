@@ -47,6 +47,13 @@ const router = new Router({
                     }
                 },
                 {
+                    path: '/contest/:cid/leaderboard',
+                    component: () => import('@/components/index/leaderboard/ContestLeaderboard'),
+                    meta: {
+                        title: '比赛排行榜'
+                    }
+                },
+                {
                     path: '/contest/:cid/problems',
                     component: () => import('@/components/index/contest/problems/ContestProblems'),
                     meta: {

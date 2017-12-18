@@ -48,18 +48,13 @@ export default {
                 return '#ed3f14'
         }
     },
-    converJudgingStatus(status) {
-        switch(status) {
-            case 'InQueue':
-                return '队列中'
-            case 'Judging':
-                return '判卷中'
-            case 'Saving':
-                return '保存中'
-            case 'Finished':
-                return '完成'
-            case 'Error':
-                return '错误'
+    getACRate(ACTimes, totalTimes) {
+        if (totalTimes == 0) {
+            return '0.00%'
+        } else {
+            totalTimes = parseFloat(totalTimes)
+            ACTimes = parseFloat(ACTimes)
+            return ((ACTimes/totalTimes)*100).toFixed(2)+'%'
         }
-    },
+    }
 }

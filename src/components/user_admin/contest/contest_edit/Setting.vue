@@ -6,8 +6,8 @@
                 <Alert>注意，启用比赛后不要修改关键信息，以免引起分值混乱</Alert>
                 <div>
                     <Button key="start" v-if="status==0" type="primary" @click="changeContestStatus()">启用比赛</Button>
-                    <Button key="close" v-if="status==1" @click="changeContestStatus()">停止启用</Button>
-                    <Button key="closed" v-if="status==2" disabled>比赛已结束</Button>
+                    <Button key="close" v-else-if="status==1" @click="changeContestStatus()">停止启用</Button>
+                    <Button key="closed" v-else-if="status==2" disabled>比赛已结束</Button>
                 </div>
             </Col>
         </Row>
@@ -16,9 +16,9 @@
 
 <script>
 export default {
-    props: ['cid'],
+    props: ['cid', 'contest'],
     created() {
-        this.getContest()
+        this.setContest()
     },
     data() {
         return {
@@ -26,10 +26,8 @@ export default {
         }
     },
     methods: {
-        getContest() {
-            this.$http.get('/user/contest/'+this.cid).then(res => {
-                this.status = res.data.status
-            })
+        setContest() {
+            this.status = this.contest.status
         },
         changeContestStatus() {
             let status = 0

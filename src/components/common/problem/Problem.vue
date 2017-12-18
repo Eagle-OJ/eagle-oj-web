@@ -4,7 +4,10 @@
         <div class="header">
             <h1>{{problem.title}}</h1>
             <Difficult :difficult="problem.difficult"></Difficult>
-            <Button class="favorite" icon="android-favorite-outline" type="ghost">收藏</Button>
+            <router-link v-if="getCid>0" :to="{path: '/contest/'+this.getCid+'/problems'}">
+                <Button class="favorite" icon="ios-arrow-back" type="info">返回比赛</Button>
+            </router-link>
+            <Button v-else class="favorite" icon="android-favorite-outline" type="ghost">收藏</Button>
         </div>
         <div class="tags">
             <span>知识点：</span>
@@ -18,7 +21,7 @@
                 </MenuItem>
                 <MenuItem name="submission">
                     <Icon type="code"></Icon>
-                    提交
+                    我的提交
                 </MenuItem>
             </Menu>
         </div>
@@ -63,7 +66,13 @@ export default {
         getProblem() {
             this.loading = true
             this.getTags()
-            this.$http.get('/problem/'+this.getPid).then(res => {
+            let url
+            if(this.getCid>0) {
+                url = '/contest/'+this.getCid+'/problem/'+this.getPid
+            } else {
+                url = '/problem/'+this.getPid
+            }
+            this.$http.get(url).then(res => {
                 let data = res.data.problem
                 this.problem.title = data.title
 				this.problem.description = data.description

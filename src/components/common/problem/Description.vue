@@ -90,8 +90,8 @@ export default {
     },
 	mounted() {
 	   	this.mountEditor()
-		this.mountQuill()
-		this.mountChart()
+        this.mountQuill()
+        this.mountChart()
 	},
 	data() {
 		return {
@@ -203,7 +203,7 @@ export default {
 				}
 			}
 			this.testCases.data = newArray
-		},
+        },
 		mountChart() {
 			let config = {
 				type: 'doughnut',

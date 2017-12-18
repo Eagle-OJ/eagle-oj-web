@@ -18,7 +18,8 @@
                     <tbody class="problem-list">
                         <tr v-for="item in problems">
                             <td>
-                                <Icon type="checkmark" style="color: #19be6b"></Icon>
+                                <Icon v-if="item.status=='AC'" type="checkmark" style="color: #19be6b"></Icon>
+                                <Icon v-else-if="item.status!=undefined" type="minus-round" style="color: #ff9900"></Icon>
                             </td>
                             <td>
                                 <router-link :to="{ path:'/contest/'+getCid+'/problem/'+item.pid }">{{item.title}}</router-link>
@@ -27,7 +28,7 @@
                                 <difficult :difficult="item.difficult"></difficult>
                             </td>
                             <td>{{item.submit_times}}</td>
-                            <td>{{getACRate(item.ac_times, item.submit_times)}}</td>
+                            <td>{{util.getACRate(item.ac_times, item.submit_times)}}</td>
                             <td v-if="contest.type==0 || contest==1">{{item.score}}</td>
                         </tr>
                     </tbody>
@@ -57,8 +58,8 @@
                         比赛模式
                     </p>
                     <div>
-                        <Tag color="blue">{{getContestType(contest.type)}}</Tag>
-                        <Tag color="green">{{getContestTimeType(contest.type, contest.total_time)}}</Tag>
+                        <Tag color="blue">{{util.getContestType(contest.type)}}</Tag>
+                        <Tag color="green">{{util.getContestTimeType(contest.type, contest.total_time)}}</Tag>
                     </div>
                 </div>
             </Col>
@@ -70,7 +71,7 @@
 import CountDown from '@/components/index/contest/CountDown'
 import format from 'date-fns/format'
 import Difficult from '@/components/common/Difficult'
-import util from '@/util'
+import Util from '@/util'
 export default {
     created() {
         this.getContestUserData()
@@ -79,6 +80,7 @@ export default {
     data() {
         return {
             loading: false,
+            util: Util,
             contest: {},
             userInfo: {},
             problems: []
@@ -102,21 +104,6 @@ export default {
                 this.loading = false
             })
         },
-        getContestType(type) {
-            return util.getContestType(type)
-        },
-        getContestTimeType(type, time) {
-            return util.getContestTimeType(type, time)
-        },
-        getACRate(submit, ac) {
-            if (submit == 0) {
-                return '0.00%'
-            } else {
-                submit = parseFloat(submit)
-                ac = parseFloat(submit)
-                return (ac/submit).toFixed(2)+'%'
-            }
-        }
     },
     computed: {
         getCid() {

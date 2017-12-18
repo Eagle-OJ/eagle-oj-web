@@ -47,9 +47,9 @@
 
 <script>
 export default {
-    props: ['cid'],
+    props: ['cid', 'contest'],
     created() {
-        this.getContest()
+        this.setContest()
     },
     data() {
         return {
@@ -151,39 +151,37 @@ export default {
                 }
             })
         },
-        getContest() {
-            this.$http.get('/user/contest/'+this.cid).then(res => {
-                res = res.data
-                this.form.name = res.name
-                this.form.slogan = res.slogan
-                this.form.description = res.description
-                if(res.password == undefined) {
-                    this.form.isShare = true
-                } else {
-                    this.form.isShare = false
-                    this.form.password = res.password
-                }
+        setContest() {
+            let res = this.contest
+            this.form.name = res.name
+            this.form.slogan = res.slogan
+            this.form.description = res.description
+            if(res.password == undefined) {
+                this.form.isShare = true
+            } else {
+                this.form.isShare = false
+                this.form.password = res.password
+            }
 
-                if (res.type == 0) {
-                    this.form.contestType = 0
-                    this.form.timeType = 0
-                } else if (res.type == 1) {
-                    this.form.contestType = 0
-                    this.form.timeType = 1
-                    this.parseTotalTime(res.total_time)
-                } else if (res.type == 2) {
-                    this.form.contestType = 1
-                    this.form.timeType = 0
-                } else {
-                    this.form.contestType = 1
-                    this.form.timeType = 1
-                    this.parseTotalTime(res.total_time)
-                }
+            if (res.type == 0) {
+                this.form.contestType = 0
+                this.form.timeType = 0
+            } else if (res.type == 1) {
+                this.form.contestType = 0
+                this.form.timeType = 1
+                this.parseTotalTime(res.total_time)
+            } else if (res.type == 2) {
+                this.form.contestType = 1
+                this.form.timeType = 0
+            } else {
+                this.form.contestType = 1
+                this.form.timeType = 1
+                this.parseTotalTime(res.total_time)
+            }
 
-                let startTime = new Date(res.start_time)
-                let endTime = new Date(res.end_time)
-                this.form.timeRange = [startTime, endTime]
-            })
+            let startTime = new Date(res.start_time)
+            let endTime = new Date(res.end_time)
+            this.form.timeRange = [startTime, endTime]
         },
         getTotalTime() {
             let hour = this.form.totalTime.h

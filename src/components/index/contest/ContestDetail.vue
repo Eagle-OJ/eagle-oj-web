@@ -11,10 +11,10 @@
                 <b>{{getTime(data.end_time)}}</b>
             </div>
             <div class="button">
-                <button class="pending" v-if="getStatus() == 'pending'">即将开始</button>
-                <button class="entered" v-if="getStatus() == 'entered'" @click="goContest()">开始做题</button>
-                <button class="entering" v-if="getStatus() == 'entering'" @click="goContest()">参加比赛</button>
                 <button class="closed" v-if="getStatus() == 'closed'" @click="goContest()">已结束</button>
+                <button class="pending" v-else-if="getStatus() == 'pending'">即将开始</button>
+                <button class="entered" v-else-if="isEnter" @click="goContest()">开始做题</button>
+                <button class="entering" v-else-if="getStatus() == 'entering'" @click="goContest()">参加比赛</button>
             </div>
         </div>
         <div class="countdown">
@@ -91,6 +91,8 @@ export default {
                             this.enterContest()
                         },
                     })
+                } else {
+                    this.enterContest()
                 }
             } else {
                 this.redirectToContest()
@@ -128,8 +130,6 @@ export default {
             let time = new Date().valueOf()
             if (time < this.data.start_time) {
                 return 'pending'
-            } else if (this.isEnter) {
-                return 'entered'
             } else if (this.data.start_time < time && time < this.data.end_time) {
                 return 'entering'
             } else {

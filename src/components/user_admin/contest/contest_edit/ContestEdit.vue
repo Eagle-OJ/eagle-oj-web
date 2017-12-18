@@ -19,9 +19,10 @@
             </MenuItem>
         </Menu>
 
-        <div class="content" style="margin-top: 20px">
+        <div class="content" style="margin-top: 20px; position: relative">
+            <Spin size="large" fix v-if="loading"></Spin>
             <keep-alive>
-                <component :is="getActive" :cid="getCid"></component>
+                <component :is="getActive" :cid="getCid" :contest="contest" v-if="! loading"></component>
             </keep-alive>
         </div>
     </div>
@@ -32,9 +33,13 @@ import Description from './Description'
 import Problems from './Problems'
 import Setting from './Setting'
 export default {
+    created() {
+        this.getContest()
+    },
     data() {
         return {
-
+            loading: false,
+            contest: {}
         }
     },
     methods: {
@@ -44,6 +49,16 @@ export default {
             } else {
                 this.$router.push('/user_admin/contest/'+this.getCid+'/edit?action='+name)
             }
+        },
+        getContest() {
+            this.loading = true
+            this.$http.get('/user/contest/'+this.getCid).then(res => {
+                this.contest = res.data
+            }).catch(res => {
+                this.$Message.error(res.message)
+            }).finally(() => {
+                this.loading = false
+            })
         }
     },
     components: {
