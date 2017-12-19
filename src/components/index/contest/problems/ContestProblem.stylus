@@ -45,6 +45,17 @@
                 background #EEEEEE
                 height 35px
                 padding-top 4px
+            .data
+                display: flex
+                padding: 5px 0
+                .data-each
+                    flex: 1
+                    text-align: center
+                    .num
+                        font-size: 20px
+                        display: block
+                    .text
+                        font-size: 15px
             .rank
                 text-align center
                 .update-time

@@ -14,33 +14,6 @@ export default {
             this.$router.push('/login')
         }
     },
-    // methods: {
-    //     waitForLogin() {
-    //         this.$Spin.show({
-    //             render: (h) => {
-    //                 return h('div', [
-    //                     h('Icon', {
-    //                         'class': 'loading-icon',
-    //                         props: {
-    //                             type: 'load-c',
-    //                             size: 18
-    //                         }
-    //                     }),
-    //                     h('div', '登入中')
-    //                 ])
-    //             }
-    //         });
-
-    //         setTimeout(() => {
-    //             if(this.$store.state.userInfo.isLogin) {
-    //                 this.$router.push('/dashboard')
-    //             } else {
-    //                 this.$router.push('/login')
-    //             }
-    //             this.$Spin.hide();
-    //         }, 1000);
-    //     }
-    // }
 }
 </script>
 

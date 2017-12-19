@@ -44,12 +44,45 @@
                 </div>
                 <div class="each">
                     <p class="info" >
+                        <Icon type="compass" style="color: dodgerblue"></Icon>
+                        数据
+                    </p>
+                    <div class="data">
+                        <div class="data-each">
+                            <span class="num">{{userInfo.submit_times}}</span>
+                            <span class="text">提交</span>
+                        </div>
+                        <div class="data-each">
+                            <span class="num">{{userInfo.ac_times}}</span>
+                            <span class="text">AC</span>
+                        </div>
+                        <div class="data-each">
+                            <span class="num">{{userInfo.wa_times}}</span>
+                            <span class="text">WA</span>
+                        </div>
+                        <div class="data-each">
+                            <span class="num">{{userInfo.rte_times}}</span>
+                            <span class="text">RTE</span>
+                        </div>
+                        <div class="data-each">
+                            <span class="num">{{userInfo.tle_times}}</span>
+                            <span class="text">TLE</span>
+                        </div>
+                        <div class="data-each">
+                            <span class="num">{{userInfo.ce_times}}</span>
+                            <span class="text">CE</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="each">
+                    <p class="info" >
                         <Icon type="trophy" style="color: #ff9900"></Icon>
                         当前排名
+                        <router-link style="float: right" :to="{path: '/contest/'+this.getCid+'/leaderboard'}">排行榜</router-link>
                     </p>
                     <div class="rank">
-                        <span style="font-size: 60px">29/<span style="font-size: 35px">45</span></span>
-                        <span class="update-time">20秒前更新</span>
+                        <span style="font-size: 60px">{{userMeta.rank}}/<span style="font-size: 35px">{{userMeta.total}}</span></span>
+                        <span class="update-time">{{getTime(userMeta.create_time)}}更新</span>
                     </div>
                 </div>
                 <div class="each">
@@ -71,6 +104,8 @@
 import CountDown from '@/components/index/contest/CountDown'
 import format from 'date-fns/format'
 import Difficult from '@/components/common/Difficult'
+import DistanceInWordsToNow from 'date-fns/distance_in_words_to_now'
+import cn from 'date-fns/locale/zh_cn'
 import Util from '@/util'
 export default {
     created() {
@@ -83,6 +118,7 @@ export default {
             util: Util,
             contest: {},
             userInfo: {},
+            userMeta: {},
             problems: []
         }
     },
@@ -96,12 +132,19 @@ export default {
             this.loading = true
             this.$http.get('/user/contest/'+this.getCid+'/data').then(res => {
                 this.userInfo = res.data.user
+                this.userMeta = res.data.meta
                 this.problems = res.data.problems
             }).catch(res => {
                 this.$router.push('/contest/'+this.getCid)
                 this.$Message.error('你没有加入比赛')
             }).finally(() => {
                 this.loading = false
+            })
+        },
+        getTime(time) {
+            return DistanceInWordsToNow(new Date(time), {
+                addSuffix: true,
+                locale: cn
             })
         },
     },

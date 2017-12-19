@@ -65,11 +65,11 @@
                 <div class="user">
                     <Avatar class="avatar" shape="square" size="large" src="/static/avatar.jpg" />
                     <div class="detail">
-                        <h3><router-link to="/user">尼古拉斯赵四</router-link></h3>
+                        <h3><router-link :to="{path: '/porfile/'+$store.state.userInfo.uid}">{{$store.state.userInfo.nickname}}</router-link></h3>
                         <p>
-                            <span>提交 123</span>
-                            <span>通过 11</span>
-                            <span>AC 56%</span>
+                            <span>提交 {{$store.state.userInfo.submit_times}}</span>
+                            <span>提交 {{$store.state.userInfo.ac_times}}</span>
+                            <span>AC {{util.getACRate($store.state.userInfo.ac_times,$store.state.userInfo.submit_times)}}</span>
                         </p>
                     </div>
                 </div>
@@ -97,13 +97,15 @@
 </template>
 
 <script>
+import Util from '@/util'
 export default {
     data() {
         return {
             announcement: {
                 title: '',
                 switch: false
-            }
+            },
+            util: Util
         }
     },
     methods: {
