@@ -1,6 +1,6 @@
 <template>
     <div class="problem">
-        <Spin size="large" fix v-if="loading"></Spin>
+        <Spin size="large" fix v-if="problemLoading || contestLoading"></Spin>
         <div class="header">
             <h1>{{problem.title}}</h1>
             <Difficult :difficult="problem.difficult"></Difficult>
@@ -25,9 +25,9 @@
                 </MenuItem>
             </Menu>
         </div>
-        <div class="content" v-if="! loading">
+        <div class="content" v-if="! (problemLoading || contestLoading)">
             <keep-alive>
-                <component :is="getActive" :cid="getCid" :pid="getPid" :problem="problem"></component>
+                <component :is="getActive" :cid="getCid" :pid="getPid" :problem="problem" :contest="contest"></component>
             </keep-alive>
         </div>
     </div>
@@ -40,10 +40,14 @@ import Difficult from '@/components/common/Difficult'
 export default {
     created() {
         this.getProblem()
+        if(this.getPid > 0) {
+            this.getContest()
+        }
     },
     data() {
         return {
-            loading: false,
+            problemLoading: false,
+            contestLoading: false,
             problem: {
                 title: '',
                 description: '',
@@ -59,12 +63,13 @@ export default {
                 owner: 0,
                 nickname: 0,
             },
+            contest: {},
             tags: []
         }
     },
     methods: {
         getProblem() {
-            this.loading = true
+            this.problemLoading = true
             this.getTags()
             let url
             if(this.getCid>0) {
@@ -91,7 +96,17 @@ export default {
 			}).catch(res => {
                 this.$Message.error(res.message)
             }).finally(() => {
-                this.loading = false
+                this.problemLoading = false
+            })
+        },
+        getContest() {
+            this.contestLoading = true
+            this.$http.get('/contest/'+this.getCid).then(res => {
+                this.contest = res.data
+            }).catch(res => {
+                this.$Message.error(res.message)
+            }).finally(() => {
+                this.contestLoading = false
             })
         },
         getTags() {

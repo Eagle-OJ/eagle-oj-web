@@ -5,9 +5,9 @@
             <Col span="20">
                 <Alert>注意，启用比赛后不要修改关键信息，以免引起分值混乱</Alert>
                 <div>
-                    <Button key="start" v-if="status==0" type="primary" @click="changeContestStatus()">启用比赛</Button>
-                    <Button key="close" v-else-if="status==1" @click="changeContestStatus()">停止启用</Button>
-                    <Button key="closed" v-else-if="status==2" disabled>比赛已结束</Button>
+                    <Button key="start" v-if="getStatus==0" type="primary" @click="changeContestStatus()">启用比赛</Button>
+                    <Button key="close" v-else-if="getStatus==1" @click="changeContestStatus()">停止启用</Button>
+                    <Button key="closed" v-else-if="getStatus==2" disabled>比赛已结束</Button>
                 </div>
             </Col>
         </Row>
@@ -17,31 +17,25 @@
 <script>
 export default {
     props: ['cid', 'contest'],
-    created() {
-        this.setContest()
-    },
-    data() {
-        return {
-            status: 0
-        }
-    },
     methods: {
-        setContest() {
-            this.status = this.contest.status
-        },
         changeContestStatus() {
             let status = 0
-            if (this.status == 0) {
+            if (this.getStatus == 0) {
                 status = 1
             } else {
                 status = 0
             }
             this.$http.post('/user/contest/'+this.cid+'/status', {status: status}).then(res => {
                 this.$Message.success(res.message)
-                this.status = status
+                this.$parent.getContest()
             }).catch(res => {
                 this.$Message.error(res.message)
             })
+        }
+    },
+    computed: {
+        getStatus() {
+            return this.contest.status
         }
     }
 }

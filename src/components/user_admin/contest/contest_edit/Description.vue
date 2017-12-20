@@ -141,6 +141,7 @@ export default {
                     this.loading = true
                     this.$http.put('/user/contest/'+this.cid, data).then(res => {
                         this.$Message.success(res.message)
+                        this.$parent.getContest()
                     }).catch(res => {
                         this.$Message.error(res.message)
                     }).finally(() => {
