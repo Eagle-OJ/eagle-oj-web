@@ -5,6 +5,9 @@
                 <router-link to="/user_admin/contest/add"><Button style="float:right" size="small" icon="plus" type="success">创建比赛</Button></router-link>
             </h2>
             <Table :columns="columns" :data="data"></Table>
+            <div class="pager" style="text-align: center; margin-top: 10px">
+                <Page :total="total" :page-size="pageSize" size="small" show-total @on-change="getUserContests"></Page>
+            </div>
         </div>
     </div>
 </template>
@@ -81,17 +84,16 @@ export default {
                     width: 100
                 }
             ],
-            data: [
-                {
-                    title: '大红鹰比赛',
-                }
-            ]
+            data: [],
+            total: 0,
+            pageSize: 5
         }
     },
     methods: {
         getUserContests(page) {
-            this.$http.get('/user/contest?page='+page+'&page_size=5').then(res => {
-                this.data = res.data
+            this.$http.get('/user/contest?page='+page+'&page_size='+this.pageSize).then(res => {
+                this.data = res.data.data
+                this.total = res.data.total
             }).catch(res => {
                 this.$Message.error(res.message)
             })

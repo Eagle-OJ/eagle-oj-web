@@ -38,6 +38,12 @@ export default {
                 {
                     title: '分数',
                     key: 'score'
+                },
+                {
+                    title: '总耗时',
+                    render: (h, param) => {
+                        return Math.ceil(param.row.used_time/1000/60)+'分钟'
+                    }
                 }
             ],
             data: [],
