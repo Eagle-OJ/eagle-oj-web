@@ -1,0 +1,77 @@
+#container
+    padding-top 65px
+    .user-info
+        width 100%
+        font-size 24px
+        text-align center
+        padding-top 80px
+        position relative
+        overflow: visible
+        border 1px solid #ddd
+        border-radius: 15px
+        &:hover
+            box-shadow: 7px 8px 40px 0px rgba(0, 0, 0, 0.3)
+        .motto
+            font-size: 17px
+        .user-detail
+            position absolute
+            width 300px
+            right 20px
+            bottom 0
+            font-size 18px
+            text-align left
+        .avatar
+            position absolute
+            border black 2px solid
+            width 130px
+            height 130px
+            border-radius 50%
+            left 50%
+            margin-left -65px
+            top -50px
+            transition transform .9s
+            &:hover
+                transform: rotate(360deg);
+    .other-thing
+        margin-top 30px
+        width 280px
+        float left
+        .achieve
+            height 34px
+            letter-spacing 2px
+            border-bottom 1px #ddd solid
+            padding 5px 3px 3px 10px
+            font-size 15px
+            font-weight 600
+            span
+                margin-left 5px
+        .charts
+            height 320px
+            width 100%
+            margin-top 10px
+    .title
+        border-bottom 1px #ddd solid
+        padding 3px 3px 3px 10px
+        background #EEEEEE
+        width 100%
+        font-size 15px
+        font-weight 600
+    .submissions
+        width 660px
+        float right
+        margin-top 30px
+        font-size 16px
+        padding-bottom 20px
+        table
+            margin-left 10px
+            td
+                border-bottom 1px solid #ddd
+                height 34px
+    .submissions, .other-thing,.recent-charts,.rank-charts
+        border solid #ddd 1px
+        overflow hidden
+        border-radius 15px
+    .recent-charts,.rank-charts
+        width 100%
+        height 350px
+        margin-top 30px

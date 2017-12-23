@@ -65,7 +65,7 @@
                 <div class="user">
                     <Avatar class="avatar" shape="square" size="large" src="/static/avatar.jpg" />
                     <div class="detail">
-                        <h3><router-link :to="{path: '/porfile/'+$store.state.userInfo.uid}">{{$store.state.userInfo.nickname}}</router-link></h3>
+                        <h3><router-link :to="{path: '/profile/'+$store.state.userInfo.uid}">{{$store.state.userInfo.nickname}}</router-link></h3>
                         <p>
                             <span>提交 {{$store.state.userInfo.submit_times}}</span>
                             <span>提交 {{$store.state.userInfo.ac_times}}</span>

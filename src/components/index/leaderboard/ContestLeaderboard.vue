@@ -40,11 +40,23 @@ export default {
                     key: 'score'
                 },
                 {
+                    title: '完成题数',
+                    key: 'finished_problems'
+                },
+                {
+                    title: '提交',
+                    key: 'submit_times'
+                },
+                {
+                    title: 'AC',
+                    key: 'ac_times'
+                },
+                {
                     title: '总耗时',
                     render: (h, param) => {
                         return Math.ceil(param.row.used_time/1000/60)+'分钟'
                     }
-                }
+                },
             ],
             data: [],
             meta: null

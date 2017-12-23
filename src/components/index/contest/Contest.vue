@@ -14,6 +14,7 @@
 						</Tooltip>
 					</td>
 					<td>状态</td>
+                    <td>类型</td>
 					<td>举办者</td>
 					<td>开始时间</td>
 					<td>操作</td>
@@ -28,14 +29,17 @@
                             <router-link :to="{path: '/contest/'+item.cid}" :class="{official: item.official==1}">{{item.name}}</router-link>
                         </td>
 						<td>
-                            <Tag v-if="getContestStatus(item.startTime, item.endTime) == 0" color="yellow" style="cursor: default" type="dot">即将开始</Tag>
-                            <Tag v-else-if="getContestStatus(item.startTime, item.endTime) == 1" color="green" style="cursor: default" type="dot">进行中</Tag>
+                            <Tag v-if="getContestStatus(item.start_time, item.end_time) == 0" color="yellow" style="cursor: default" type="dot">即将开始</Tag>
+                            <Tag v-else-if="getContestStatus(item.start_time, item.end_time) == 1" color="green" style="cursor: default" type="dot">进行中</Tag>
                             <Tag v-else color="red" style="cursor: default" type="dot">已结束</Tag>
+                        </td>
+                        <td>
+                            <ContestType :type="item.type" :total_time="item.total_time"></ContestType>
                         </td>
 						<td>
                             <router-link :to="{path: '/profile/'+item.owner}">{{item.nickname}}</router-link>
                         </td>
-						<td>{{getTime(item.startTime)}}</td>
+						<td>{{getTime(item.start_time)}}</td>
 						<td>
                             <router-link :to="{path: '/contest/'+item.cid}">参加</router-link>
                         </td>
@@ -50,6 +54,7 @@
 <script>
 import util from '@/util'
 import format from 'date-fns/format'
+import ContestType from '@/components/common/ContestType'
 
 export default {
     created() {
@@ -88,6 +93,9 @@ export default {
         getTime(time) {
             return format(new Date(time), 'YYYY-MM-DD HH:mm:ss')
         }
+    },
+    components: {
+        ContestType
     }
 }
 </script>

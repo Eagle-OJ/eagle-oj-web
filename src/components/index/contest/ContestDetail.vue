@@ -29,8 +29,7 @@
             <div class="mode-title">模式说明<div style="width: 70%;border: 2px gray solid;margin: 0 auto"></div></div>
             <div class="contest-mode">
                 本次比赛：
-                <Tag color="blue">{{getContestType(data.type)}}</Tag>
-                <Tag color="green">{{getContestTimeType(data.type, data.total_time)}}</Tag>
+                <ContestType :type="data.type" :total_time="data.total_time"></ContestType>
             </div>
             <div class="mode-des">
                 <p><b>ACM模式</b> 如果题目的一个测试点错误，则判整体都是错误</p>
@@ -47,8 +46,9 @@
 
 <script>
 import format from 'date-fns/format'
-import util from '@/util'
+import Util from '@/util'
 import CountDown from '@/components/index/contest/CountDown'
+import ContestType from '@/components/common/ContestType'
 export default {
     created() {
         this.getContest()
@@ -56,6 +56,7 @@ export default {
     },
     data() {
         return {
+            util: Util,
             data: {},
             isEnter: false,
             password: null
@@ -136,12 +137,6 @@ export default {
                 return 'closed'
             }
         },
-        getContestTimeType(type, totalTime) {
-            return util.getContestTimeType(type, totalTime)
-        },
-        getContestType(type) {
-            return util.getContestType(type)
-        }
     },
     computed: {
         getCid() {
@@ -158,7 +153,8 @@ export default {
         }
     },
     components: {
-        CountDown
+        CountDown,
+        ContestType
     }
 }
 </script>

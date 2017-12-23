@@ -67,6 +67,10 @@ Vue.prototype.$getUrl = function(url) {
     return store.state.setting.oss_url+url
 }
 
+Vue.prototype.$getAvatar = function(aid) {
+    return 'http://localhost:8080/avatar?aid='+aid
+}
+
 Vue.prototype.$getLang = function(text) {
     return store.state.setting.lang[text]
 }
