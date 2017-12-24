@@ -1,7 +1,7 @@
 <template>
 	<div class="description">
 		<Row :gutter="5" class="content">
-            <Alert v-if="contest.status!=1" show-icon type="error">本比赛已经不得参加！</Alert>
+            <Alert v-if="contest && contest.status!=1" show-icon type="error">本比赛已经不得参加！</Alert>
 			<Col span="18" class="left">
 				<div>
 					<h2>描述</h2>
@@ -52,7 +52,7 @@
 			</div>
 			<div class="submit">
 				<Button type="ghost" shape="circle" icon="play" style="margin-right:5px" @click="runTest" :loading="isSubmit">测试运行</Button>
-				<Button type="primary" shape="circle" icon="upload" @click="submitCode(false)" :loading="isSubmit" :disabled="contest.status!=1">提交代码</Button>
+				<Button type="primary" shape="circle" icon="upload" @click="submitCode(false)" :loading="isSubmit" :disabled="contest!=null && contest.status!=1">提交代码</Button>
 			</div>
 		</Row>
 

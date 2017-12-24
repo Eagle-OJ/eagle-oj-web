@@ -40,7 +40,7 @@ import Difficult from '@/components/common/Difficult'
 export default {
     created() {
         this.getProblem()
-        if(this.getPid > 0) {
+        if(this.getCid > 0) {
             this.getContest()
         }
     },
@@ -63,7 +63,7 @@ export default {
                 owner: 0,
                 nickname: 0,
             },
-            contest: {},
+            contest: null,
             tags: []
         }
     },

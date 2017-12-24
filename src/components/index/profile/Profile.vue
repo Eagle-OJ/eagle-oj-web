@@ -21,57 +21,43 @@
 			</div>
             <img class="avatar" :src="$getAvatar(this.profile.avatar)">
 		</div>
-		<div class="other-thing">
-			<div class="title"><span>个人成就</span></div>
-			<div class="achieve">
-                <span>
-                    <Icon type="edit" style="font-size: 15px;margin-right: 8px;"></Icon>完成题目
+        <Row class="middle" :gutter="20">
+            <Col span="9">
+                <Card class="left">
+                    <p slot="title">
+                        提交次数
+                        <Badge v-if="profile!=null" :count="profile.submit_times"></Badge>
+                    </p>
+                    <div class="charts">
+                        <canvas ref="timesChart" width="250" height="250"></canvas>
+                    </div>
+                </Card>
+            </Col>
+            <Col span="15">
+                <Card class="right">
+                    <p slot="title">最近做题</p>
+                    <ul>
+                        <li v-for="item in userProblems" :key="item.pid">
+                            <router-link :to="{path: '/problem/'+item.pid}">                            
+                                {{item.title}}
+                            </router-link>
+                            <ProblemResult style="float: right; margin-top:6px" :result="item.status"></ProblemResult>
+                        </li>
+                    </ul>
+                </Card>
+            </Col>
+        </Row>
+		
+        <Card class="user_log">
+            <p slot="title">提交统计</p>
+            <p>
+                <span style="float: right">
+                    <Button size="small" type="info" @click="getUserLog('week')">近1星期</Button>
+                    <Button size="small" type="info" @click="getUserLog('month')">近1月</Button>
                 </span>
-				<span style="margin-left: 90px">
-                    <Badge count="20/600"></Badge>
-                </span>
-			</div>
-			<div class="charts">
-				<canvas id="myChart" width="400" height="400"></canvas>
-			</div>
-		</div>
-		<div class="submissions">
-			<div class="title"><span>最近提交</span></div>
-			<div>
-				<table cellpadding="0" cellspacing="0">
-					<tr v-for="i in 9">
-						<td width="300px">A+B problem</td>
-						<td width="200px">
-							2017-01-01
-						</td>
-						<td width="200px">
-							<Tag color="green" style="margin-right: 20px">java</Tag>
-							<Tag color="red">Fail</Tag>
-						</td>
-					</tr>
-					<tr>
-						<td width="300px">A+B problem</td>
-						<td width="200px">
-							2017-01-01
-						</td>
-						<td width="200px">
-							<Tag color="green" style="margin-right: 20px">java</Tag>
-							<Tag color="blue">Accpet</Tag>
-						</td>
-					</tr>
-				</table>
-			</div>
-		</div>
-		<div style="clear: both"></div>
-		<div class="recent-charts">
-			<div class="title"><span>提交统计</span></div>
-			<canvas id="liner" width="680" height="200"></canvas>
-		</div>
-		<div class="rank-charts">
-			<div class="title">Rank积分</div>
-			<canvas id="rank-liner" width="680" height="220"></canvas>
-		</div>
-		<div style="clear: both"></div>
+            </p>
+            <canvas ref="logChart" width="700" height="280"></canvas>
+        </Card>
 	</div>
 </template>
 
@@ -79,53 +65,111 @@
 <script>
 import Chart from 'chart.js'
 import Util from '@/util'
+import ProblemResult from '@/components/common/ProblemResult'
 export default {
     created() {
-        this.getUserProfile()
+        this.getUserProblem()
     },
     mounted() {
-        this.doughnut();
-        this.recentSub();
-        this.rankline();
+        this.mountLogChart()
+        this.getUserProfile()
+        this.getUserLog('week')
     },
     data() {
         return {
+            util: Util,
             profile: null,
-            util: Util
+            userProblems: [],
+            timesChart: null,
+            logData: {
+                label: [],
+                AC: [],
+                CE: [],
+                RTE: [],
+                WA: [],
+                TLE: [],
+            },
+            logChart: null
         }
     },
     methods: {
         getUserProfile() {
             this.$http.get('/profile/'+this.getUid).then(res => {
                 this.profile = res.data
+                this.mountTimesChart()
             }).catch(res => {
                 this.$Message.error(res.message)
             })
         },
-        doughnut() {
-            let ctx = document.getElementById('myChart').getContext('2d');
-            let chart = new Chart(ctx, {
-                // The type of chart we want to create
+        getUserProblem() {
+            this.$http.get('/problem_user', {
+                params: {
+                    uid: this.getUid,
+                    page: 1,
+                    page_size: 10
+                }
+            }).then(res => {
+                this.userProblems = res.data.data
+            })
+        },
+        getUserLog(type) {
+            this.logData.label = []
+            this.logData.AC = []
+            this.logData.CE = []
+            this.logData.RTE = []
+            this.logData.WA = []
+            this.logData.TLE = []
+            if(type == 'week') {
+                this.logData.title = '最近一星期'
+            } else {
+                this.logData.title = '最近一月'
+            }
+            this.$http.get('/user_log', {
+                params: {
+                    uid: this.getUid,
+                    time: type
+                }
+            }).then(res => {
+                let data = res.data
+                for(let i=0; i<data.length; i++) {
+                    let log = data[i]
+                    this.logData.label.push(log.date)
+                    this.logData.AC.push(log.ac_times)
+                    this.logData.CE.push(log.ce_times)
+                    this.logData.RTE.push(log.rte_times)
+                    this.logData.WA.push(log.wa_times)
+                    this.logData.TLE.push(log.tle_times)
+                }
+                this.updateLogChart()
+            })
+        },
+        mountTimesChart() {
+            this.timesChart = new Chart(this.$refs.timesChart, {
                 type: 'doughnut',
-
-                // The data for our dataset
                 data: {
-                    labels: ["Accept", "TLE", "Wrong Answer", "Other", "Runtime Error"],
+                    labels: [
+						Util.convertProblemStatus('AC'),
+						Util.convertProblemStatus('CE'),
+						Util.convertProblemStatus('RTE'),
+						Util.convertProblemStatus('TLE'),
+						Util.convertProblemStatus('WA')
+					],
                     datasets: [{
-                        label: "My First dataset",
-                        backgroundColor: [
-                            '#4bc0c0',
-                            '#ff6384',
-                            '#ffcd56',
-                            '#36a2eb',
-                            '#ff9f40',
-                        ],
-                        borderColor: 'white',
-                        data: [10, 15, 15, 20, 40],
-                    }]
+						data: [
+							this.profile.ac_times,
+							this.profile.ce_times,
+							this.profile.rte_times,
+							this.profile.tle_times,
+							this.profile.wa_times],
+						backgroundColor: [
+							Util.getProblemStatusColor('AC'),
+							Util.getProblemStatusColor('CE'),
+							Util.getProblemStatusColor('RTE'),
+							Util.getProblemStatusColor('TLE'),
+							Util.getProblemStatusColor('WA')
+						],
+					}],
                 },
-
-                // Configuration options go here
                 options: {
                     responsive: true,
                     legend: {
@@ -142,53 +186,15 @@ export default {
                         animateRotate: true
                     },
                 }
-            });
+            })
         },
-        recentSub(){
-            let ctx = document.getElementById('liner').getContext('2d');
-            let chart = new Chart(ctx, {
+        mountLogChart() {
+            this.logChart = new Chart(this.$refs.logChart, {
                 // The type of chart we want to create
                 type: 'line',
-                data: {
-                    labels: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
-                    datasets: [{
-                            label: "Accept",
-                            backgroundColor:"#0099FF",
-                            borderColor: '#0099FF',
-                            data: [0, 10, 5, 2, 20, 30, 45],
-                            pointBackgroundColor:'#0099FF',
-                            pointRadius:4,
-                            fill:false
-                        },
-                        {
-                            label: "Wrong Answer",
-                            backgroundColor:"#FF0033",
-                            borderColor: '#FF0033',
-                            data: [30, 12, 9, 8, 21, 42, 17],
-                            pointBackgroundColor:'#FF0033',
-                            pointRadius:4,
-                            fill:false,
-                            borderDash: [5, 5],
-                        },
-                        {
-                            label: "Submission",
-                            backgroundColor: "#339900",
-                            borderColor: '#339900',
-                            data: [30, 22, 14, 19, 41, 17, 23],
-                            pointBackgroundColor: '#339900',
-                            pointRadius: 4,
-                            fill:false
-                        }]
-                },
-
                 // Configuration options go here
                 options: {
                     responsive: true,
-                    title:{
-                        display: true,
-                        text:'一周活动',
-                        fontSize:16
-                    },
                     tooltips: {
                         mode: 'index',
                         intersect: false,
@@ -200,78 +206,72 @@ export default {
                     scales: {
                         yAxes: [{
                             display: true,
+                            ticks: {
+                                beginAtZero:true
+                            },
                             scaleLabel: {
                                 display: true,
-                                labelString: '分数'
+                                labelString: '次数'
                             }
                         }]
-                    }
+                    },
                 }
             });
         },
-        rankline(){
-            let ctx = document.getElementById('rank-liner').getContext('2d');
-            let chart = new Chart(ctx, {
-                // The type of chart we want to create
-                type: 'line',
-
-                // The data for our dataset
-                data: {
-                    labels: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
-                    datasets: [{
-                        label: "Score",
-                        backgroundColor: '#ff9f40',
-                        borderColor: '#ff9f40',
-                        data: [1800, 2100, 2000, 2300, 2200, 1999, 2000],
-                        fill:false
-                    },]
+        updateLogChart() {
+            this.logChart.options.title = {
+                display: true,
+                text: this.logData.title,
+                fontSize:16
+            },
+            this.logChart.data.labels = this.logData.label
+            this.logChart.data.datasets = [
+                {
+                    label: Util.convertProblemStatus('AC'),
+                    backgroundColor: Util.getProblemStatusColor('AC'),
+                    borderColor: Util.getProblemStatusColor('AC'),
+                    data: this.logData.AC,
+                    fill:false
                 },
-
-                // Configuration options go here
-                options: {
-                    responsive: true,
-                    tooltips: {
-                        mode: 'index',
-                        intersect: false,
-                    },
-                    hover: {
-                        mode: 'nearest',
-                        intersect: true
-                    },
-                    scales: {
-                        yAxes: [{
-                            display: true,
-                            scaleLabel: {
-                                display: true,
-                                labelString: 'score'
-                            },
-                            ticks: {
-                                max: 2500,
-                                min: 1800,
-                                stepSize: 100
-                            }
-                        }],
-                        xAxes: [{
-                            display: true,
-                            time: {
-                                unit: 'second'
-                            },
-                            ticks: {
-                                callback: function(dataLabel, index) {
-                                    // Hide the label of every 2nd dataset. return null to hide the grid line too
-                                    return index % 2 === 0 ? dataLabel : '';
-                                }
-                            }
-                        }]
-                    }
+                {
+                    label: Util.convertProblemStatus('WA'),
+                    backgroundColor: Util.getProblemStatusColor('WA'),
+                    borderColor: Util.getProblemStatusColor('WA'),
+                    data: this.logData.WA,
+                    fill:false
                 },
-            });
+                {
+                    label: Util.convertProblemStatus('RTE'),
+                    backgroundColor: Util.getProblemStatusColor('RTE'),
+                    borderColor: Util.getProblemStatusColor('RTE'),
+                    data: this.logData.RTE,
+                    fill:false
+                },
+                {
+                    label: Util.convertProblemStatus('TLE'),
+                    backgroundColor: Util.getProblemStatusColor('TLE'),
+                    borderColor: Util.getProblemStatusColor('TLE'),
+                    data: this.logData.TLE,
+                    fill:false
+                },
+                {
+                    label: Util.convertProblemStatus('CE'),
+                    backgroundColor: Util.getProblemStatusColor('CE'),
+                    borderColor: Util.getProblemStatusColor('CE'),
+                    data: this.logData.CE,
+                    fill:false
+                },
+            ]
+            this.logChart.update()
         }
     },
     computed: {
         getUid() {
             return this.$route.params.uid
         }
+    },
+    components: {
+        ProblemResult
     }
 }
 </script>
