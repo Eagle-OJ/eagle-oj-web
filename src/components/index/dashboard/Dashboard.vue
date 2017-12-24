@@ -68,7 +68,7 @@
                         <h3><router-link :to="{path: '/profile/'+$store.state.userInfo.uid}">{{$store.state.userInfo.nickname}}</router-link></h3>
                         <p>
                             <span>提交 {{$store.state.userInfo.submit_times}}</span>
-                            <span>提交 {{$store.state.userInfo.ac_times}}</span>
+                            <span>通过 {{$store.state.userInfo.ac_times}}</span>
                             <span>AC {{util.getACRate($store.state.userInfo.ac_times,$store.state.userInfo.submit_times)}}</span>
                         </p>
                     </div>

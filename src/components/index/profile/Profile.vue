@@ -1,7 +1,7 @@
 <template>
 	<div id="container">
-		<div class="user-info" v-if="profile!=null">
-			<div class="nickname">{{profile.nickname}}
+        <Card class="user-info" v-if="profile!=null">
+            <div class="nickname">{{profile.nickname}}
                 <Icon type="male" v-if="profile.gender==1" color="#2d8cf0"></Icon>
                 <Icon type="female" v-else-if="profile.gender==2" color="hotpink"></Icon>
                 <Icon type="transgender" v-else color="#80848f"></Icon>
@@ -20,7 +20,7 @@
 				</Row>
 			</div>
             <img class="avatar" :src="$getAvatar(this.profile.avatar)">
-		</div>
+        </Card>
         <Row class="middle" :gutter="20">
             <Col span="9">
                 <Card class="left">
@@ -67,13 +67,10 @@ import Chart from 'chart.js'
 import Util from '@/util'
 import ProblemResult from '@/components/common/ProblemResult'
 export default {
-    created() {
-        this.getUserProblem()
-    },
     mounted() {
         this.mountLogChart()
-        this.getUserProfile()
-        this.getUserLog('week')
+        this.mountTimesChart()
+        this.initial()
     },
     data() {
         return {
@@ -93,10 +90,15 @@ export default {
         }
     },
     methods: {
+        initial() {
+            this.getUserProblem()
+            this.getUserProfile()
+            this.getUserLog('week')
+        },
         getUserProfile() {
             this.$http.get('/profile/'+this.getUid).then(res => {
                 this.profile = res.data
-                this.mountTimesChart()
+                this.updateTimesChart()
             }).catch(res => {
                 this.$Message.error(res.message)
             })
@@ -154,21 +156,7 @@ export default {
 						Util.convertProblemStatus('TLE'),
 						Util.convertProblemStatus('WA')
 					],
-                    datasets: [{
-						data: [
-							this.profile.ac_times,
-							this.profile.ce_times,
-							this.profile.rte_times,
-							this.profile.tle_times,
-							this.profile.wa_times],
-						backgroundColor: [
-							Util.getProblemStatusColor('AC'),
-							Util.getProblemStatusColor('CE'),
-							Util.getProblemStatusColor('RTE'),
-							Util.getProblemStatusColor('TLE'),
-							Util.getProblemStatusColor('WA')
-						],
-					}],
+                    datasets: [],
                 },
                 options: {
                     responsive: true,
@@ -188,11 +176,27 @@ export default {
                 }
             })
         },
+        updateTimesChart() {
+            this.timesChart.data.datasets = [{
+                data: [
+                    this.profile.ac_times,
+                    this.profile.ce_times,
+                    this.profile.rte_times,
+                    this.profile.tle_times,
+                    this.profile.wa_times],
+                backgroundColor: [
+                    Util.getProblemStatusColor('AC'),
+                    Util.getProblemStatusColor('CE'),
+                    Util.getProblemStatusColor('RTE'),
+                    Util.getProblemStatusColor('TLE'),
+                    Util.getProblemStatusColor('WA')
+                ],
+            }]
+            this.timesChart.update()
+        },
         mountLogChart() {
             this.logChart = new Chart(this.$refs.logChart, {
-                // The type of chart we want to create
                 type: 'line',
-                // Configuration options go here
                 options: {
                     responsive: true,
                     tooltips: {
@@ -207,7 +211,8 @@ export default {
                         yAxes: [{
                             display: true,
                             ticks: {
-                                beginAtZero:true
+                                beginAtZero:true,
+                                suggestedMax: 10,
                             },
                             scaleLabel: {
                                 display: true,
@@ -268,6 +273,11 @@ export default {
     computed: {
         getUid() {
             return this.$route.params.uid
+        }
+    },
+    watch: {
+        'getUid': function() {
+            this.initial()
         }
     },
     components: {
