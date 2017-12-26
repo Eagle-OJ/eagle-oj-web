@@ -1,0 +1,46 @@
+#container
+    padding-top 65px
+    .user-info
+        width 100%
+        font-size 24px
+        text-align center
+        padding-top 80px
+        position relative
+        overflow: visible
+        margin-bottom: 20px
+        .motto
+            font-size: 17px
+        .user-detail
+            position absolute
+            width 300px
+            right 20px
+            bottom 16px
+            font-size 18px
+            text-align left
+        .avatar
+            position absolute
+            border black 2px solid
+            width 130px
+            height 130px
+            border-radius 50%
+            left 50%
+            margin-left -65px
+            top -50px
+            transition transform .9s
+            &:hover
+                transform: rotate(360deg);
+    .middle
+        margin-bottom: 20px
+        .left
+            .charts
+                height 320px
+                width 100%
+                margin-top 10px
+        .right            
+            ul
+                li
+                    border-bottom: 1px solid #ddd
+                    line-height: 35px
+                &:first-child
+                    border-top: 1px solid #ddd
+

@@ -1,285 +1,290 @@
 <template>
-    <div class="description">
-        <Row :gutter="5" class="content">
-            <Col span="18" class="left">
-                <div>
-                    <h2>描述</h2>
-                    <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Commodi suscipit aut est a maxime, id magnam quisquam obcaecati asperiores sit illum quis harum eius laboriosam temporibus dignissimos deleniti aperiam inventore?</p>
-                </div>
-                <div>
-                    <h2>输入规范</h2>
-                    <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Commodi suscipit aut est a maxime, id magnam quisquam obcaecati asperiores sit illum quis harum eius laboriosam temporibus dignissimos deleniti aperiam inventore?</p>
-                </div>
-                <div>
-                    <h2>输出规范</h2>
-                    <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Commodi suscipit aut est a maxime, id magnam quisquam obcaecati asperiores sit illum quis harum eius laboriosam temporibus dignissimos deleniti aperiam inventore?</p>
-                </div>
-                <div>
-                    <h2>约束</h2>
-                    <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Commodi suscipit aut est a maxime, id magnam quisquam obcaecati asperiores sit illum quis harum eius laboriosam temporibus dignissimos deleniti aperiam inventore?</p>
-                </div>
-                <div class="samples">
-                    <h2>样例</h2>
-                    <p>
-                        <div v-for="i in 3" :key="i">
-<pre>input
-output</pre>
-                        </div>
-                    </p>
-                </div>
-            </Col>
-            <Col span="6" class="right">
-                <div class="contributor">
-                    <span>出题人：</span>
-                    <router-link to="#">EagleOJ</router-link>
-                </div>
-                <Card class="chart">
-                    <div>
-                        <canvas ref="myChart" width="300" height="450"></canvas>
-                    </div>
-                </Card>
-            </Col>
-        </Row>
+	<div class="description">
+		<Row :gutter="5" class="content">
+            <Alert v-if="contest && contest.status!=1" show-icon type="error">本比赛已经不得参加！</Alert>
+			<Col span="18" class="left">
+				<div>
+					<h2>描述</h2>
+					<div id="description"></div>
+				</div>
+				<div>
+					<h2>输入规范</h2>
+					<div id="input_format"></div>
+				</div>
+				<div>
+					<h2>输出规范</h2>
+					<div id="output_format"></div>
+				</div>
+				<div class="samples">
+					<h2>样例</h2>
+					<div v-for="item in problem.samples" class="each">
+						<h5>输入</h5>
+						<pre>{{item.input}}</pre>
+						<h5>输出</h5>
+						<pre>{{item.output}}</pre>
+					</div>
+				</div>
+			</Col>
+			<Col span="6" class="right">
+				<div class="contributor">
+					<span>出题人：</span>
+					<router-link :to="{path: '/profile/'+problem.owner}">{{problem.author}}</router-link>
+				</div>
+				<Card class="chart">
+					<div>
+						<canvas ref="myChart" width="300" height="450"></canvas>
+					</div>
+				</Card>
+			</Col>
+		</Row>
 
-        <Row class="editor">
-            <div class="toolbar">
-                <Select v-model="currentLanguage" style="width:150px;margin-right:10px">
-                    <Option v-for="item in languageList" :value="item.value" :key="item.value">{{ item.label }}</Option>
-                </Select>
-                <Tooltip content="使用以前代码" placement="top">
-                    <Button type="ghost" icon="android-time">回退</Button>
-                </Tooltip>
-            </div>
-            <div id="editor-container">
+		<Row class="editor">
+			<div class="toolbar">
+				<Select v-model="lang" @on-change="changeLang" style="width:150px;margin-right:10px">
+					<Option v-for="item in langList" :value="item" :key="item">{{$getLang(item)}}</Option>
+				</Select>
+				<Tooltip content="使用以前代码" placement="top">
+					<Button type="ghost" icon="android-time">回退</Button>
+				</Tooltip>
+			</div>
+			<div id="editor-container">
 
-            </div>
-            <div class="submit">
-                <Button type="ghost" shape="circle" icon="play" style="margin-right:5px" @click="runTest" :loading="submit.isSubmit">测试运行</Button>
-                <Button type="primary" shape="circle" icon="upload" @click="submitCode(false)" :loading="submit.isSubmit">提交代码</Button>
-            </div>
-        </Row>
+			</div>
+			<div class="submit">
+				<Button type="ghost" shape="circle" icon="play" style="margin-right:5px" @click="runTest" :loading="isSubmit">测试运行</Button>
+				<Button type="primary" shape="circle" icon="upload" @click="submitCode(false)" :loading="isSubmit" :disabled="contest!=null && contest.status!=1">提交代码</Button>
+			</div>
+		</Row>
 
-        <div class="status" v-if="submit.showStatus">
-            <Spin v-if="submit.isSubmit" fix style="font-size: 15px">
-                <Icon type="load-c" size=18 class="icon-loading"></Icon>
-                <div>{{submit.msg}}</div>
-            </Spin>
-        </div>
+		<Modal class="test_case" v-model="testCases.isOpen" ok-text="运行" title="进行测试运行" @on-ok="submitCode(true)">
+			<Alert>至少添加一组测试数据，输入字符串无可不填</Alert>
+			<div class="body">
+				<div class="line" v-for="(item,index) of testCases.data">
+					<div class="input">
+						<Input v-model="item.stdin" placeholder="输入字符串"></Input>
+					</div>
+					<div class="space"></div>
+					<div class="output">
+						<Input v-model="item.stdout" placeholder="期望结果"></Input>
+					</div>
+					<div class="trash">
+						<Icon type="trash-b" @click.native="deleteTestCase(index)" />
+					</div>
+				</div>
+			</div>
+			<p>
+				<Button size="small" @click="addTestCase">添加一组</Button>
+			</p>
+		</Modal>
 
-        <Modal class="test_case" v-model="test_case.isOpen" ok-text="运行" title="进行测试运行" @on-ok="submitCode(true)">
-            <Alert>至少添加一组测试数据，输入字符串无可不填</Alert>
-            <div class="body">
-                <div class="line" v-for="(item,index) of test_case.data">
-                    <div class="input">
-                        <Input v-model="item.input" placeholder="输入字符串"></Input>
-                    </div>
-                    <div class="space"></div>
-                    <div class="output">
-                        <Input v-model="item.output" placeholder="期望结果"></Input>
-                    </div>
-                    <div class="trash">
-                        <Icon type="trash-b" @click.native="deleteTestCase(index)" />
-                    </div>
-                </div>
-            </div>
-            <p>
-                <Button size="small" @click="addTestCase">添加一组</Button>
-            </p>
-        </Modal>
-
-    </div>
+	</div>
 </template>
 
 <script>
 import Chart from 'chart.js'
-
+import Util from '@/util'
+import Cookie from 'js-cookie'
 export default {
-    mounted() {
-        let config = {
-            type: 'doughnut',
-            data: {
-                datasets: [{
-                    data: [1, 2, 3, 4, 5],
-                    backgroundColor: [
-                         '#4bc0c0',
-                         '#ff6384',
-                         '#ffcd56',
-                         '#36a2eb',
-                         '#ff9f40',
-                    ],
-                }],
-                labels: [
-                    "Accepted",
-                    "Wrong Answer",
-                    "Runtime Error",
-                    "TLE",
-                    "Other"
-                ]
+    props: ['cid', 'pid', 'problem', 'contest'],
+    created() {
+        this.langList = this.problem.lang
+    },
+	mounted() {
+	   	this.mountEditor()
+        this.mountQuill()
+        this.mountChart()
+	},
+	data() {
+		return {
+			editor: null,
+			quill: {
+				description: null,
+				inputFormat: null,
+				outputFormat: null
+			},
+			lang: null,
+			langList: [],
+			testCases: {
+				isOpen: false,
+				data: []
             },
-            options: {
-                responsive: true,
-                legend: {
-                    display: true,
-                    labels: {
-                        usePointStyle: true,
-                    }
-                },
-                title: {
-                    display: true,
-                    text: '提 交 记 录'
-                },
-                animation: {
-                    animateScale: true,
-                    animateRotate: true
-                },
-            }
-        };
-        let myChart = new Chart(this.$refs.myChart, config)
+            isSubmit: false
+		}
+	},
+	methods: {
+		changeLang(value) {
+			let editor = this.editor
+			switch(value) {
+				case 'CPP':
+					editor.getSession().setMode("ace/mode/c_cpp")
+					break;
+				case 'C':
+					editor.getSession().setMode("ace/mode/c_cpp")
+					break
+				case 'JAVA8':
+					editor.getSession().setMode("ace/mode/java")
+					break
+				default:
+					editor.getSession().setMode("ace/mode/python")
+			}
+		},
+		runTest() {
+			this.testCases.isOpen = true
+		},
+		submitCode(isTestMode) {
+			let code = this.editor.getValue()
+			if (this.lang == null) {
+				this.$Message.warning('选择编程语言')
+				return
+			}
+			if (code.length==0) {
+				this.$Message.warning('请输入代码')
+				return
+			}
+			let path = this.$route.fullPath
+			let title = this.problem.title
+			if (isTestMode) {
+				// test mode
+				if (this.testCases.data.length==0) {
+					this.$Message.warning('请输入测试数据')
+					return
+                }
+                this.isSubmit = true
+				this.$http.post('/code', {
+					lang: this.lang,
+					source_code: code,
+					test_cases: this.testCases.data
+				}).then(res => {
+					this.$store.commit('addSubmission', {
+						title: title,
+						url: path,
+						id: res.data
+					})
+				}).catch(res => {
+                    this.$Message.error(res.message)
+                }).finally(() => {
+                    this.isSubmit = false
+                })
+			} else {
+                if (! this.$store.state.userInfo.isLogin) {
+                    this.$Message.warning('请先进行登入')
+                    return
+                }
+                this.isSubmit = true
+				this.$http.post('/user/code', {
+                    contest_id: this.cid,
+                    problem_id: this.pid,
+                    lang: this.lang,
+                    source_code: code,
+                }).then(res => {
+                    this.$store.commit('addSubmission', {
+                        title: title,
+                        url: path,
+                        id: res.data
+                    })
+                }).catch(res => {
+                    this.$Message.error(res.message)
+                }).finally(() => {
+                    this.isSubmit = false
+                })
+			}
+		},
+		addTestCase() {
+			let obj = {
+				stdin: '',
+				stdout: ''
+			}
+			this.testCases.data.push(obj)
+		},
+		deleteTestCase(index) {
+			let newArray = []
+			for (let i=0; i<this.testCases.data.length; i++) {
+				if (i != index) {
+					newArray.push(this.testCases.data[i])
+				}
+			}
+			this.testCases.data = newArray
+        },
+		mountChart() {
+			let config = {
+				type: 'doughnut',
+				data: {
+					datasets: [{
+						data: [
+							this.problem.AC,
+							this.problem.CE,
+							this.problem.RTE,
+							this.problem.TLE,
+							this.problem.WA],
+						backgroundColor: [
+							Util.getProblemStatusColor('AC'),
+							Util.getProblemStatusColor('CE'),
+							Util.getProblemStatusColor('RTE'),
+							Util.getProblemStatusColor('TLE'),
+							Util.getProblemStatusColor('WA')
+						],
+					}],
+					labels: [
+						Util.convertProblemStatus('AC'),
+						Util.convertProblemStatus('CE'),
+						Util.convertProblemStatus('RTE'),
+						Util.convertProblemStatus('TLE'),
+						Util.convertProblemStatus('WA')
+					]
+				},
+				options: {
+					responsive: true,
+					legend: {
+						display: true,
+						labels: {
+							usePointStyle: true,
+						}
+					},
+					title: {
+						display: true,
+						text: '提 交 次 数 - '+this.problem.submitTimes+'次'
+					},
+					animation: {
+						animateScale: true,
+						animateRotate: true
+					},
+				}
+			};
+			let myChart = new Chart(this.$refs.myChart, config)
+		},
+		mountQuill() {
+			let config = {
+				theme: 'snow',
+				modules: {
+					toolbar: false,
+					formula: true
+				}
+			}
+			this.quill.description = new Quill(document.getElementById('description'), config)
+			this.quill.description.enable(false)
+			this.quill.description.setContents(this.problem.description)
 
-       let editor = ace.edit('editor-container')
-       editor.setTheme("ace/theme/github");
-       editor.setShowPrintMargin(false)
-       editor.getSession().setMode("ace/mode/python");
-       document.getElementById('editor-container').style.fontSize='14px';
+			this.quill.inputFormat = new Quill(document.getElementById('input_format'), config)
+			this.quill.inputFormat.enable(false)
+			this.quill.inputFormat.setContents(this.problem.description)
+
+			this.quill.outputFormat = new Quill(document.getElementById('output_format'), config)
+			this.quill.outputFormat.enable(false)
+			this.quill.outputFormat.setContents(this.problem.description)
+		},
+		mountEditor() {
+			let editor = ace.edit('editor-container')
+			this.editor = editor
+			editor.setTheme("ace/theme/github");
+			editor.setShowPrintMargin(false)
+			document.getElementById('editor-container').style.fontSize='14px';
+		}
     },
-    data() {
-        return {
-            currentLanguage: '',
-            languageList: [
-                {
-                    label: 'Java1.8',
-                    value: '1'
-                },
-                {
-                    label: 'Java1.8',
-                    value: '1'
-                },
-                {
-                    label: 'Java1.8',
-                    value: '1'
-                },
-                {
-                    label: 'Java1.8',
-                    value: '1'
-                }
-            ],
-            test_case: {
-                isOpen: false,
-                data: []
-            },
-            submit: {
-                showStatus: false,
-                code: '',
-                msg: '加载中',
-                isSubmit: false
-            }
-        }
-    },
-    methods: {
-        runTest() {
-            this.test_case.isOpen = true
-        },
-        submitCode(isTestMode) {
-            this.submit.isSubmit = true
-            this.submit.showStatus = true
-            if (isTestMode) {
-                console.log('test mode')
-            } else {
-                console.log('submit')
-            }
-            setTimeout(()=> {
-                this.submit.isSubmit = false
-            }, 1000)
-        },
-        addTestCase() {
-            let obj = {
-                input: '',
-                output: ''
-            }
-            this.test_case.data.push(obj)
-        },
-        deleteTestCase(index) {
-            let newArray = []
-            for (let i=0; i<this.test_case.data.length; i++) {
-                if (i != index) {
-                    newArray.push(this.test_case.data[i])
-                }
-            }
-            this.test_case.data = newArray
-        }
-    }
 }
 </script>
 
 
 <style lang="stylus" scoped>
-    .content
-        border-bottom 1px solid #e9eaec
-        margin-bottom 10px
-        .left
-            div
-                margin-bottom: 10px
-                p
-                    font-size: 15px
-                &.samples
-                    pre
-                        background #f4faff
-                        margin 5px 0
-                        padding 5px
-        .right
-            .contributor
-                padding 5px
-                margin-bottom 5px
-                font-size 14px
-                span
-                    color #80848f
-                a
-                    color #495060
-                    &:hover
-                        color #5cadff
-    .editor
-        .toolbar
-            margin-bottom 5px
-        #editor-container
-            border 1px solid #dddee1
-            border-radius 1px
-            width 100%
-            height 300px
-        .submit
-            margin-top 10px
-            text-align right
-    .test_case
-        .body
-            margin-bottom 5px
-            .line
-                display: flex
-                margin-bottom 5px
-                .input
-                    flex 10
-                .output
-                    flex 10
-                .trash
-                    flex 2
-                    text-align center
-                    i
-                        font-size 25px
-                        line-height 32px
-                        cursor pointer
-                .space
-                    flex 1
-    .status
-        margin-top 15px
-        min-height 200px
-        border 1px solid #dddee1
-        position relative
-        .icon-loading
-            animation: ani-icon-loading 1s linear infinite;
-        @keyframes ani-icon-loading
-            from
-                transform: rotate(0deg)
-            50%
-                transform: rotate(180deg)
-            to
-                transform: rotate(360deg)
+	@import './description.styl'
 </style>
 

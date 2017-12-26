@@ -14,61 +14,89 @@
 						</Tooltip>
 					</td>
 					<td>状态</td>
+                    <td>类型</td>
 					<td>举办者</td>
-					<td>时间</td>
+					<td>开始时间</td>
 					<td>操作</td>
 				</thead>
 				<tbody>
-					<tr>
-						<td><Icon type="locked"></Icon></td>
-						<td><a href="#" class="official">红鹰杯</a></td>
-						<td><Tag color="yellow" style="cursor: default" type="dot">进行中</Tag></td>
-						<td><a href="#">宁波大红鹰</a></td>
-						<td>2017-01-01</td>
-						<td><a href="#">参加</a></td>
-					</tr>
-					<tr>
-						<td></td>
-						<td><a href="#">红鹰杯</a></td>
-						<td> <Tag color="red" style="cursor: default" type="dot">已结束</Tag></td>
-						<td><a href="#">宁波大红鹰</a></td>
-						<td>2017-01-01</td>
-						<td><a href="#">参加</a></td>
-					</tr>
-					<tr>
-						<td></td>
-						<td><a href="#">红鹰杯</a></td>
-						<td> <Tag color="green" style="cursor: default" type="dot">即将开始</Tag></td>
-						<td><a href="#">宁波大红鹰</a></td>
-						<td>2017-01-01</td>
-						<td><a href="#">参加</a></td>
-					</tr>
-					<tr>
-						<td><Icon type="locked"></Icon></td>
-						<td><a href="#">红鹰杯</a></td>
-						<td> <Tag color="yellow" style="cursor: default" type="dot">进行中</Tag></td>
-						<td><a href="#">宁波大红鹰</a></td>
-						<td>2017-01-01</td>
-						<td><a href="#">参加</a></td>
-					</tr>
-					<tr v-for="i in 10">
-						<td></td>
-						<td><a href="#" title="查看比赛详情">红鹰杯</a></td>
-						<td> <Tag color="red" style="cursor: default" type="dot">已结束</Tag></td>
-						<td><a href="#" title="查看详细资料">宁波大红鹰</a></td>
-						<td>2017-01-01</td>
-						<td><a href="#" title="查看比赛详情">参加</a></td>
-					</tr>
-
+                    <tr v-if="data.length==0">
+                        <td colspan="6" style="text-align:center;color: #80848f">暂无比赛</td>
+                    </tr>
+                    <tr v-for="item in data">
+                        <td><Icon v-if="item.password" type="locked"></Icon></td>
+						<td>
+                            <router-link :to="{path: '/contest/'+item.cid}" :class="{official: item.official==1}">{{item.name}}</router-link>
+                        </td>
+						<td>
+                            <Tag v-if="getContestStatus(item.start_time, item.end_time) == 0" color="yellow" style="cursor: default" type="dot">即将开始</Tag>
+                            <Tag v-else-if="getContestStatus(item.start_time, item.end_time) == 1" color="green" style="cursor: default" type="dot">进行中</Tag>
+                            <Tag v-else color="red" style="cursor: default" type="dot">已结束</Tag>
+                        </td>
+                        <td>
+                            <ContestType :type="item.type" :total_time="item.total_time"></ContestType>
+                        </td>
+						<td>
+                            <router-link :to="{path: '/profile/'+item.owner}">{{item.nickname}}</router-link>
+                        </td>
+						<td>{{getTime(item.start_time)}}</td>
+						<td>
+                            <router-link :to="{path: '/contest/'+item.cid}">参加</router-link>
+                        </td>
+                    </tr>
 				</tbody>
 			</table>
 		</div>
-		<Page :total="40" size="small" show-total style="text-align: right; margin-top: 40px"></Page>
+		<Page :total="this.total" size="small" show-total style="text-align: right; margin-top: 40px"></Page>
     </div>
 </template>
 
 <script>
+import util from '@/util'
+import format from 'date-fns/format'
+import ContestType from '@/components/common/ContestType'
+
 export default {
+    created() {
+        this.getContests(1)
+    },
+    data() {
+        return {
+            pageSize: 10,
+            total: 0,
+            data: []
+        }
+    },
+    methods: {
+        getContests(page) {
+            this.$http.get('/contest?page='+page+'&page_size='+this.pageSize).then(res => {
+                res = res.data
+                this.total = res.total
+                this.data = res.data
+            }).catch(res => {
+                this.$Message.error(res.message)
+            })
+        },
+        getContestStatus(startTime, endTime) {
+            let time = new Date().valueOf()
+            if (time < startTime) {
+                // 即将开始
+                return 0;
+            } else if (time > endTime) {
+                // 已经结束
+                return 2
+            } else {
+                // 正在进行
+                return 1
+            }
+        },
+        getTime(time) {
+            return format(new Date(time), 'YYYY-MM-DD HH:mm:ss')
+        }
+    },
+    components: {
+        ContestType
+    }
 }
 </script>
 
@@ -106,8 +134,6 @@ export default {
 			background #f0f0f4
 	.contests:hover
 		box-shadow: 0px 0px 50px 0px rgba(0, 0, 0, 0.4)
-
-
 </style>
 
 

@@ -14,7 +14,7 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
-    @import 'problem_detail.stylus'
+    @import 'problem_detail.styl'
 </style>
 
 

@@ -6,19 +6,19 @@
 			<span class="time">{{ days }}</span> 天
 			<span class="time">{{ hours }}</span>时
 			<span class="time">{{ minutes }}</span>分
-			<span class="time">{{ seconds }}</span>
+			<span class="time">{{ seconds }}</span> {{getEndText()}}
 		</span>
 		<span v-else>
 			<span class="time">{{ hours }}</span>时
 			<span class="time">{{ minutes }}</span>分
-			<span class="time">{{ seconds }}</span>
+			<span class="time">{{ seconds }}</span> {{getEndText()}}
 		</span>
 	</div>
 </template>
 
 <script>
 	export default {
-		props: ['deadline'],
+		props: ['deadline', 'end_text'],
 		data() {
 			return {
 				infinite: 'false',
@@ -95,7 +95,10 @@
 						clearInterval( vm.timer );
 					}
 				}, 1000 );
-			},
+            },
+            getEndText() {
+                return this.end_text
+            }
 		},
 	};
 </script>
