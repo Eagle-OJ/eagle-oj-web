@@ -22,7 +22,8 @@ const router = new Router({
                     path: '/dashboard',
                     component: () => import('@/components/index/dashboard/Dashboard'),
                     meta: {
-                        title: '主页'
+                        title: '主页',
+                        requireAuth: true
                     }
                 },
                 {
@@ -287,6 +288,7 @@ router.beforeEach((to, from, next) => {
     iView.LoadingBar.start();    
     if(to.matched.some(record => record.meta.requireAuth)) {
         if (!Cookie.get('token')) {
+            iView.Message.warning('请登入')
             next({
                 path: '/login',
                 query: { redirect: to.fullPath }
