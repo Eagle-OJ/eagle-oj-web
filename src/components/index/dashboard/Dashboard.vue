@@ -16,6 +16,32 @@
                             </Col>
                         </Row>
                     </div>
+
+                    <div class="contest" v-if="item.type == 2">
+                        <Row>
+                            <Col span="3" class="img">
+                                <Icon type="trophy" color="#fea116"></Icon>
+                            </Col>
+                            <Col span="21" class="content">
+                                <div class="time">{{getTime(item.create_time)}}</div>
+                                <div class="detail">
+                                    一起来看看<router-link :to="{path: '/contest/'+item.json_content.cid}">{{item.json_content.name}}</router-link>的<router-link :to="{path: '/contest/'+item.json_content.cid+'/leaderboard'}">排行榜</router-link>
+                                </div>
+                                <div class="description">
+                                    前三名：
+                                    <template v-if="item.json_content.rank[0]">
+                                        <Icon type="ribbon-a" color="#c37e00"></Icon><router-link :to="{path: '/profile/'+item.json_content.rank[0].uid}">{{item.json_content.rank[0].nickname}}</router-link>
+                                    </template>
+                                    <template v-if="item.json_content.rank[1]">
+                                        <Icon type="ribbon-a" color="#a1a3a6"></Icon><router-link :to="{path: '/profile/'+item.json_content.rank[1].uid}">{{item.json_content.rank[1].nickname}}</router-link>
+                                    </template>
+                                    <template v-if="item.json_content.rank[2]">
+                                        <Icon type="ribbon-a" color="#78331e"></Icon><router-link :to="{path: '/profile/'+item.json_content.rank[2].uid}">{{item.json_content.rank[2].nickname}}</router-link>
+                                    </template>
+                                </div>
+                            </Col>
+                        </Row>
+                    </div>
                 </template>
                 <div class="sloved">
                     <Row>
@@ -26,25 +52,6 @@
                             <div class="time">14秒前</div>
                             <div class="detail">
                                 <router-link to="/profile/1">Danny</router-link>第一个解出了<router-link to="/problem/1">耳机里的问题</router-link>
-                            </div>
-                        </Col>
-                    </Row>
-                </div>
-                <div class="contest">
-                    <Row>
-                        <Col span="3" class="img">
-                            <Icon type="trophy" color="#fea116"></Icon>
-                        </Col>
-                        <Col span="21" class="content">
-                            <div class="time">14秒前</div>
-                            <div class="detail">
-                                一起来看看<router-link to="/contest/1">大烘焙比赛</router-link>的<router-link to="/leadboard">排行榜</router-link>
-                            </div>
-                            <div class="description">
-                                前三名：
-                                <Icon type="ribbon-a" color="#c37e00"></Icon><router-link to="/profile/1">Danny</router-link>
-                                <Icon type="ribbon-a" color="#a1a3a6"></Icon><router-link to="/profile/1">Danny</router-link>
-                                <Icon type="ribbon-a" color="#78331e"></Icon><router-link to="/profile/1">Danny</router-link>
                             </div>
                         </Col>
                     </Row>

@@ -1,5 +1,5 @@
 <template>
-	<div class="navigation">
+	<div id="navigation" class="navigation">
 		<div id="container">
 			<div class="logo">
                 <router-link to="/">
@@ -59,8 +59,8 @@ export default {
 </script>
 
 
-<style lang="stylus" scoped>
-    .navigation
+<style lang="stylus">
+    #navigation.navigation
         background white
         height 70px
         box-shadow 8px 1px 3px 0 rgba(0,34,77,.1)
@@ -115,6 +115,8 @@ export default {
                 line-height 0
                 height auto
                 float none
+                .ivu-select-dropdown
+                    z-index 1000
 </style>
 
 

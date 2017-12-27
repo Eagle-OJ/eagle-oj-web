@@ -22,9 +22,9 @@
 
 <script>
 export default {
-    props: ['gid'],
+    props: ['gid', 'group'],
     created() {
-        this.getGroup()
+        this.setGroup()
     },
     data() {
         return {
@@ -67,17 +67,12 @@ export default {
                 }
             })
         },
-        getGroup() {
-            this.$http.get('/user/group/'+this.gid).then(res => {
-                res = res.data
-                if (res.password) {
-                    this.form.password = res.password
-                    this.form.isSecret = true
-                }
-                this.form.name = res.name
-            }).catch(res => {
-                this.$Message.error(res.message)
-            })
+        setGroup() {
+            if (this.group.password) {
+                this.form.password = this.group.password
+                this.form.isSecret = true
+            }
+            this.form.name = this.group.name
         }
     }
 }

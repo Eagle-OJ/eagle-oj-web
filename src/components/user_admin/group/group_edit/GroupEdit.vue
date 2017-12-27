@@ -15,9 +15,10 @@
             </MenuItem>
         </Menu>
 
-        <div class="content" style="margin-top: 20px">
+        <div class="content" style="margin-top: 20px; position: relative">
+            <Spin size="large" fix v-if="loading"></Spin>
             <keep-alive>
-                <component :is="getActive" :gid="getGid"></component>
+                <component v-if="group != null" :is="getActive" :gid="getGid" :group="group"></component>
             </keep-alive>
         </div>
     </div>
@@ -27,13 +28,32 @@
 import Description from './Description'
 import Setting from './Setting'
 export default {
+    created() {
+        this.getGroup()
+    },
+    data() {
+        return {
+            loading: false,
+            group: null
+        }
+    },
     methods: {
         goTo(name) {
             if (name == 'back') {
                 this.$router.push('/user/group')
             } else {
-                this.$router.push('/user_admin/group/1/edit?action='+name)
+                this.$router.push('/user_admin/group/'+this.getGid+'/edit?action='+name)
             }
+        },
+        getGroup() {
+            this.loading = true
+            this.$http.get('/user/group/'+this.getGid).then(res => {
+                this.group = res.data
+            }).catch(res => {
+                this.$Message.error(res.message)
+            }).finally(() => {
+                this.loading = false
+            })
         }
     },
     components: {
