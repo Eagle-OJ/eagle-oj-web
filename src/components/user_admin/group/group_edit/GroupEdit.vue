@@ -5,9 +5,13 @@
                 <Icon type="ios-paper"></Icon>
                 小组编辑
             </MenuItem>
+            <MenuItem name="members">
+                <Icon type="ios-paper"></Icon>
+                组员管理
+            </MenuItem>
             <MenuItem name="setting">
                 <Icon type="settings"></Icon>
-                其他
+                设置
             </MenuItem>
             <MenuItem name="back">
                 <Icon type="android-arrow-back"></Icon>
@@ -26,6 +30,7 @@
 
 <script>
 import Description from './Description'
+import Members from './Members'
 import Setting from './Setting'
 export default {
     created() {
@@ -58,6 +63,7 @@ export default {
     },
     components: {
         Description,
+        Members,
         Setting,
     },
     computed: {

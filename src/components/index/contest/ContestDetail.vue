@@ -148,7 +148,7 @@ export default {
             this.getContest()
             this.getContestUserInfo()
         },
-        '$store.userInfo.isLogin': function () {
+        '$store.state.userInfo.isLogin': function () {
             this.getContestUserInfo()
         }
     },

@@ -1,148 +1,159 @@
 <template>
     <div id="container">
-        <div class="group">
-            <div class="left">
-                <div class="holder">
-                    <p>
-                        <Tooltip content="带有皇冠图标的为组长" placement="top">
-                            <Icon type="help-circled" style="margin-right: 8px"></Icon>
-                        </Tooltip>
-                        组员信息
-                    </p>
-
-                    <div class="holder-info">
-                        <img src="/static/captain.png" width="29px" height="18px" style="position:absolute;left: 3px;top:13px">
-                        <img src="/static/touxiang.jpg" width="40px" height="40px" style="position:absolute;left: 40px;top:0px">
-                        <a href="#" title="查看个人资料" style="position:absolute;left: 90px;top:13px">狗蛋狗蛋</a>
+        <Row :gutter="20">
+            <Col span="14" class="left">
+                <Card class="description" v-if="description != null">
+                    <p slot="title">小组介绍</p>
+                    <div class="content">
+                        <p><span class="title">小组名称:</span>{{description.name}}</p>
+                        <p><span class="title">创建时间:</span>{{getTime(description.create_time)}}</p>
+                        <p><span class="title">组长:</span><router-link :to="{path: '/profile/'+description.owner}">{{description.nickname}}</router-link></p>
                     </div>
+                </Card>
+                <div class="join">
+                    <Button key="join" v-if="!isIn" class="button" type="success" size="large" @click="joinGroup">加入小组</Button>
+                    <Button key="quit" v-else class="button" type="error" size="large" @click="quitGroup">退出小组</Button>
                 </div>
-                <div class="members">
-                    <table cellpadding="0" cellspacing="0">
-                        <tr v-for="i in 10">
-                            <td>{{i}}</td>
-                            <td><img src="/static/touxiang.jpg" width="30x" height="30px"></td>
-                            <td><a href="#" title="查看个人资料">Keira Knightley</a></td>
-                        </tr>
-                    </table>
-                    <Page :current="2" :total="50" simple style="text-align: right;margin-top: 10px"></Page>
-                </div>
-            </div>
-
-            <div class="right">
-                <div class="group">
-                    <p>小组说明</p>
-                    <img src="/static/touxiang.jpg" width="100px" height="100px">
-                    <div class="group-info">
-                        小组名称:<span class="group-name">大红鹰第一小组</span><br>
-                        创建时间:<span class="group-time">2017-10-10</span><br>
-                        组长:<span class="captain">狗蛋狗蛋</span>
-                    </div>
-                </div>
-                <div class="no-name">
-                    <button>加入小组<br><span style="font-size: 14px">join </span></button>
-                </div>
-            </div>
-        </div>
-        <div style="clear: both"></div>
+            </Col>
+            <Col span="10" class="right">
+                <Card>
+                    <p slot="title">组员信息</p>
+                    <ul class="members">
+                        <li v-for="item in members">
+                            <img :src="$getUrl(item.url)">
+                            <router-link :to="{path: '/profile/'+item.uid}" title="查看个人资料">{{item.nickname}}</router-link>
+                        </li>
+                    </ul>
+                    <Page :current="1" :total="total" :page-size="pageSize" simple style="text-align: center"></Page>
+                </Card>
+            </Col>
+        </Row>
     </div>
 </template>
 
 <script>
+import Format from 'date-fns/format'
+import cn from 'date-fns/locale/zh_cn'
 export default {
+    created() {
+        this.getGroup()
+        this.judgeIsIn()
+        this.getMembers(1)
+    },
+    data() {
+        return {
+            description: null,
+            members: [],
+            pageSize: 10,
+            total: 0,
+            isIn: false,
+            password: null,
+        }
+    },
+    methods: {
+        getGroup() {
+            this.$http.get('/group/'+this.getGid).then(res => {
+                this.description = res.data
+            })
+        },
+        getMembers(page) {
+            this.$http.get('/group/'+this.getGid+'/members', {
+                params: {
+                    page: page,
+                    page_size: this.pageSize
+                }
+            }).then(res => {
+                this.members = res.data.data
+                this.total = res.data.total
+            })
+        },
+        judgeIsIn() {
+            if(this.$store.state.userInfo.isLogin) {
+                this.$http.get('/user/group/'+this.getGid+'/is_in').then(res => {
+                    this.isIn = res.data
+                }).catch(res => {
+                    this.isIn = false
+                    this.$Message.error(res.message)
+                })
+            }
+        },
+        joinGroup() {
+            if (! this.$store.state.userInfo.isLogin) {
+                this.$Message.warning('请先登入')
+                return
+            }
 
+            if (this.description.password) {
+                this.$Modal.confirm({
+                    render: (h) => {
+                        return h('Input', {
+                            props: {
+                                value: this.value,
+                                autofocus: true,
+                                maxlength: 6,
+                                type: 'password',
+                                placeholder: '请输入密码'
+                            },
+                            on: {
+                                input: (val) => {
+                                    this.password = val;
+                                }
+                            },
+                            
+                        })
+                    },
+                    onOk: () => {
+                        this.doJoinGroup()
+                    },
+                })
+            } else {
+                this.doJoinGroup()
+            }
+        },
+        doJoinGroup() {
+            this.$http.post('/user/group/'+this.getGid+'/enter', {
+                password: this.password
+            }).then(res => {
+                this.$Message.success(res.message)
+                this.isIn = true
+            }).catch(res => {
+                this.$Message.error(res.message)
+            })
+        },
+        quitGroup() {
+            this.$http.delete('/user/group/'+this.getGid+'/user/'+this.$store.state.userInfo.uid).then(res => {
+                this.isIn = false
+                this.$Message.success('退出成功')
+            }).catch(res => {
+                this.$Message.error('退出失败')
+            })
+        },
+        getTime(time) {
+            return Format(new Date(time), 'YYYY-MM-DD', {
+                locale: cn
+            })
+        }
+    },
+    computed: {
+        getGid() {
+            return this.$route.params.gid
+        }
+    },
+    watch: {
+        'getGid': function() {
+            this.getGroup()
+            this.getMembers(1)
+            this.judgeIsIn()
+        },
+        '$store.state.userInfo.isLogin': function () {
+            this.judgeIsIn()
+        }
+    }
 }
 </script>
 
 <style lang="stylus" scoped>
-    .group
-        margin-top 40px
-        .left
-            float left
-            width 30%
-            .holder
-                overflow hidden
-                border-radius 10px
-                border 1px solid #DDD
-                font-size 17px
-                box-shadow 3px 3px 30px 0px rgba(0,0,0,0.15)
-                p
-                    font-size 18px
-                    background #f8f8f9
-                    padding-left 14px
-                    padding-top 5px
-                .holder-info
-                    height: 45px
-                    position relative
-                    a
-                        color  #464c5b
-                        &:hover
-                            text-decoration underline
-                            color #2d8cf0
-            .members
-                padding-left 10px
-                margin-top 10px
-                border 1px solid #ddd
-                font-size 14px
-                width 80%
-                border-radius 10px
-                padding-bottom 10px
-                margin-left 7px
-                td
-                    padding-left 20px
-                    border-bottom 1px #ddd solid
-                    height 45px
-                a
-                    color  #464c5b
-                a:hover
-                    text-decoration underline
-                    color #2d8cf0
-        .right
-            float right
-            width 60%
-            margin-left 100px
-            .group
-                padding 10px 0px 10px 8px
-                margin-top 10px
-                position relative
-                border-left 2px #ddd solid
-                border-bottom 2px #ddd solid
-                border-top 1px #ddd solid
-                border-right 1px #ddd solid
-                box-shadow 3px -3px 20px 0px rgba(0,0,0,0.15)
-                p
-                    padding-left 10px
-                    font-size 20px
-                    font-weight bold
-                    color  #464c5b
-                    width 90px
-                .group-info
-                    margin-top 10px
-                    font-size 17px
-                    position absolute
-                    top 28%
-                    left 30%
-                    line-height 30px
-            .no-name
-                margin-top 30px
-                width 100%
-                height 380px
-                padding-left 40%
-                padding-top 25%
-                background url("/static/button_bg.jpg") no-repeat
-                button
-                    border-radius 10px
-                    padding 10px
-                    width 160px
-                    font-size 17px
-                    letter-spacing 2px
-                    background #2ec866
-                    border none
-                    color white
-                button:hover
-                    background #090
-                    cursor pointer
-                button:focus
-                    outline none
+    @import 'GroupDetail.styl'
 </style>
 
 
