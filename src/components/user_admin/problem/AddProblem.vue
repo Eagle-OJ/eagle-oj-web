@@ -178,7 +178,7 @@ export default {
                 tags: this.form.tags
             }
             this.loading = true
-            this.$http.post('/user/problem', data).then(res => {
+            this.$http.post('/problem', data).then(res => {
                 this.$Message.success(res.message)
                 this.$router.push('/user_admin/problem/'+res.data+"/edit")
             }).catch(res => {

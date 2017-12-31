@@ -22,20 +22,20 @@
                 </Col>
             </Row>
             <Row class="each-sort">
+                <Col span="4" class="left"><h2>公开题目</h2></Col>
+                <Col span="20" class="right">
+                    <Alert v-if="status == 1">管理员审核中</Alert>
+                    <i-switch v-model="isShared">
+                        <span slot="open">开</span>
+                        <span slot="close">关</span>
+                    </i-switch>
+                </Col>
+            </Row>
+            <Row class="each-sort">
                 <Col span="20" offset="4" class="right">
                     <Button @click="updateSetting()">保存设置</Button>
                 </Col>
             </Row>
-        </Row>
-
-        <Row :gutter="10" class="each">
-            <Col span="4" class="left"><h2>公开题目</h2></Col>
-            <Col span="20" class="right">
-                <Alert>公开自己的题目供所有人使用-需要管理员审核</Alert>
-                <Button key="application" v-if="status == 0" type="primary" @click="updateStatus()">申请审核</Button>
-                <Button key="waiting" v-else-if="status == 1" type="default">审核中</Button>
-                <Button key="shared" v-else type="primary" disabled>已经分享</Button>
-            </Col>
         </Row>
     </div>
 </template>
@@ -51,7 +51,8 @@ export default {
             lang: [],
             status: 0,
             time: 1,
-            memory: 1
+            memory: 1,
+            isShared: false,
         }
     },
     methods: {
@@ -61,27 +62,24 @@ export default {
             this.time = problem.time
             this.memory = problem.memory
             this.status = problem.status
+            if (this.status == 1 || this.status == 2) {
+                this.isShared = true
+            } else {
+                this.isShared = false
+            }
         },
         updateSetting() {
-            this.$http.put('/user/problem/'+this.pid+'/setting', {
+            this.$http.put('/problem/'+this.pid+'/setting', {
                 lang: this.lang,
                 time: this.time,
-                memory: this.memory
+                memory: this.memory,
+                is_shared: this.isShared
             }).then(res => {
                 this.$Message.success(res.message)
             }).catch(res => {
                 this.$Message.error(res.message)
             })
         },
-        updateStatus() {
-            let pid = this.pid
-            this.$http.post('/user/problem/'+pid+'/status').then(res => {
-                this.$Message.success(res.message)
-                this.status = 1
-            }).catch(res => {
-                this.$Message.error(res.message)
-            })
-        }
     }
 }
 </script>

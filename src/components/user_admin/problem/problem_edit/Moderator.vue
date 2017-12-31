@@ -12,7 +12,7 @@
                 </div>
                 <ul>
                     <li v-for="item in moderators">
-                        <Avatar :src="$getUrl(item.avatar)" size="large" class="avatar" />
+                        <Avatar :src="$getAvatar(item.avatar)" size="large" class="avatar" />
                         <router-link :to="{path: '/profile/'+item.uid}">{{item.nickname}}</router-link>
                         <Button type="ghost" icon="trash-b" class="delete" @click="deleteModerator(item.uid)">删除</Button>
                     </li>
@@ -26,7 +26,7 @@
 export default {
     props: ['pid'],
     created() {
-        this.setModerators()
+        this.getModerators()
     },
     data() {
         return {
@@ -35,15 +35,15 @@ export default {
         }
     },
     methods: {
-        setModerators() {
-            this.$http.get('/problem/'+this.pid+"/moderators").then(res => {
+        getModerators() {
+            this.$http.get('/problem/'+this.pid+'/moderators').then(res => {
                 this.moderators = res.data
             }).catch(res => {
                 this.$Message.error(res.message)
             })
         },
         deleteModerator(uid) {
-            this.$http.delete('/user/problem/'+this.pid+"/moderator/"+uid).then(res => {
+            this.$http.delete('/problem/'+this.pid+"/moderator/"+uid).then(res => {
                 this.$Message.success(res.message)
                 this.getModerators()
             }).catch(res => {
@@ -56,7 +56,7 @@ export default {
                 return
             }
 
-            this.$http.put('/user/problem/'+this.pid+"/moderators", {
+            this.$http.post('/problem/'+this.pid+"/moderator", {
                 email: this.email
             }).then(res => {
                 this.$Message.success(res.message)

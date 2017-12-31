@@ -130,7 +130,7 @@ export default {
                 this.$Message.warning('输出不得为空')
                 return
             }
-            this.$http.post('/user/problem/'+this.pid+"/test_cases", {
+            this.$http.post('/problem/'+this.pid+"/test_cases", {
                 stdin: this.test_case.stdin,
                 stdout: this.test_case.stdout,
                 strength: this.test_case.strength
@@ -151,7 +151,7 @@ export default {
             this.test_case.strength = this.data[index].strength
         },
         doEditTestCase() {
-            this.$http.put('/user/problem/'+this.pid+'/test_case/'+this.test_case.tid, {
+            this.$http.put('/problem/'+this.pid+'/test_case/'+this.test_case.tid, {
                 stdin: this.test_case.stdin,
                 stdout: this.test_case.stdout,
                 strength: this.test_case.strength
@@ -168,7 +168,7 @@ export default {
                 title: '确认删除',
                 content: '<p>删除此测试用例不会存在</p>',
                 onOk: () => {
-                    this.$http.delete('/user/problem/'+this.pid+"/test_case/"+tid).then(res => {
+                    this.$http.delete('/problem/'+this.pid+"/test_case/"+tid).then(res => {
                         this.$Message.success(res.message)
                         this.getTestCases()
                     }).catch(res => {
@@ -178,7 +178,7 @@ export default {
             });
         },
         getTestCases() {
-            this.$http.get('/user/problem/'+this.pid+'/test_cases').then(res => {
+            this.$http.get('/problem/'+this.pid+'/test_cases').then(res => {
                 this.data = res.data
             }).catch(res => {
                 this.$Message.error(res.message)

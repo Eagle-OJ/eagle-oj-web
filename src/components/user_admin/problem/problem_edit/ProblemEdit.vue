@@ -62,7 +62,7 @@ export default {
         },
         getProblem() {
             this.loading = true
-            this.$http.get('/user/problem/'+this.getPid).then(res => {
+            this.$http.get('/problem/'+this.getPid).then(res => {
                 this.problem = res.data
             }).catch(res => {
                 this.$Message.error(res.message)

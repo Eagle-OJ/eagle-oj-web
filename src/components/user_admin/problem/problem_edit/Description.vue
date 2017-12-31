@@ -175,7 +175,7 @@ export default {
                 tags: this.form.tags
             }
             this.loading = true
-            this.$http.put('/user/problem/'+this.pid, data).then(res => {
+            this.$http.put('/problem/'+this.pid, data).then(res => {
                 this.$Message.success(res.message)
             }).catch(res => {
                 this.$Message.error(res.message)

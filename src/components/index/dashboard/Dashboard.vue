@@ -145,7 +145,7 @@ export default {
     },
     methods: {
         getMessage(page) {
-            this.$http.get('/user/message', {
+            this.$http.get('/message', {
                 params: {
                     page: page,
                     page_size: this.message.pageSize
