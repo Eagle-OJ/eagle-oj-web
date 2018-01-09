@@ -6,7 +6,7 @@
             </h2>
             <Table :columns="columns" :data="data"></Table>
             <div class="pager" style="text-align: center; margin-top: 10px">
-                <Page :total="total" :page-size="pageSize" size="small" show-total @on-change="getUserContests"></Page>
+                <Page :total="total" :page-size="pageSize" show-total @on-change="getUserContests" simple></Page>
             </div>
         </div>
     </div>

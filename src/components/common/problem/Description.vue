@@ -28,7 +28,7 @@
 			<Col span="6" class="right">
 				<div class="contributor">
 					<span>出题人：</span>
-					<router-link :to="{path: '/profile/'+problem.owner}">{{problem.author}}</router-link>
+					<router-link :to="{path: '/profile/'+problem.owner}">{{problem.nickname}}</router-link>
 				</div>
 				<Card class="chart">
 					<div>

@@ -55,7 +55,7 @@ export default {
                         password = this.form.password
                     }
                     this.loading = true
-                    this.$http.put('/user/group/'+this.gid, {name: this.form.name, password: password}).then(res => {
+                    this.$http.put('/group/'+this.gid, {name: this.form.name, password: password}).then(res => {
                         this.$Message.success(res.message)
                     }).catch(res => {
                         this.$Message.error(res.message)

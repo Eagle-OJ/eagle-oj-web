@@ -52,7 +52,11 @@ export default {
         },
         getGroup() {
             this.loading = true
-            this.$http.get('/user/group/'+this.getGid).then(res => {
+            this.$http.get('/group/'+this.getGid, {
+                params: {
+                    isDetail: true
+                }
+            }).then(res => {
                 this.group = res.data
             }).catch(res => {
                 this.$Message.error(res.message)
@@ -73,6 +77,11 @@ export default {
         },
         getGid() {
             return this.$route.params.gid
+        }
+    },
+    watch: {
+        'getGid': function() {
+            this.getGroup()
         }
     }
 }

@@ -52,7 +52,7 @@ export default {
                         password = this.form.password
                     }
                     this.loading = true
-                    this.$http.post('/user/group', {name: this.form.name, password: password}).then(res => {
+                    this.$http.post('/group', {name: this.form.name, password: password}).then(res => {
                         this.$router.push('/user_admin/group/'+res.data+"/edit")
                         this.$Message.success(res.message)
                     }).catch(res => {

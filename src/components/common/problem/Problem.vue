@@ -78,7 +78,7 @@ export default {
                 url = '/problem/'+this.getPid
             }
             this.$http.get(url).then(res => {
-                let data = res.data.problem
+                let data = res.data
                 this.problem.title = data.title
 				this.problem.description = data.description
 				this.problem.inputFormat = data.input_format
@@ -92,7 +92,7 @@ export default {
 				this.problem.TLE = data.tle_times
 				this.problem.WA = data.wa_times
 				this.problem.owner = data.owner
-                this.problem.author = res.data.author
+                this.problem.nickname = data.nickname
 			}).catch(res => {
                 this.$Message.error(res.message)
             }).finally(() => {

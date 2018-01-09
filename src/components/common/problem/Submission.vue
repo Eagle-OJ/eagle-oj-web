@@ -87,7 +87,7 @@ export default {
                 return
             }
             this.loading = true
-            this.$http.get('/user/code', {
+            this.$http.get('/submissions', {
                 params: {
                     cid: this.cid,
                     pid: this.pid,

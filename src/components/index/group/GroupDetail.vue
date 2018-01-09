@@ -20,7 +20,7 @@
                     <p slot="title">组员信息</p>
                     <ul class="members">
                         <li v-for="item in members">
-                            <img :src="$getUrl(item.url)">
+                            <img :src="$getAvatar(item.avatar)">
                             <router-link :to="{path: '/profile/'+item.uid}" title="查看个人资料">{{item.nickname}}</router-link>
                         </li>
                     </ul>
@@ -69,7 +69,7 @@ export default {
         },
         judgeIsIn() {
             if(this.$store.state.userInfo.isLogin) {
-                this.$http.get('/user/group/'+this.getGid+'/is_in').then(res => {
+                this.$http.get('/group/'+this.getGid+'/is_in').then(res => {
                     this.isIn = res.data
                 }).catch(res => {
                     this.isIn = false
@@ -111,18 +111,20 @@ export default {
             }
         },
         doJoinGroup() {
-            this.$http.post('/user/group/'+this.getGid+'/enter', {
+            this.$http.post('/group/'+this.getGid+'/enter', {
                 password: this.password
             }).then(res => {
                 this.$Message.success(res.message)
                 this.isIn = true
+                this.getMembers(1)
             }).catch(res => {
                 this.$Message.error(res.message)
             })
         },
         quitGroup() {
-            this.$http.delete('/user/group/'+this.getGid+'/user/'+this.$store.state.userInfo.uid).then(res => {
+            this.$http.delete('/group/'+this.getGid+'/user/'+this.$store.state.userInfo.uid).then(res => {
                 this.isIn = false
+                this.getMembers(1)
                 this.$Message.success('退出成功')
             }).catch(res => {
                 this.$Message.error('退出失败')

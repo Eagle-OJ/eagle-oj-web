@@ -1,5 +1,19 @@
 <template>
     <div class="setting">
+        <Row>
+            <Col span="5">发送通知</Col>
+            <Col span="19">
+                <p>xxx</p>
+                <p>fa song</p>
+            </Col>
+        </Row>
+        <Row>
+            <Col span="5">拉入比赛</Col>
+            <Col span="19">
+                <p>xxx</p>
+                <p>拉入</p>
+            </Col>
+        </Row>
         <h1>创建小组</h1>
         <Form ref="form" :model="form" :label-width="80" :rules="validateRule">
             <FormItem label="小组名称" prop="name">
