@@ -138,13 +138,6 @@ const router = new Router({
                     }
                 }, 
                 {
-                    path: 'history',
-                    component: () => import('@/components/user/history/History'),
-                    meta: {
-                        title: '我的记录'
-                    }
-                },
-                {
                     path: 'problem',
                     component: () => import('@/components/user/problem_admin/ProblemAdmin'),
                     meta: {

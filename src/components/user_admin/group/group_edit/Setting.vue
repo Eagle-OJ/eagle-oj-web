@@ -1,81 +1,71 @@
 <template>
     <div class="setting">
-        <Row>
-            <Col span="5">发送通知</Col>
-            <Col span="19">
-                <p>xxx</p>
-                <p>fa song</p>
+        <Row class="each">
+            <Col span="5" class="title">发送通知</Col>
+            <Col span="19" class="content">
+                <p>
+                    <Alert>给你的组员发送消息</Alert>
+                    <Input v-model="message" :minlength="10">
+                        <Button slot="append" icon="android-send" @click="sendMessage"></Button>
+                    </Input>
+                </p>
             </Col>
         </Row>
-        <Row>
-            <Col span="5">拉入比赛</Col>
-            <Col span="19">
-                <p>xxx</p>
-                <p>拉入</p>
+        <Row class="each pull_contest">
+            <Col span="5" class="title">拉入比赛</Col>
+            <Col span="19" class="content">
+                <Alert>将你的组员全部拉入比赛中</Alert>
+                <p>
+                    <span>比赛ID：</span><InputNumber style="margin-right: 10px" v-model="cid"></InputNumber>
+                    <span>密码：</span><Input style="width: 200px" placeholder="无密码可不填" v-model="password"></Input>
+                </p>
+                <p>
+                    <Button @click="pullUsersIntoContest">提交</Button>
+                </p>
             </Col>
         </Row>
-        <h1>创建小组</h1>
-        <Form ref="form" :model="form" :label-width="80" :rules="validateRule">
-            <FormItem label="小组名称" prop="name">
-                <Input v-model="form.name" :maxlength="20"></Input>
-            </FormItem>
-            <FormItem label="是否公开">
-                <i-switch v-model="form.isSecret" size="large">
-                    <span slot="close">公开</span>
-                    <span slot="open">私密</span>
-                </i-switch>
-            </FormItem>
-            <FormItem label="小组密码" v-if="form.isSecret">
-                <Input v-model="form.password" placeholder="密码不得超出6位" :maxlength="6"></Input>
-            </FormItem>
-            <FormItem>
-                <Button type="primary" @click="createGroup()" :loading="loading">创建</Button>
-            </FormItem>
-        </Form>
     </div>
 </template>
 
 <script>
 export default {
+    props: ['gid'],
     data() {
         return {
-            loading: false,
-            form: {
-                name: '',
-                password: '',
-                isSecret: false,
-            },
-            validateRule: {
-                name: [
-                    { required: true, message: '名称不得为空'},
-                    { type: 'string', max: 20, message: '长度不得超出20' }
-                ]
-            }
+            message: '',
+            cid: 0,
+            password: ''
         }
     },
     methods: {
-        createGroup() {
-            this.$refs['form'].validate((valid) => {
-                if (valid) {
-                    let password = null
-                    if (this.form.isSecret) {
-                        if (this.form.password.length == 0) {
-                            this.$Message.warning('密码不得为空')
-                            return
-                        } 
-                        password = this.form.password
-                    }
-                    this.loading = true
-                    this.$http.post('/user/group', {name: this.form.name, password: password}).then(res => {
-                        this.$router.push('/user_admin/group/'+res.data+"/edit")
-                    }).catch(res => {
-                        this.$Message.error(res.message)
-                    }).finally(() => {
-                        this.loading = false
-                    })
-                } else {
-                    this.$Message.error('请按要求填写')
-                }
+        pullUsersIntoContest() {
+            if(this.cid <= 0) {
+                this.$Message.warning('比赛ID非法')
+                return
+            }
+            let temp = null
+            if(this.password.length != 0) {
+                temp = this.password
+            }
+            this.$http.post('/group/'+this.gid+'/pull_contest', {cid: this.cid, password: temp}).then(res => {
+                this.$Message.success(res.message)
+                this.password = ''
+                this.cid = 0
+            }).catch(res => {
+                this.$Message.error(res.message)
+            })
+        },
+        sendMessage() {
+            if(this.message.length < 10) {
+                this.$Message.warning('消息长度不得小于10个字')
+                return
+            }
+
+            this.$http.post('/group/'+this.gid+'/message', {message: this.message}).then(res => {
+                this.$Message.success(res.message)
+                this.message = ''
+            }).catch(res => {
+                this.$Message.error(res.message)
             })
         }
     }
@@ -83,7 +73,15 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
-
+    .setting
+        .each
+            margin-bottom 15px
+            border-bottom 1px solid #ddd
+            .title
+                font-size 18px
+            .content
+                p
+                    margin-bottom 10px
 </style>
 
 

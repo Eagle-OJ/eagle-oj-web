@@ -18,9 +18,6 @@
                 <FormItem label="昵称" prop="nickname">
                     <Input v-model="user.nickname" :maxlength="20"></Input>
                 </FormItem>
-                <FormItem label="真实姓名" prop="realName">
-                    <Input v-model="user.realName" :maxlength="20"></Input>
-                </FormItem>
                 <FormItem label="签名" prop="motto">
                     <Input type="textarea" :maxlength="50" :autosize="{minRows: 2,maxRows: 5}" v-model="user.motto"></Input>
                 </FormItem>
@@ -72,16 +69,12 @@ export default {
                 avatar: '',
                 email: '',
                 nickname: '',
-                realName: '',
                 motto: '',
                 gender: 0,
             },
             validate: {
                 nickname: [
                     { required: true, message: '请输入昵称' },
-                    { type: 'string', max: 20, message: '最大不要超出20个字', trigger: 'blur' }
-                ],
-                realName: [
                     { type: 'string', max: 20, message: '最大不要超出20个字', trigger: 'blur' }
                 ],
                 motto: [
@@ -96,7 +89,6 @@ export default {
             this.user.avatar = temp.avatar
             this.user.email = temp.email
             this.user.nickname = temp.nickname
-            this.user.realName = temp.real_name
             this.user.motto = temp.motto
             this.user.gender = temp.gender
         },
@@ -150,7 +142,6 @@ export default {
                     this.loading = true
                     this.$http.post('/user/profile/edit', {
                         nickname: this.user.nickname,
-                        real_name: this.user.realName,
                         motto: this.user.motto,
                         gender: this.user.gender
                     }).then(res => {

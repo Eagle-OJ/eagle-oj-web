@@ -1,3 +1,6 @@
+import distanceInWordsToNow from 'date-fns/distance_in_words_to_now'
+import cn from 'date-fns/locale/zh_cn'
+
 export default {
     getContestTimeType(type, totalTime) {
         if (type == 1 || type == 3) {
@@ -56,5 +59,8 @@ export default {
             ACTimes = parseFloat(ACTimes)
             return ((ACTimes/totalTimes)*100).toFixed(2)+'%'
         }
+    },
+    getDistanceTime(time) {
+        return distanceInWordsToNow(new Date(time), {locale: cn, addSuffix: true})
     }
 }

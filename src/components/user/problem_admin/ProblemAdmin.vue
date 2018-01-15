@@ -11,8 +11,7 @@
 </template>
 
 <script>
-import distanceInWordsToNow from 'date-fns/distance_in_words_to_now'
-import cn from 'date-fns/locale/zh_cn'
+import Util from '@/util'
 import Difficult from '@/components/common/Difficult'
 export default {
     created() {
@@ -101,7 +100,7 @@ export default {
             })
         },
         getTime(time) {
-            return distanceInWordsToNow(new Date(time), {locale: cn})
+            return Util.getDistanceTime(time)
         },
     }
 }

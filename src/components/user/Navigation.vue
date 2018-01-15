@@ -6,10 +6,6 @@
                     <Icon type="document-text"></Icon>
                     信息编辑
                 </MenuItem>
-                <MenuItem name="history">
-                    <Icon type="chatbubbles"></Icon>
-                    我的记录
-                </MenuItem>
                 <MenuItem name="my_contest">
                     <Icon type="compose"></Icon>
                     我的比赛

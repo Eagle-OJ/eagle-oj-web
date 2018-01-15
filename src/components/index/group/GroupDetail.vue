@@ -10,6 +10,10 @@
                         <p><span class="title">组长:</span><router-link :to="{path: '/profile/'+description.owner}">{{description.nickname}}</router-link></p>
                     </div>
                 </Card>
+                <Input v-if="isIn" v-model="realName" class="real_name" :maxlength="20">
+                    <span slot="prepend">组内名称</span>
+                    <Button slot="append" icon="checkmark" @click="updateRealName"></Button>
+                </Input>
                 <div class="join">
                     <Button key="join" v-if="!isIn" class="button" type="success" size="large" @click="joinGroup">加入小组</Button>
                     <Button key="quit" v-else class="button" type="error" size="large" @click="quitGroup">退出小组</Button>
@@ -48,6 +52,7 @@ export default {
             total: 0,
             isIn: false,
             password: null,
+            realName: ''
         }
     },
     methods: {
@@ -69,13 +74,24 @@ export default {
         },
         judgeIsIn() {
             if(this.$store.state.userInfo.isLogin) {
-                this.$http.get('/group/'+this.getGid+'/is_in').then(res => {
-                    this.isIn = res.data
+                this.$http.get('/group/'+this.getGid+'/user/'+this.getUid).then(res => {
+                    this.isIn = true
+                    this.realName = res.data.real_name
                 }).catch(res => {
                     this.isIn = false
-                    this.$Message.error(res.message)
                 })
             }
+        },
+        updateRealName() {
+            if(this.realName.length ==0 || this.realName.length >20) {
+                this.$Message.warning('组内姓名不符合要求')
+                return
+            }
+            this.$http.put('/group/'+this.getGid+'/user/'+this.getUid, {real_name: this.realName}).then(res => {
+                this.$Message.success(res.message)
+            }).catch(res => {
+                this.$Message.error(res.message)
+            })
         },
         joinGroup() {
             if (! this.$store.state.userInfo.isLogin) {
@@ -139,6 +155,9 @@ export default {
     computed: {
         getGid() {
             return this.$route.params.gid
+        },
+        getUid() {
+            return this.$store.state.userInfo.uid
         }
     },
     watch: {

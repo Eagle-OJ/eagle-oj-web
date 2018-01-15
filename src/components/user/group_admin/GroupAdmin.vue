@@ -21,7 +21,13 @@ export default {
             column: [
                 {
                     title: '小组名称',
-                    key: 'name'
+                    render: (h, params) => {
+                        return h('router-link', {
+                            props: {
+                                to: '/group/'+params.row.gid
+                            }
+                        }, params.row.name)
+                    }
                 },
                 {
                     title: '操作',

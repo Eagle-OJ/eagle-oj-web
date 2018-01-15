@@ -3,7 +3,7 @@
         <Row>
             <Col span="16" class="left">
                 <template v-for="item in message.data">
-                    <div class="message" v-if="item.type == 1">
+                    <div class="message" v-if="item.type == 1 || item.type == 3 || item.type == 4">
                         <Row>
                             <Col span="3" class="img">
                                 <Icon type="ios-email" color="#4b3a76"></Icon>
