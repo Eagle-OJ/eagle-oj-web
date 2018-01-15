@@ -1,7 +1,7 @@
 <template>
     <div class="main">
         <Menu class="top" mode="horizontal" theme="dark" active-name="1">
-            <div class="layout-logo"></div>
+            <div class="layout-logo">管 理 中 心</div>
             <router-link to="/">
                 <Button class="back" type="primary">返回首页</Button>
             </router-link>
@@ -72,6 +72,10 @@ export default {
             position: relative
             top: 15px
             left: 20px
+            line-height 30px
+            text-align center
+            font-size 15px
+            color #fff
         .back
             float right 
             position: relative
