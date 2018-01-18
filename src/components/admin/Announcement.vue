@@ -1,0 +1,178 @@
+<template>
+    <div class="announcement">
+        <div class="tool">
+            <Button @click="add">添加公告</Button>
+        </div>
+        <Table :columns="columns" :data="data"></Table>
+        <Modal v-model="isShowModal" title="公告编辑" @on-ok="save" :loading="loading">
+            <p style="margin-bottom: 10px"><Input v-model="title" placeholder="标题，最多50字" :maxlength="50"></Input></p>
+            <p><Input v-model="content" type="textarea" :autosize="{minRows: 5,maxRows: 10}" placeholder="最多500字" :maxlength="500"></Input></p>
+        </Modal>
+    </div>
+</template>
+
+<script>
+import Util from '@/util'
+export default {
+    created() {
+        this.get()
+    },
+    data() {
+        return {
+            isShowModal: false,
+            isEdit: false,
+            loading: true,
+            columns: [
+                {
+                    type: 'expand',
+                    width: 50,
+                    render: (h, params) => {
+                        return h('div', {}, params.row.content)
+                    }
+                },
+                {
+                    title: 'ID',
+                    key: 'aid'
+                },
+                {
+                    title: '标题',
+                    key: 'title'
+                },
+                {
+                    title: '发布日期',
+                    render: (h, params) => {
+                        return this.getTime(params.row.create_time)
+                    }
+                },
+                {
+                    title: '操作',
+                    render: (h, params) => {
+                        return h('div', [
+                            h('Button', {
+                                props: {
+                                    type: 'primary',
+                                    size: 'small'
+                                },
+                                style: {
+                                    marginRight: '5px'
+                                },
+                                on: {
+                                    click: () => {
+                                        this.edit(params.index)
+                                    }
+                                }
+                            }, '编辑'),
+                            h('Button', {
+                                props: {
+                                    type: 'error',
+                                    size: 'small'
+                                },
+                                on: {
+                                    click: () => {
+                                        this.delete(params.index)
+                                    }
+                                }
+                            }, '删除')
+                        ])
+                    }
+                }
+            ],
+            data: [],
+            title: '',
+            content: '',
+            aid: 0
+        }
+    },
+    methods: {
+        get() {
+            this.$http.get('/announcement').then(res => {
+                this.data = res.data
+            })
+        },
+        add() {
+            this.isShowModal = true
+            this.isEdit = false
+        },
+        edit(index) {
+            this.isShowModal = true
+            this.isEdit = true
+            this.title = this.data[index].title
+            this.content = this.data[index].content
+            this.aid = this.data[index].aid
+        },
+        delete(index) {
+            let title = this.data[index].title
+            let aid = this.data[index].aid
+            let _this = this
+            this.$Modal.confirm({
+                title: '删除警告',
+                content: '确认删除<b>'+title+'</b>?',
+                onOk: function() {
+                    this.$http.delete('/announcement/'+aid).then(res => {
+                        this.$Message.success(res.message)
+                        _this.get()
+                    }).catch(res => {
+                        this.$Message.error(res.message)
+                    })
+                }
+            })
+        },
+        save() {
+            if(this.title.length == 0 || this.title.length > 50) {
+                this.$Message.warning('标题格式不符')
+                this.changeLoading()
+                return
+            }
+
+            if(this.content.length == 0 || this.content.length > 500) {
+                this.$Message.warning('内容格式不符')
+                this.changeLoading()
+                return
+            }
+
+            if(this.isEdit) {
+                this.$http.put('/announcement/'+this.aid, {title: this.title, content: this.content}).then(res => {
+                    this.$Message.success(res.message)
+                    this.get()
+                    this.reset()
+                    this.isShowModal = false
+                }).catch(res => {
+                    this.$Message.error(res.message)
+                })
+            } else {
+                this.$http.post('/announcement', {title: this.title, content: this.content}).then(res => {
+                    this.$Message.success(res.message)
+                    this.get()
+                    this.reset()
+                    this.isShowModal = false
+                }).catch(res => {
+                    this.$Message.error(res.message)
+                })
+            }
+            this.changeLoading()
+        },
+        reset() {
+            this.title = ''
+            this.content = ''
+            this.aid = 0
+        },
+        changeLoading() {
+            this.loading = false;
+            this.$nextTick(() => {
+                this.loading = true;
+            });
+        },
+        getTime(time) {
+            return Util.getFormatTime(time, 'YYYY-MM-DD HH:mm:ss')
+        }
+    }
+}
+</script>
+
+<style lang="stylus" scoped>
+    .tool
+        text-align: right
+        margin-bottom 10px
+</style>
+
+

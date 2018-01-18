@@ -10,29 +10,37 @@
         <div class="layout-content">
             <Row>
                 <Col span="5">
-                    <Menu active-name="1-2" width="auto">
+                    <Menu width="auto" @on-select="goTo">
                         <MenuGroup title="首页">
-                            <MenuItem name="3">
+                            <MenuItem name="description">
                                 <Icon type="heart"></Icon>
                                 网站概览
                             </MenuItem>
+                            <MenuItem name="announcement">
+                                <Icon type="android-notifications-none"></Icon>
+                                公告管理
+                            </MenuItem>
                         </MenuGroup>
                         <MenuGroup title="内容管理">
-                            <MenuItem name="3">
+                            <MenuItem name="2-1">
                                 <Icon type="heart"></Icon>
                                 成员管理
                             </MenuItem>
-                            <MenuItem name="3">
+                            <MenuItem name="2-2">
                                 <Icon type="heart"></Icon>
                                 比赛管理
                             </MenuItem>
-                            <MenuItem name="4">
+                            <MenuItem name="2-3">
                                 <Icon type="heart-broken"></Icon>
                                 小组管理
                             </MenuItem>
                         </MenuGroup>
                         <MenuGroup title="系统设置">
-                            <MenuItem name="3">
+                            <MenuItem name="3-1">
+                                <Icon type="heart"></Icon>
+                                判卷机管理
+                            </MenuItem>
+                            <MenuItem name="3-2">
                                 <Icon type="heart"></Icon>
                                 判卷机管理
                             </MenuItem>
@@ -47,14 +55,27 @@
             </Row>
         </div>
         <div class="layout-copy">
-            2011-2016 &copy; Eagle-OJ
+            2017-2018 &copy; Eagle-OJ
         </div>
     </div>
 </template>
 
 <script>
 export default {
-  
+    created() {
+        this.checkRole()
+    },
+    methods: {
+        goTo(name) {
+            this.$router.push('/admin/announcement')
+        },
+        checkRole() {
+            if(this.$store.state.userInfo.role < 9) {
+                this.$Message.warning('你无权访问管理后台')
+                this.$router.push('/dashboard')
+            }
+        }
+    }
 }
 </script>
 
@@ -88,12 +109,11 @@ export default {
         background: #fff
         border-radius: 4px
         .layout-content-main
-            padding: 10px;
-
+            padding: 10px
     .layout-copy
-        text-align: center;
-        padding: 10px 0 20px;
-        color: #9ea7b4;
+        text-align: center
+        padding: 10px 0 20px
+        color: #9ea7b4
 </style>
 
 

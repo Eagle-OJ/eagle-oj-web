@@ -239,6 +239,13 @@ const router = new Router({
                     meta: {
                         title: '首页-管理中心'
                     }
+                },
+                {
+                    path: 'announcement',
+                    component: () => import('@/components/admin/Announcement'),
+                    meta: {
+                        title: '公告管理-管理中心'
+                    }
                 }
             ]
         },

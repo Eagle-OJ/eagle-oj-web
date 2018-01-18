@@ -1,4 +1,5 @@
 import distanceInWordsToNow from 'date-fns/distance_in_words_to_now'
+import format from 'date-fns/format'
 import cn from 'date-fns/locale/zh_cn'
 
 export default {
@@ -62,5 +63,8 @@ export default {
     },
     getDistanceTime(time) {
         return distanceInWordsToNow(new Date(time), {locale: cn, addSuffix: true})
+    },
+    getFormatTime(time, formatString) {
+        return format(new Date(time), formatString)
     }
 }
