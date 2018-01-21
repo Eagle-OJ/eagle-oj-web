@@ -36,7 +36,7 @@
                     </DropdownMenu>
                 </Dropdown>
                 <router-link to="/user">
-                    <img class="avatar" :src="$getUrl($store.state.userInfo.avatar)"/>
+                    <img class="avatar" :src="$getAvatar($store.state.userInfo.avatar)"/>
                 </router-link>
             </div>
 		</div>

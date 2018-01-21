@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import Store from '@/store'
 import Cookie from 'js-cookie'
 import Config from '@/env.js'
 import iView from 'iview'
@@ -7,6 +8,13 @@ Vue.use(Router)
 
 const router = new Router({
     routes: [
+        {
+            path: '/install',
+            component: () => import('@/components/install/Install'),
+            meta: {
+                title: '网站安装'
+            }
+        },
         {
             path: '/',
             component: () => import('@/components/index/Main'),
@@ -235,16 +243,23 @@ const router = new Router({
             children: [
                 {
                     path: '/',
-                    component: () => import('@/components/admin/index/Index'),
+                    component: () => import('@/components/admin/Index'),
                     meta: {
-                        title: '首页-管理中心'
+                        title: '管理中心'
                     }
                 },
                 {
                     path: 'announcement',
                     component: () => import('@/components/admin/Announcement'),
                     meta: {
-                        title: '公告管理-管理中心'
+                        title: '公告管理'
+                    }
+                },
+                {
+                    path: 'setting',
+                    component: () => import('@/components/admin/Setting'),
+                    meta: {
+                        title: '系统设置'
                     }
                 }
             ]

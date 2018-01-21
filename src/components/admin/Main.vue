@@ -11,7 +11,7 @@
             <Row>
                 <Col span="5">
                     <Menu width="auto" @on-select="goTo">
-                        <MenuGroup title="首页">
+                        <MenuGroup title="网站">
                             <MenuItem name="description">
                                 <Icon type="heart"></Icon>
                                 网站概览
@@ -19,6 +19,10 @@
                             <MenuItem name="announcement">
                                 <Icon type="android-notifications-none"></Icon>
                                 公告管理
+                            </MenuItem>
+                            <MenuItem name="setting">
+                                <Icon type="android-settings"></Icon>
+                                系统设置
                             </MenuItem>
                         </MenuGroup>
                         <MenuGroup title="内容管理">
@@ -67,7 +71,7 @@ export default {
     },
     methods: {
         goTo(name) {
-            this.$router.push('/admin/announcement')
+            this.$router.push('/admin/'+name)
         },
         checkRole() {
             if(this.$store.state.userInfo.role < 9) {

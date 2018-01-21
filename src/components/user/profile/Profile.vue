@@ -1,7 +1,7 @@
 <template>
     <div class="profile">
         <div class="avatar">
-            <img :src="$getUrl($store.state.userInfo.avatar)"/>
+            <img :src="$getAvatar($store.state.userInfo.avatar)"/>
             <label for="avatarUpload">
                 <Icon type="upload"></Icon> 上传头像
             </label>

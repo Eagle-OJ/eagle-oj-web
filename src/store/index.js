@@ -102,6 +102,9 @@ export default new Vuex.Store({
         setWebsite() {
             Axios.get('/setting').then(res => {
                 this.commit('setWebsite', res.data)
+                if(! res.data.isInstalled) {
+                    router.push('/install')
+                }
             })
         },
         getUserInfo() {

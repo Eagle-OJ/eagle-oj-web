@@ -87,8 +87,8 @@
                 </div>
             </Col>
             <Col span="8" class="right">
-                <div class="user">
-                    <Avatar class="avatar" shape="square" size="large" src="/static/avatar.jpg" />
+                <div class="user" v-if="$store.state.userInfo.isLogin">
+                    <Avatar class="avatar" shape="square" size="large" :src="$getAvatar($store.state.userInfo.avatar)" />
                     <div class="detail">
                         <h3><router-link :to="{path: '/profile/'+$store.state.userInfo.uid}">{{$store.state.userInfo.nickname}}</router-link></h3>
                         <p>
@@ -104,16 +104,17 @@
                 <div class="announcement">
                     <div class="header"><Icon type="information-circled"></Icon>公告</div>
                     <ul>
-                        <li v-for="(index, i) in 5" :key="i" @click="showAnnouncement(index)">
-                            <span>{{index}}.</span>低级赛季隆重开始发而发而非爱我发呢阿瑟发
+                        <li style="text-align: center" v-if="announcement.list.length == 0">暂无公告</li>
+                        <li v-for="(item, index) in announcement.list" @click="showAnnouncement(index)">
+                            <span>{{index+1}}.</span>{{item.title}}
                         </li>
                     </ul>
                 </div>
             </Col>
         </Row>
-        <Modal v-model="announcement.switch" title="这个是网站公告" class="announcement-detail">
-            <p class="time">发布时间：1990-12-12</p>
-            <p class="content">这里是公告哈哈哈哈哈哈，的发哦飞啊飞发疯爱妃啊法恩莎阿瑟发额啊发。</p>
+        <Modal v-model="announcement.switch" :title="announcement.title" class="announcement-detail">
+            <p class="time">发布时间：{{getTime(announcement.time)}}</p>
+            <p class="content">{{announcement.content}}</p>
             <div slot="footer">
                 <Button type="success" size="large" long @click="closeAnnouncement">我知道了</Button>
             </div>
@@ -123,16 +124,18 @@
 
 <script>
 import Util from '@/util'
-import DistanceInWordsToNow from 'date-fns/distance_in_words_to_now'
-import cn from 'date-fns/locale/zh_cn'
 export default {
     created() {
         this.getMessage(1)
+        this.getAnnouncement()
     },
     data() {
         return {
             announcement: {
+                list: [],
                 title: '',
+                content: '',
+                time: 0,
                 switch: false
             },
             message: {
@@ -156,16 +159,21 @@ export default {
             })
         },
         getTime(time) {
-            return DistanceInWordsToNow(new Date(time), {
-                addSuffix: true,
-                locale: cn
-            })
+            return Util.getDistanceTime(time)
         },
-        showAnnouncement() {
+        showAnnouncement(index) {
             this.announcement.switch = true
+            this.announcement.title = this.announcement.list[index].title
+            this.announcement.content = this.announcement.list[index].content
+            this.announcement.time = this.announcement.list[index].create_time
         },
         closeAnnouncement() {
             this.announcement.switch = false
+        },
+        getAnnouncement() {
+            this.$http.get('/announcement').then(res => {
+                this.announcement.list = res.data
+            })
         },
         randomDoProblem() {
             this.$router.push('/problem/1')
