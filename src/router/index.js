@@ -261,6 +261,13 @@ const router = new Router({
                     meta: {
                         title: '系统设置'
                     }
+                },
+                {
+                    path: 'judger',
+                    component: () => import('@/components/admin/Judger'),
+                    meta: {
+                        title: '判卷机管理'
+                    }
                 }
             ]
         },
@@ -299,7 +306,11 @@ const router = new Router({
 })
 
 router.beforeEach((to, from, next) => {
-    document.title = to.meta.title+Config.TITLE
+    let webTitle = ''
+    if(Store.state.setting.title.length != 0) {
+        webTitle = ' - '+Store.state.setting.title
+    }
+    document.title = to.meta.title+webTitle+Config.TITLE
     iView.LoadingBar.start();    
     if(to.matched.some(record => record.meta.requireAuth)) {
         if (!Cookie.get('token')) {

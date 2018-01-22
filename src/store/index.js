@@ -12,8 +12,12 @@ export default new Vuex.Store({
             isLogin: false,
         },
         setting: {
-            oss_url: '',
-            lang: {}
+            is_installed: false,
+            lang: {},
+            oss_config: {
+                url: ''
+            },
+            title: ''
         },
         submissions: [
             // {
@@ -102,7 +106,7 @@ export default new Vuex.Store({
         setWebsite() {
             Axios.get('/setting').then(res => {
                 this.commit('setWebsite', res.data)
-                if(! res.data.isInstalled) {
+                if(! res.data.is_installed) {
                     router.push('/install')
                 }
             })

@@ -8,29 +8,29 @@
                     <Input v-model="form.nickname" placeholder="长度不超过20" :maxlength="20"></Input>
                 </FormItem>
                 <FormItem label="邮箱" prop="email">
-                    <Input v-model="form.email" value="admin@admin.com"></Input>
+                    <Input v-model="form.email"></Input>
                 </FormItem>
                 <FormItem label="密码" prop="password">
                     <Input v-model="form.password" type="password"></Input>
                 </FormItem>
                 <div class="little-title" style="background: #2d8cf0">网站设置</div>
                 <FormItem label="网站名称" prop="title">
-                    <Input v-model="form.title"></Input>
+                    <Input v-model="form.title" placeholder="长度不超过20" :maxlength="20"></Input>
                 </FormItem>
                 <div class="little-title" style="background: #19be6b">阿里云OSS设置</div>
-                <FormItem label="Access key" prop="oss">
+                <FormItem label="Access key" prop="accessKey">
                     <Input v-model="form.accessKey"></Input>
                 </FormItem>
-                <FormItem label="Secret key" prop="oss">
+                <FormItem label="Secret key" prop="secretKey">
                     <Input v-model="form.secretKey"></Input>
                 </FormItem>
-                <FormItem label="End point" prop="oss">
+                <FormItem label="End point" prop="endPoint">
                     <Input v-model="form.endPoint"></Input>
                 </FormItem>
-                <FormItem label="Bucket" prop="oss">
+                <FormItem label="Bucket" prop="bucket">
                     <Input v-model="form.bucket"></Input>
                 </FormItem>
-                <FormItem label="Url" prop="oss">
+                <FormItem label="Url" prop="url">
                     <Input v-model="form.url"></Input>
                 </FormItem>
                 <FormItem>
@@ -54,7 +54,7 @@ export default {
                 accessKey: '',
                 endPoint: '',
                 bucket: '',
-                url: ''
+                url: '',
             },
             rules: {
                 nickname: [
@@ -70,10 +70,23 @@ export default {
                 ],
                 title: [
                     { required: true, message: '网站名称不得为空'},
+                    { type: 'string', max: 20, message: '网站标题最大长度不能超出20'}
                 ],
-                oss: [
-                    { required: true, message: 'oss配置不得为空'}
-                ]
+                secretKey: [
+                    { required: true, message: 'Secret key不得为空'},
+                ],
+                accessKey: [
+                    { required: true, message: 'Access key不得为空'},
+                ],
+                endPoint: [
+                    { required: true, message: 'End point不得为空'},
+                ],
+                bucket: [
+                    { required: true, message: 'Bucket不得为空'},
+                ],
+                url: [
+                    { required: true, message: 'URL不得为空'},
+                ],
             }
         }
     },
@@ -81,10 +94,17 @@ export default {
         submit() {
             this.$refs['form'].validate((valid) => {
                 if (valid) {
-                    this.$Message.success('Success!');
-                } else {
-                    this.$Message.error('Fail!');
+                    this.doInstall()
                 }
+            })
+        },
+        doInstall() {
+            let data = this.form
+            this.$http.post('/setting', data).then(res => {
+                this.$Message.success(res.message)
+                this.$router.push('/login')
+            }).catch(res => {
+                this.$Message.error(res.message)
             })
         }
     }

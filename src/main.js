@@ -64,11 +64,15 @@ if (Cookie.get('token')) {
 }
 
 Vue.prototype.$getUrl = function(url) {
-    return store.state.setting.oss_url+url
+    return store.state.setting.oss_config.url+url
 }
 
 Vue.prototype.$getAvatar = function(aid) {
-    return 'http://localhost:8080/avatar?aid='+aid
+    if(aid == 0) {
+        return '/static/default_avatar.jpg'
+    } else {
+        return 'http://localhost:8080/avatar?aid='+aid
+    }
 }
 
 Vue.prototype.$getLang = function(text) {

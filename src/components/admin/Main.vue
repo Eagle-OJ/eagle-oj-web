@@ -12,7 +12,7 @@
                 <Col span="5">
                     <Menu width="auto" @on-select="goTo">
                         <MenuGroup title="网站">
-                            <MenuItem name="description">
+                            <MenuItem name="overview">
                                 <Icon type="heart"></Icon>
                                 网站概览
                             </MenuItem>
@@ -23,6 +23,10 @@
                             <MenuItem name="setting">
                                 <Icon type="android-settings"></Icon>
                                 系统设置
+                            </MenuItem>
+                            <MenuItem name="judger">
+                                <Icon type="code-working"></Icon>
+                                判卷机管理
                             </MenuItem>
                         </MenuGroup>
                         <MenuGroup title="内容管理">
@@ -71,7 +75,11 @@ export default {
     },
     methods: {
         goTo(name) {
-            this.$router.push('/admin/'+name)
+            if(name == 'overview') {
+                this.$router.push('/admin')
+            } else {
+                this.$router.push('/admin/'+name)
+            }
         },
         checkRole() {
             if(this.$store.state.userInfo.role < 9) {
