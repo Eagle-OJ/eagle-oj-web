@@ -13,7 +13,7 @@
                     <Menu width="auto" @on-select="goTo">
                         <MenuGroup title="网站">
                             <MenuItem name="overview">
-                                <Icon type="heart"></Icon>
+                                <Icon type="monitor"></Icon>
                                 网站概览
                             </MenuItem>
                             <MenuItem name="announcement">
@@ -30,27 +30,25 @@
                             </MenuItem>
                         </MenuGroup>
                         <MenuGroup title="内容管理">
-                            <MenuItem name="2-1">
-                                <Icon type="heart"></Icon>
-                                成员管理
+                            <MenuItem name="auditing">
+                                <Icon type="ios-checkmark-outline"></Icon>
+                                题目审核
                             </MenuItem>
-                            <MenuItem name="2-2">
+                            <MenuItem name="problem">
                                 <Icon type="heart"></Icon>
+                                题目管理
+                            </MenuItem>
+                            <MenuItem name="user">
+                                <Icon type="android-person"></Icon>
+                                用户管理
+                            </MenuItem>
+                            <MenuItem name="contest">
+                                <Icon type="compose"></Icon>
                                 比赛管理
                             </MenuItem>
-                            <MenuItem name="2-3">
-                                <Icon type="heart-broken"></Icon>
+                            <MenuItem name="group">
+                                <Icon type="ios-people"></Icon>
                                 小组管理
-                            </MenuItem>
-                        </MenuGroup>
-                        <MenuGroup title="系统设置">
-                            <MenuItem name="3-1">
-                                <Icon type="heart"></Icon>
-                                判卷机管理
-                            </MenuItem>
-                            <MenuItem name="3-2">
-                                <Icon type="heart"></Icon>
-                                判卷机管理
                             </MenuItem>
                         </MenuGroup>
                     </Menu>
@@ -87,7 +85,7 @@ export default {
                 this.$router.push('/dashboard')
             }
         }
-    }
+    },
 }
 </script>
 

@@ -71,7 +71,7 @@ Vue.prototype.$getAvatar = function(aid) {
     if(aid == 0) {
         return '/static/default_avatar.jpg'
     } else {
-        return 'http://localhost:8080/avatar?aid='+aid
+        return '/api/avatar?aid='+aid
     }
 }
 

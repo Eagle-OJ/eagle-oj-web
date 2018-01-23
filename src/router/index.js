@@ -268,6 +268,41 @@ const router = new Router({
                     meta: {
                         title: '判卷机管理'
                     }
+                },
+                {
+                    path: 'user',
+                    component: () => import('@/components/admin/User'),
+                    meta: {
+                        title: '用户管理'
+                    }
+                },
+                {
+                    path: 'group',
+                    component: () => import('@/components/admin/Group'),
+                    meta: {
+                        title: '小组管理'
+                    }
+                },
+                {
+                    path: 'contest',
+                    component: () => import('@/components/admin/Contest'),
+                    meta: {
+                        title: '比赛管理'
+                    }
+                },
+                {
+                    path: 'auditing',
+                    component: () => import('@/components/admin/Auditing'),
+                    meta: {
+                        title: '审核管理'
+                    }
+                },
+                {
+                    path: 'problem',
+                    component: () => import('@/components/admin/Problem'),
+                    meta: {
+                        title: '题目管理'
+                    }
                 }
             ]
         },
