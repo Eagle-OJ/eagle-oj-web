@@ -157,7 +157,7 @@ export default {
             if (this.$store.state.userInfo.isLogin) {
                 this.problems.uid = this.$store.state.userInfo.uid
             }
-            this.$http.get('/problem', {
+            this.$http.get('/problems', {
                 params: {
                     page: page,
                     page_size: this.problems.pageSize,

@@ -1,9 +1,9 @@
 <template>
     <div class="problem">
-        <Spin size="large" fix v-if="problemLoading || contestLoading"></Spin>
-        <div class="header">
-            <h1>{{problem.title}}</h1>
-            <Difficult :difficult="problem.difficult"></Difficult>
+        <Spin size="large" fix v-if="dataLoading"></Spin>
+        <div class="header" v-if="data">
+            <h1>{{data.problem.title}}</h1>
+            <Difficult :difficult="data.problem.difficult"></Difficult>
             <router-link v-if="getCid>0" :to="{path: '/contest/'+this.getCid+'/problems'}">
                 <Button class="favorite" icon="ios-arrow-back" type="info">返回比赛</Button>
             </router-link>
@@ -25,9 +25,9 @@
                 </MenuItem>
             </Menu>
         </div>
-        <div class="content" v-if="! (problemLoading || contestLoading)">
+        <div class="content" v-if="data">
             <keep-alive>
-                <component :is="getActive" :cid="getCid" :pid="getPid" :problem="problem" :contest="contest"></component>
+                <component :is="getActive" :cid="getCid" :pid="getPid" :data="data"></component>
             </keep-alive>
         </div>
     </div>
@@ -39,37 +39,18 @@ import Submission from './Submission.vue'
 import Difficult from '@/components/common/Difficult'
 export default {
     created() {
-        this.getProblem()
-        if(this.getCid > 0) {
-            this.getContest()
-        }
+        this.getData()
     },
     data() {
         return {
-            problemLoading: false,
-            contestLoading: false,
-            problem: {
-                title: '',
-                description: '',
-                inputFormat: '',
-                outputFormat: '',
-                samples: [],
-                submitTimes: 0,
-                AC: 0,
-                CE: 0,
-                RTE: 0,
-                TLE: 0,
-                WA: 0,
-                owner: 0,
-                nickname: 0,
-            },
-            contest: null,
+            dataLoading: false,
+            data: null,
             tags: []
         }
     },
     methods: {
-        getProblem() {
-            this.problemLoading = true
+        getData() {
+            this.dataLoading = true
             this.getTags()
             let url
             if(this.getCid>0) {
@@ -78,35 +59,11 @@ export default {
                 url = '/problem/'+this.getPid
             }
             this.$http.get(url).then(res => {
-                let data = res.data
-                this.problem.title = data.title
-				this.problem.description = data.description
-				this.problem.inputFormat = data.input_format
-				this.problem.outputFormat = data.output_format
-                this.problem.samples = data.samples
-                this.problem.submitTimes = data.submit_times
-                this.problem.lang = data.lang
-				this.problem.AC = data.ac_times
-				this.problem.CE = data.ce_times
-				this.problem.RTE = data.rte_times
-				this.problem.TLE = data.tle_times
-				this.problem.WA = data.wa_times
-				this.problem.owner = data.owner
-                this.problem.nickname = data.nickname
+                this.data = res.data
 			}).catch(res => {
                 this.$Message.error(res.message)
             }).finally(() => {
-                this.problemLoading = false
-            })
-        },
-        getContest() {
-            this.contestLoading = true
-            this.$http.get('/contest/'+this.getCid).then(res => {
-                this.contest = res.data
-            }).catch(res => {
-                this.$Message.error(res.message)
-            }).finally(() => {
-                this.contestLoading = false
+                this.dataLoading = false
             })
         },
         getTags() {

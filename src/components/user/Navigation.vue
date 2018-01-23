@@ -14,6 +14,10 @@
                     <Icon type="ios-people"></Icon>
                     我的小组
                 </MenuItem>
+                <MenuItem name="my_zone">
+                    <Icon type="aperture"></Icon>
+                    我的主页
+                </MenuItem>
             </MenuGroup>
             <MenuGroup title="相关管理">
                 <MenuItem name="problem">
@@ -51,8 +55,15 @@ export default {
         goTo(name) {
             if (name == 'edit')
                 this.$router.push('/user')
+            else if (name == 'my_zone')
+                this.$router.push('/profile/'+this.getUid)
             else 
                 this.$router.push('/user/'+name)
+        }
+    },
+    computed: {
+        getUid() {
+            return this.$store.state.userInfo.uid
         }
     }
 }

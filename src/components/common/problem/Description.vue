@@ -1,7 +1,7 @@
 <template>
 	<div class="description">
 		<Row :gutter="5" class="content">
-            <Alert v-if="contest && contest.status!=1" show-icon type="error">本比赛已经不得参加！</Alert>
+            <Alert v-if="data.contest && !data.contest.status" show-icon type="error">本比赛已经不得参加！</Alert>
 			<Col span="18" class="left">
 				<div>
 					<h2>描述</h2>
@@ -17,7 +17,7 @@
 				</div>
 				<div class="samples">
 					<h2>样例</h2>
-					<div v-for="item in problem.samples" class="each">
+					<div v-for="item in data.problem.samples" class="each">
 						<h5>输入</h5>
 						<pre>{{item.input}}</pre>
 						<h5>输出</h5>
@@ -28,7 +28,7 @@
 			<Col span="6" class="right">
 				<div class="contributor">
 					<span>出题人：</span>
-					<router-link :to="{path: '/profile/'+problem.owner}">{{problem.nickname}}</router-link>
+					<router-link :to="{path: '/profile/'+data.problem.owner}">{{data.author.nickname}}</router-link>
 				</div>
 				<Card class="chart">
 					<div>
@@ -52,7 +52,7 @@
 			</div>
 			<div class="submit">
 				<Button type="ghost" shape="circle" icon="play" style="margin-right:5px" @click="runTest" :loading="isSubmit">测试运行</Button>
-				<Button type="primary" shape="circle" icon="upload" @click="submitCode(false)" :loading="isSubmit" :disabled="contest!=null && contest.status!=1">提交代码</Button>
+				<Button type="primary" shape="circle" icon="upload" @click="submitCode(false)" :loading="isSubmit" :disabled="! isPermitSubmitCode">提交代码</Button>
 			</div>
 		</Row>
 
@@ -85,9 +85,9 @@ import Chart from 'chart.js'
 import Util from '@/util'
 import Cookie from 'js-cookie'
 export default {
-    props: ['cid', 'pid', 'problem', 'contest'],
+    props: ['cid', 'pid', 'data'],
     created() {
-        this.langList = this.problem.lang
+        this.langList = this.data.problem.lang
     },
 	mounted() {
 	   	this.mountEditor()
@@ -142,7 +142,7 @@ export default {
 				return
 			}
 			let path = this.$route.fullPath
-			let title = this.problem.title
+			let title = this.data.problem.title
 			if (isTestMode) {
 				// test mode
 				if (this.testCases.data.length==0) {
@@ -211,11 +211,11 @@ export default {
 				data: {
 					datasets: [{
 						data: [
-							this.problem.AC,
-							this.problem.CE,
-							this.problem.RTE,
-							this.problem.TLE,
-							this.problem.WA],
+							this.data.problem.ac_times,
+							this.data.problem.ce_times,
+							this.data.problem.rte_times,
+							this.data.problem.tle_times,
+							this.data.problem.wa_times],
 						backgroundColor: [
 							Util.getProblemStatusColor('AC'),
 							Util.getProblemStatusColor('CE'),
@@ -242,7 +242,7 @@ export default {
 					},
 					title: {
 						display: true,
-						text: '提 交 次 数 - '+this.problem.submitTimes+'次'
+						text: '提 交 次 数 - '+this.data.problem.submit_times+'次'
 					},
 					animation: {
 						animateScale: true,
@@ -262,15 +262,15 @@ export default {
 			}
 			this.quill.description = new Quill(document.getElementById('description'), config)
 			this.quill.description.enable(false)
-			this.quill.description.setContents(this.problem.description)
+			this.quill.description.setContents(this.data.problem.description)
 
 			this.quill.inputFormat = new Quill(document.getElementById('input_format'), config)
 			this.quill.inputFormat.enable(false)
-			this.quill.inputFormat.setContents(this.problem.description)
+			this.quill.inputFormat.setContents(this.data.problem.description)
 
 			this.quill.outputFormat = new Quill(document.getElementById('output_format'), config)
 			this.quill.outputFormat.enable(false)
-			this.quill.outputFormat.setContents(this.problem.description)
+			this.quill.outputFormat.setContents(this.data.problem.description)
 		},
 		mountEditor() {
 			let editor = ace.edit('editor-container')
@@ -280,6 +280,15 @@ export default {
 			document.getElementById('editor-container').style.fontSize='14px';
 		}
     },
+    computed: {
+        isPermitSubmitCode() {
+            if (this.cid > 0) {
+                return this.data.contest.status
+            } else {
+                return true
+            }
+        }
+    }
 }
 </script>
 

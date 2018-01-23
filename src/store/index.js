@@ -109,6 +109,8 @@ export default new Vuex.Store({
                 if(! res.data.is_installed) {
                     router.push('/install')
                 }
+            }).catch(res => {
+                router.push('/500')
             })
         },
         getUserInfo() {
