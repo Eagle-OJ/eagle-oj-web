@@ -53,6 +53,7 @@ export default {
             time: 1,
             memory: 1,
             isShared: false,
+            beforeShared: false,
         }
     },
     methods: {
@@ -64,8 +65,10 @@ export default {
             this.status = problem.status
             if (this.status == 1 || this.status == 2) {
                 this.isShared = true
+                this.beforeShared = true
             } else {
                 this.isShared = false
+                this.beforeShared = false
             }
         },
         updateSetting() {
@@ -76,6 +79,12 @@ export default {
                 is_shared: this.isShared
             }).then(res => {
                 this.$Message.success(res.message)
+                if(this.isShared && this.beforeShared==false) {
+                    this.status = 1
+                }
+                if(!this.isShared && this.beforeShared==true) {
+                    this.status = 0
+                }
             }).catch(res => {
                 this.$Message.error(res.message)
             })

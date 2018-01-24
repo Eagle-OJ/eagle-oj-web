@@ -47,24 +47,6 @@
                         <span class="number">{{item.used}}</span>
                     </router-link>
                 </Card>
-                <Card class="user_info">
-                    <i-circle :size="200" :percent="75">
-                        <div class="detail">
-                            <h1>64</h1>
-                            <p>已做过</p>
-                            <span>
-                                通过率
-                                <i>75%</i>
-                            </span>
-                        </div>
-                    </i-circle>
-                    <div class="cover">
-                        <p>登入查看信息</p>
-                    </div>
-                </Card>
-                <Card>
-                    i dont know
-                </Card>
             </Col>
         </Row>
     </div>

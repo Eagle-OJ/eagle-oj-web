@@ -146,6 +146,13 @@ const router = new Router({
                     }
                 }, 
                 {
+                    path: 'security',
+                    component: () => import('@/components/user/security/Security'),
+                    meta: {
+                        title: '账号安全'
+                    }
+                },
+                {
                     path: 'problem',
                     component: () => import('@/components/user/problem_admin/ProblemAdmin'),
                     meta: {

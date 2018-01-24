@@ -3,7 +3,7 @@
         <Row>
             <Col span="16" class="left">
                 <template v-for="item in message.data">
-                    <div class="message" v-if="item.type == 1 || item.type == 3 || item.type == 4">
+                    <div class="message" v-if="item.type == 0">
                         <Row>
                             <Col span="3" class="img">
                                 <Icon type="ios-email" color="#4b3a76"></Icon>
@@ -43,7 +43,7 @@
                         </Row>
                     </div>
                 </template>
-                <div class="sloved">
+                <div class="sloved" v-if="false">
                     <Row>
                         <Col span="3" class="img">
                             <Icon type="flag" color="#ed3f14"></Icon>
@@ -56,7 +56,7 @@
                         </Col>
                     </Row>
                 </div>
-                <div class="message">
+                <div class="message" v-if="false">
                     <Row>
                         <Col span="3" class="img">
                             <Icon type="ios-email" color="#4b3a76"></Icon>
@@ -69,7 +69,7 @@
                         </Col>
                     </Row>
                 </div>
-                <div class="message">
+                <div class="message" v-if="false">
                     <Row>
                         <Col span="3" class="img">
                             <Icon type="ios-email" color="#4b3a76"></Icon>

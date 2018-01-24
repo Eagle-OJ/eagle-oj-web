@@ -6,6 +6,10 @@
                     <Icon type="document-text"></Icon>
                     信息编辑
                 </MenuItem>
+                <MenuItem name="security">
+                    <Icon type="locked"></Icon>
+                    账号安全
+                </MenuItem>
                 <MenuItem name="my_contest">
                     <Icon type="compose"></Icon>
                     我的比赛

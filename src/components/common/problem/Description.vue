@@ -40,12 +40,9 @@
 
 		<Row class="editor">
 			<div class="toolbar">
-				<Select v-model="lang" @on-change="changeLang" style="width:150px;margin-right:10px">
+				<Select v-model="lang" @on-change="changeLang" placeholder="选择编程语言" style="width:150px;margin-right:10px">
 					<Option v-for="item in langList" :value="item" :key="item">{{$getLang(item)}}</Option>
 				</Select>
-				<Tooltip content="使用以前代码" placement="top">
-					<Button type="ghost" icon="android-time">回退</Button>
-				</Tooltip>
 			</div>
 			<div id="editor-container">
 
