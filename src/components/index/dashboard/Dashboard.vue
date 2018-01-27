@@ -171,7 +171,7 @@ export default {
             this.announcement.switch = false
         },
         getAnnouncement() {
-            this.$http.get('/announcement').then(res => {
+            this.$http.get('/announcements').then(res => {
                 this.announcement.list = res.data
             })
         },

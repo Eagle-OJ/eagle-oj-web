@@ -148,7 +148,7 @@ export default {
                     uid: this.problems.uid
                 }
             }).then(res => {
-                this.problems.data = res.data.problems
+                this.problems.data = res.data.data
                 this.problems.total = res.data.total
             })
         },

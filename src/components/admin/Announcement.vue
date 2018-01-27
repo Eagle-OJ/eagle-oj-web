@@ -85,7 +85,7 @@ export default {
     },
     methods: {
         get() {
-            this.$http.get('/announcement').then(res => {
+            this.$http.get('/announcements').then(res => {
                 this.data = res.data
             })
         },
