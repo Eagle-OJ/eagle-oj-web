@@ -120,13 +120,13 @@ export default {
         save() {
             if(this.title.length == 0 || this.title.length > 50) {
                 this.$Message.warning('标题格式不符')
-                this.changeLoading()
+                this.resetLoading()
                 return
             }
 
             if(this.content.length == 0 || this.content.length > 500) {
                 this.$Message.warning('内容格式不符')
-                this.changeLoading()
+                this.resetLoading()
                 return
             }
 
@@ -149,14 +149,14 @@ export default {
                     this.$Message.error(res.message)
                 })
             }
-            this.changeLoading()
+            this.resetLoading()
         },
         reset() {
             this.title = ''
             this.content = ''
             this.aid = 0
         },
-        changeLoading() {
+        resetLoading() {
             this.loading = false;
             this.$nextTick(() => {
                 this.loading = true;

@@ -1,5 +1,6 @@
 <template>
     <div id="container">
+        <Alert type="warning" v-if="! isEditable">题目处于公开分享状态，只有管理员能够对题目进行修改</Alert>
         <Menu mode="horizontal" :active-name="getActive" @on-select="goTo">
             <MenuItem name="description">
                 <Icon type="ios-paper"></Icon>
@@ -30,7 +31,7 @@
         <div class="content" style="margin-top: 20px; position: relative">
             <Spin size="large" fix v-if="loading"></Spin>
             <keep-alive >
-                <component :is="getActive" :pid="getPid" :problem="problem" v-if="! loading"></component>
+                <component :is="getActive" :pid="getPid" :problem="problem" :isEditable="isEditable" v-if="! loading"></component>
             </keep-alive>
         </div>
     </div>
@@ -85,6 +86,13 @@ export default {
         },
         getPid() {
             return this.$route.params.pid
+        },
+        isEditable() {
+            if(this.problem == null) {
+                return false
+            } else {
+                return this.problem.status != 2
+            }
         }
     }
 }

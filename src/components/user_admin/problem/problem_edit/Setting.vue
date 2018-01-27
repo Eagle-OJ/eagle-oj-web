@@ -33,7 +33,7 @@
             </Row>
             <Row class="each-sort">
                 <Col span="20" offset="4" class="right">
-                    <Button @click="updateSetting()">保存设置</Button>
+                    <Button type="success" :disabled="!isEditable" @click="updateSetting()">保存设置</Button>
                 </Col>
             </Row>
         </Row>
@@ -45,7 +45,7 @@ export default {
     created() {
         this.setProblem()
     },
-    props: ['pid', 'problem'],
+    props: ['pid', 'problem', 'isEditable'],
     data() {
         return {
             lang: [],

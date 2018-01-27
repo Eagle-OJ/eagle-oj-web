@@ -85,7 +85,7 @@
             </div>
 
             <div class="each-line submit">
-                <Button type="success" @click="updateProblem" :loading="loading">保存题目</Button>
+                <Button type="success" @click="updateProblem" :disabled="! isEditable" :loading="loading">保存题目</Button>
             </div>
         </div>
     </div>
@@ -93,7 +93,7 @@
 
 <script>
 export default {
-    props: ['pid', 'problem'],
+    props: ['pid', 'problem', 'isEditable'],
     created() {
         this.getTags()
     },
