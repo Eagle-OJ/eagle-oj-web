@@ -142,7 +142,7 @@ export default {
                 })
             } else {
                 // add testCase
-                this.$http.post('/problem/'+this.pid+"/test_cases", {
+                this.$http.post('/problem/'+this.pid+"/test_case", {
                     stdin: this.test_case.stdin,
                     stdout: this.test_case.stdout,
                     strength: this.test_case.strength

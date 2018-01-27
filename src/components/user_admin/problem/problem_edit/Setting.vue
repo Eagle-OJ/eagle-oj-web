@@ -72,7 +72,7 @@ export default {
             }
         },
         updateSetting() {
-            this.$http.put('/problem/'+this.pid+'/setting', {
+            this.$http.put('/problem/'+this.pid, {
                 lang: this.lang,
                 time: this.time,
                 memory: this.memory,
