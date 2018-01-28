@@ -53,11 +53,10 @@ export default {
     },
     methods: {
         getOwnGroup(page) {
-            this.$http.get('/groups', {
+            this.$http.get('/groups/user', {
                 params: {
                     page: page,
                     page_size: this.pageSize,
-                    owner: this.$store.state.userInfo.uid
                 }
             }).then(res => {
                 this.data = res.data.data

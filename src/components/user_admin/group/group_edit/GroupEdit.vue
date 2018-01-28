@@ -54,7 +54,7 @@ export default {
             this.loading = true
             this.$http.get('/group/'+this.getGid, {
                 params: {
-                    isDetail: true
+                    is_detail: true
                 }
             }).then(res => {
                 this.group = res.data
