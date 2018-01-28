@@ -11,36 +11,29 @@
             <p slot="title">已添加题目</p>
             <Table :columns="columns" :data="data"></Table>
         </Card>
-        <Modal v-model="modal" title="添加题目">
-            <div style="text-align:center">
-                <span>显示题号 </span>
-                <InputNumber style="margin-right: 10px" v-model="displayId" :min="1"></InputNumber>
-                <span>题号 </span>
-                <InputNumber style="margin-right: 10px" v-model="pid" :min="1"></InputNumber>
-                <span>分值 </span>
-                <InputNumber v-model="score" :min="1"></InputNumber>
-            </div>
-            <div slot="footer">
-                <Button type="success" size="large" long :loading="loading" @click="addProblem">添加题目</Button>
-            </div>
+        <Modal v-model="addProblemModal" title="添加题目" width="650" >
+            <Table :columns="problems.columns" :data="problems.data"></Table>
+            <Page :page-size="problems.pageSize" :total="problems.total" @on-change="getCommonProblems" simple style="margin-top: 10px; text-align: center"></Page>
+            <p slot="footer"></p>
         </Modal>
-        <Modal v-model="editModal" title="修改分值" >
+        <Modal v-model="editModal" title="编辑" >
             <div style="text-align:center">
-                <span>显示题号 </span>
-                <InputNumber style="margin-right: 10px" v-model="displayId" :min="1"></InputNumber>
                 <span>题号 </span>
                 <InputNumber style="margin-right: 10px" v-model="pid" :min="1" disabled></InputNumber>
+                <span>显示题号 </span>
+                <InputNumber style="margin-right: 10px" v-model="displayId" :min="1"></InputNumber>
                 <span>分值 </span>
                 <InputNumber v-model="score" :min="1"></InputNumber>
             </div>
             <div slot="footer">
-                <Button type="success" size="large" long :loading="loading" @click="doEditProblem">修改</Button>
+                <Button type="success" size="large" long :loading="loading" @click="save">保存</Button>
             </div>
         </Modal>
     </div>
 </template>
 
 <script>
+import Difficult from '@/components/common/Difficult'
 export default {
     props: ['cid'],
     created() {
@@ -49,11 +42,12 @@ export default {
     data() {
         return {
             loading: false,
-            score: 1,
+            score: null,
             displayId: null,
             pid: null,
-            modal: false,
+            addProblemModal: false,
             editModal: false,
+            isEdit: false,
             data: [],
             columns: [
                 {
@@ -110,44 +104,153 @@ export default {
                         ])
                     }
                 }
-            ]   
+            ],
+            problems: {
+                columns: [
+                    {
+                        title: '标题',
+                        render: (h, params) => {
+                            return h('router-link', {
+                                props: {
+                                    to: '/problem/'+params.row.pid
+                                }
+                            }, params.row.title)
+                        }
+                    },
+                    {
+                        title: '提交',
+                        key: 'submit_times',
+                        width: 60
+                    },
+                    {
+                        title: '通过率',
+                        render: (h, params) => {
+                            if (params.row.submit_times == 0) {
+                                return '0.00%'
+                            } else {
+                                return ((params.row.ac_times / params.row.submit_times)*100).toFixed(2)+'%'
+                            }
+                        },
+                        width: 100
+                    },
+                    {
+                        title: '难度',
+                        render: (h, params) => {
+                            return h(Difficult, {
+                                props: {
+                                    difficult: params.row.difficult
+                                }
+                            })
+                        },
+                        width: 100
+                    },
+                    {
+                        title: '操作',
+                        width: 80,
+                        render: (h, params) => {
+                            return h('Button', {
+                                props: {
+                                    type: 'ghost',
+                                    size: 'small'
+                                },
+                                on: {
+                                    click: () => {
+                                        this.editModal = true
+                                        this.pid = params.row.pid
+                                        this.displayId = null
+                                        this.score = null
+                                        this.isEdit = false
+                                    }
+                                }
+                            }, '添加')
+                        }
+                    }
+                ],
+                data: [],
+                total: 0,
+                pageSize: 5
+            }
         }
     },
     methods: {
         showAddProblem() {
-            this.resetInput()
-            this.modal = true
+            this.addProblemModal = true
+            this.getCommonProblems(1)
         },
-        addProblem() {
-            if (this.displayId == null) {
-                this.$Message.warning('请输入显示题号')
-                return
+        save() {
+            if(this.isEdit) {
+                
+            } else {
+                if (this.displayId == null) {
+                    this.$Message.warning('请输入显示题号')
+                    return
+                }
+                if (this.pid == null) {
+                    this.$Message.warning('请输入添加题目编号')
+                    return
+                }
+                if (this.score == null) {
+                    this.$Message.warning('请输入分值号')
+                    return
+                }
+                this.loading = true
+                this.$http.post('/contest/'+this.cid+'/problem', {
+                    pid: this.pid,
+                    display_id: this.displayId,
+                    score: this.score
+                }).then(res => {
+                    this.$Message.success(res.message)
+                    this.getProblems()
+                    this.editModal = false
+                }).catch(res => {
+                    this.$Message.error(res.message)
+                }).finally(() => {
+                    this.loading = false
+                })
             }
-            if (this.pid == null) {
-                this.$Message.warning('请输入添加题目编号')
-                return
-            }
-            this.loading = true
-            this.$http.post('/user/contest/'+this.cid+"/problem", {
-                pid: this.pid,
-                score: this.score,
-                display_id: this.displayId
-            }).then(res => {
-                this.$Message.success(res.message)
-                this.resetInput()
-                this.getProblems()
-                this.modal = false
-            }).catch(res => {
-                this.$Message.error(res.message)
-            }).finally(() => {
-                this.loading = false
-            })
+        },
+        
+        addProblem(pid) {
+            // if (this.displayId == null) {
+            //     this.$Message.warning('请输入显示题号')
+            //     return
+            // }
+            // if (this.pid == null) {
+            //     this.$Message.warning('请输入添加题目编号')
+            //     return
+            // }
+            // this.loading = true
+            // this.$http.post('/user/contest/'+this.cid+"/problem", {
+            //     pid: this.pid,
+            //     score: this.score,
+            //     display_id: this.displayId
+            // }).then(res => {
+            //     this.$Message.success(res.message)
+            //     this.resetInput()
+            //     this.getProblems()
+            //     this.modal = false
+            // }).catch(res => {
+            //     this.$Message.error(res.message)
+            // }).finally(() => {
+            //     this.loading = false
+            // })
         },
         getProblems() {
             this.$http.get('/user/contest/'+this.cid+"/problem").then(res => {
                 this.data = res.data
             }).catch(res => {
                 this.$Message.error(res.message)
+            })
+        },
+        getCommonProblems(page) {
+            this.$http.get('/problems', {
+                params: {
+                    page: page,
+                    page_size: this.problems.pageSize,
+                }
+            }).then(res => {
+                this.problems.data = res.data.data
+                this.problems.total = res.data.total
             })
         },
         showEditProblem(index) {

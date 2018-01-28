@@ -38,6 +38,12 @@
             <FormItem label="有效时间">
                 <DatePicker type="datetimerange" format="yyyy-MM-dd HH:mm" style="width: 300px" :options="disabledDate" v-model="form.timeRange"></DatePicker>
             </FormItem>
+            <FormItem label="是否开启">
+                <i-switch v-model="form.isOpen" size="large">
+                    <span slot="open">开启</span>
+                    <span slot="close">关闭</span>
+                </i-switch>
+            </FormItem>
             <FormItem>
                 <Button style="float: right" type="primary" :loading="loading" @click="handleSubmit">更新比赛</Button>
             </FormItem>
@@ -66,7 +72,8 @@ export default {
                     m: 0,
                 },
                 contestType: 0,
-                timeType: 0
+                timeType: 0,
+                isOpen: false
             },
             disabledDate: {
                 disabledDate (date) {
@@ -128,6 +135,11 @@ export default {
                         }
                     }
 
+                    let status = 0
+                    if(this.form.isOpen) {
+                        status = 1
+                    }
+
                     let data = {
                         name: this.form.name,
                         slogan: this.form.slogan,
@@ -136,10 +148,11 @@ export default {
                         type: type,
                         total_time: totalTime,
                         start_time: startTime,
-                        end_time: endTime
+                        end_time: endTime,
+                        status: status
                     }
                     this.loading = true
-                    this.$http.put('/user/contest/'+this.cid, data).then(res => {
+                    this.$http.put('/contest/'+this.cid, data).then(res => {
                         this.$Message.success(res.message)
                         this.$parent.getContest()
                     }).catch(res => {

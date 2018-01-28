@@ -25,7 +25,7 @@
                     </Col>
                 </Row>
                 <div class="problems">
-                    <Table :columns="problems.colums" :data="problems.data"></Table>
+                    <Table :columns="problems.columns" :data="problems.data"></Table>
                     <div class="page">
                         <Page :total="problems.total" :page-size="problems.pageSize" size="small" show-total></Page>
                     </div>
@@ -64,7 +64,7 @@ export default {
             searchQuery: '',
             tags: [],
             problems: {
-                colums: [
+                columns: [
                     {
                         title: '状态',
                         render: (h, params) => {

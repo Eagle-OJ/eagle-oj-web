@@ -62,7 +62,7 @@ export default {
                     m: 0,
                 },
                 contestType: 0,
-                timeType: 0
+                timeType: 0,
             },
             disabledDate: {
                 disabledDate (date) {
@@ -125,6 +125,7 @@ export default {
                     }
 
                     let data = {
+                        group: this.getGroup,
                         name: this.form.name,
                         slogan: this.form.slogan,
                         description: this.form.description,
@@ -132,10 +133,10 @@ export default {
                         type: type,
                         total_time: totalTime,
                         start_time: startTime,
-                        end_time: endTime
+                        end_time: endTime,
                     }
                     this.loading = true
-                    this.$http.post('/user/contest', data).then(res => {
+                    this.$http.post('/contest', data).then(res => {
                         this.$Message.success(res.message)
                         this.$router.push('/user_admin/contest/'+res.data+'/edit')
                     }).catch(res => {
@@ -152,6 +153,15 @@ export default {
             let hour = this.form.totalTime.h
             let minute = this.form.totalTime.m
             return hour*60*60*1000+minute*60*1000
+        }
+    },
+    computed: {
+        getGroup() {
+            if(this.$route.query.group) {
+                return this.$route.query.group
+            } else {
+                return 0
+            }
         }
     }
 }

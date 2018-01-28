@@ -221,7 +221,7 @@ const router = new Router({
                     path: 'contest/:cid/edit',
                     component: () => import('@/components/user_admin/contest/contest_edit/ContestEdit'),
                     meta: {
-                        title: 'xxx比赛编辑'
+                        title: '比赛编辑'
                     }
                 },
                 {

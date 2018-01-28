@@ -69,7 +69,7 @@ export default {
     },
     methods: {
         getContests(page) {
-            this.$http.get('/contest?page='+page+'&page_size='+this.pageSize).then(res => {
+            this.$http.get('/contests?page='+page+'&page_size='+this.pageSize).then(res => {
                 res = res.data
                 this.total = res.total
                 this.data = res.data

@@ -91,7 +91,7 @@ export default {
     },
     methods: {
         getUserContests(page) {
-            this.$http.get('/user/contest?page='+page+'&page_size='+this.pageSize).then(res => {
+            this.$http.get('/contests/user?page='+page+'&page_size='+this.pageSize).then(res => {
                 this.data = res.data.data
                 this.total = res.data.total
             }).catch(res => {

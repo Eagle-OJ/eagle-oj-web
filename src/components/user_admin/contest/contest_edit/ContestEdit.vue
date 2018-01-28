@@ -9,10 +9,6 @@
                 <Icon type="document-text"></Icon>
                 题目管理
             </MenuItem>
-            <MenuItem name="setting">
-                <Icon type="settings"></Icon>
-                设置
-            </MenuItem>
             <MenuItem name="back">
                 <Icon type="android-arrow-back"></Icon>
                 返回
@@ -52,7 +48,9 @@ export default {
         },
         getContest() {
             this.loading = true
-            this.$http.get('/user/contest/'+this.getCid).then(res => {
+            this.$http.get('/contest/'+this.getCid, {
+                is_detail: true
+            }).then(res => {
                 this.contest = res.data
             }).catch(res => {
                 this.$Message.error(res.message)
