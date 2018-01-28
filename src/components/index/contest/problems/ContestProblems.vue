@@ -102,10 +102,7 @@
 
 <script>
 import CountDown from '@/components/index/contest/CountDown'
-import format from 'date-fns/format'
 import Difficult from '@/components/common/Difficult'
-import DistanceInWordsToNow from 'date-fns/distance_in_words_to_now'
-import cn from 'date-fns/locale/zh_cn'
 import Util from '@/util'
 export default {
     created() {
@@ -130,7 +127,7 @@ export default {
         },
         getContestUserData() {
             this.loading = true
-            this.$http.get('/user/contest/'+this.getCid+'/data').then(res => {
+            this.$http.get('/contest/'+this.getCid+'/data').then(res => {
                 this.userInfo = res.data.user
                 this.userMeta = res.data.meta
                 this.problems = res.data.problems
@@ -142,10 +139,7 @@ export default {
             })
         },
         getTime(time) {
-            return DistanceInWordsToNow(new Date(time), {
-                addSuffix: true,
-                locale: cn
-            })
+            return Util.getDistanceTime(time)
         },
     },
     computed: {
@@ -155,12 +149,12 @@ export default {
         getCountDown() {
             let type = this.contest.type
             if (type == 0 || type == 2) {
-                return format(new Date(this.contest.end_time), 'YYYY-MM-DD HH:mm:ss')
+                return Util.getFormatTime(this.contest_end_time, 'YYYY-MM-DD HH:mm:ss')
             } else {
                 // 获取限定时间
                 let join = this.userInfo.join_time
                 let total = this.contest.total_time
-                return format(new Date(join+total), 'YYYY-MM-DD HH:mm:ss')
+                return Util.getFormatTime(join+total, 'YYYY-MM-DD HH:mm:ss')
             }
         }
     },

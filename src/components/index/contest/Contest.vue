@@ -52,8 +52,7 @@
 </template>
 
 <script>
-import util from '@/util'
-import format from 'date-fns/format'
+import Util from '@/util'
 import ContestType from '@/components/common/ContestType'
 
 export default {
@@ -91,7 +90,7 @@ export default {
             }
         },
         getTime(time) {
-            return format(new Date(time), 'YYYY-MM-DD HH:mm:ss')
+            return Util.getFormatTime(time, 'YYYY-MM-DD HH:mm:ss')
         }
     },
     components: {

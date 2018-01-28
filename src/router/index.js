@@ -66,7 +66,7 @@ const router = new Router({
                     path: '/contest/:cid/problems',
                     component: () => import('@/components/index/contest/problems/ContestProblems'),
                     meta: {
-                        title: 'xxx比赛',
+                        title: '比赛',
                         requireAuth: true
                     }
                 },
@@ -74,7 +74,7 @@ const router = new Router({
                     path: '/contest/:cid/problem/:pid',
                     component: () => import('@/components/index/problem/ProblemDetail'),
                     meta: {
-                        title: 'xx比赛的题目',
+                        title: '比赛题目详情',
                         requireAuth: true
                     }                    
                 },

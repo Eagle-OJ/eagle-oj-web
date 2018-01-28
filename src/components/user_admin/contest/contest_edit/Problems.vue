@@ -52,15 +52,21 @@ export default {
             columns: [
                 {
                     title: '显示题号',
-                    key: 'display_id'
+                    key: 'display_id',
                 },
                 {
-                    title: '题号',
-                    key: 'pid'
+                    title: '题目编号',
+                    key: 'pid',
                 },
                 {
                     title: '名称',
-                    key: 'title'
+                    render: (h, params) => {
+                        return h('router-link', {
+                            props: {
+                                to: '/problem/'+params.row.pid
+                            }
+                        }, params.row.title)
+                    }
                 },
                 {
                     title: '分值',
@@ -70,7 +76,7 @@ export default {
                                 color: 'green'
                             }
                         }, params.row.score)
-                    }
+                    },
                 },
                 {
                     title: '操作',
@@ -97,7 +103,7 @@ export default {
                                 },
                                 on: {
                                     click: () => {
-                                        this.deleteProblem(params.row.title, params.row.pid)
+                                        this.deleteProblem(params.index)
                                     }
                                 }
                             }, '删除')
@@ -173,70 +179,12 @@ export default {
         }
     },
     methods: {
-        showAddProblem() {
-            this.addProblemModal = true
-            this.getCommonProblems(1)
-        },
-        save() {
-            if(this.isEdit) {
-                
-            } else {
-                if (this.displayId == null) {
-                    this.$Message.warning('请输入显示题号')
-                    return
-                }
-                if (this.pid == null) {
-                    this.$Message.warning('请输入添加题目编号')
-                    return
-                }
-                if (this.score == null) {
-                    this.$Message.warning('请输入分值号')
-                    return
-                }
-                this.loading = true
-                this.$http.post('/contest/'+this.cid+'/problem', {
-                    pid: this.pid,
-                    display_id: this.displayId,
-                    score: this.score
-                }).then(res => {
-                    this.$Message.success(res.message)
-                    this.getProblems()
-                    this.editModal = false
-                }).catch(res => {
-                    this.$Message.error(res.message)
-                }).finally(() => {
-                    this.loading = false
-                })
-            }
-        },
-        
-        addProblem(pid) {
-            // if (this.displayId == null) {
-            //     this.$Message.warning('请输入显示题号')
-            //     return
-            // }
-            // if (this.pid == null) {
-            //     this.$Message.warning('请输入添加题目编号')
-            //     return
-            // }
-            // this.loading = true
-            // this.$http.post('/user/contest/'+this.cid+"/problem", {
-            //     pid: this.pid,
-            //     score: this.score,
-            //     display_id: this.displayId
-            // }).then(res => {
-            //     this.$Message.success(res.message)
-            //     this.resetInput()
-            //     this.getProblems()
-            //     this.modal = false
-            // }).catch(res => {
-            //     this.$Message.error(res.message)
-            // }).finally(() => {
-            //     this.loading = false
-            // })
-        },
         getProblems() {
-            this.$http.get('/user/contest/'+this.cid+"/problem").then(res => {
+            this.$http.get('/contest/'+this.cid+"/problems", {
+                params: {
+                    is_detail: true
+                }
+            }).then(res => {
                 this.data = res.data
             }).catch(res => {
                 this.$Message.error(res.message)
@@ -253,47 +201,77 @@ export default {
                 this.problems.total = res.data.total
             })
         },
+        showAddProblem() {
+            this.addProblemModal = true
+            this.getCommonProblems(1)
+        },
         showEditProblem(index) {
-            this.resetInput()
             this.displayId = this.data[index].display_id
             this.pid = this.data[index].pid
             this.score = this.data[index].score
             this.editModal = true
+            this.isEdit = true
         },
-        doEditProblem() {
-            this.$http.put('/user/contest/'+this.cid+'/problem/'+this.pid, {
-                score: this.score,
-                display_id: this.displayId
-            }).then(res => {
-                this.$Message.success(res.message)
-                this.getProblems()
-                this.editModal = false
-            }).catch(res => {
-                this.$Message.error(res.message)
-            })
+        save() {
+            if (this.displayId == null) {
+                this.$Message.warning('请输入显示题号')
+                return
+            }
+            if (this.pid == null) {
+                this.$Message.warning('请输入添加题目编号')
+                return
+            }
+            if (this.score == null) {
+                this.$Message.warning('请输入分值号')
+                return
+            }
+            if(this.isEdit) {
+                this.loading = true
+                this.$http.put('/contest/'+this.cid+'/problem/'+this.pid, {
+                    score: this.score,
+                    display_id: this.displayId
+                }).then(res => {
+                    this.$Message.success(res.message)
+                    this.getProblems()
+                    this.editModal = false
+                }).catch(res => {
+                    this.$Message.error(res.message)
+                }).finally(() => {
+                    this.loading = false
+                })
+            } else {
+                this.loading = true
+                this.$http.post('/contest/'+this.cid+'/problem', {
+                    pid: this.pid,
+                    display_id: this.displayId,
+                    score: this.score
+                }).then(res => {
+                    this.$Message.success(res.message)
+                    this.getProblems()
+                    this.editModal = false
+                }).catch(res => {
+                    this.$Message.error(res.message)
+                }).finally(() => {
+                    this.loading = false
+                })
+            }
         },
-        deleteProblem(title, pid) {
+        deleteProblem(index) {
+            let pid = this.data[index].pid
+            let title = this.data[index].title
             this.$Modal.confirm({
                 title: '确认删除',
                 content: '<p>确认删除 <b>'+title+'</b> ？</p>',
                 onOk: () => {
-                    this.doDeleteProblem(pid)
+                    this.$http.delete('/contest/'+this.cid+'/problem/'+pid).then(res => {
+                        this.$Message.success(res.message)
+                        this.getProblems()
+                    }).catch(res => {
+                        this.$Message.error(res.message)
+                    })
                 }
             });
         },
-        doDeleteProblem(pid) {
-            this.$http.delete('/user/contest/'+this.cid+'/problem/'+pid).then(res => {
-                this.$Message.success(res.message)
-                this.getProblems()
-            }).catch(res => {
-                this.$Message.error(res.message)
-            })
-        },
-        resetInput() {
-            this.score = 1
-            this.displayId = null
-            this.pid = null
-        }
     }
 }
 </script>

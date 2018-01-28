@@ -32,10 +32,10 @@
                 <ContestType :type="data.type" :total_time="data.total_time"></ContestType>
             </div>
             <div class="mode-des">
+                <p><b>OI模式</b> 按照测试点得分来计算</p>
                 <p><b>ACM模式</b> 如果题目的一个测试点错误，则判整体都是错误</p>
-                <p><b>普通模式</b> 按照测试点得分来计算</p>
                 <p><b>不限时</b> 开始比赛后没有时间限制</p>
-                <p><b>限时</b> 在选手开始答题为计时开始时间，比赛时间到即比赛结束</p>
+                <p><b>限时</b> 在选手加入比赛为计时开始时间，比赛时间到即比赛结束</p>
             </div>
         </div>
         <div></div>
@@ -45,7 +45,6 @@
 </template>
 
 <script>
-import format from 'date-fns/format'
 import Util from '@/util'
 import CountDown from '@/components/index/contest/CountDown'
 import ContestType from '@/components/common/ContestType'
@@ -100,7 +99,7 @@ export default {
             }
         },
         enterContest() {
-            this.$http.post('/user/contest/'+this.getCid+'/enter', {password: this.password}).then(res => {
+            this.$http.post('/contest/'+this.getCid+'/enter', {password: this.password}).then(res => {
                 this.$Message.success(res.message)
                 this.redirectToContest()
             }).catch(res => {
@@ -116,11 +115,11 @@ export default {
             })
         },
         getTime(time) {
-            return format(new Date(time), 'YYYY-MM-DD HH:mm:ss')
+            return Util.getFormatTime(time, 'YYYY-MM-DD HH:mm:ss')
         },
         getContestUserInfo() {
             if (this.$store.state.userInfo.isLogin) {
-                this.$http.get('/user/contest/'+this.getCid+'/data').then(res => {
+                this.$http.get('/contest/'+this.getCid+'/data').then(res => {
                     this.isEnter = true
                 }).catch(res => {
                     this.isEnter = false

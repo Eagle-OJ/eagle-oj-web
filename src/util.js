@@ -15,9 +15,9 @@ export default {
     },
     getContestType(type) {
         if (type == 0 || type == 1) {
-            return '普通比赛'
+            return 'OI模式'
         } else {
-            return 'ACM比赛'
+            return 'ACM模式'
         }
     },
     convertProblemStatus(text) {
