@@ -1,5 +1,6 @@
 <template>
     <div id="container">
+        <Alert v-if="contest.group > 0">正在编辑小组赛</Alert>
         <Menu mode="horizontal" :active-name="getActive" @on-select="goTo">
             <MenuItem name="description">
                 <Icon type="ios-paper"></Icon>

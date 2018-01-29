@@ -1,96 +1,210 @@
 <template>
     <div id="container">
-        <Row :gutter="20">
-            <Col span="14" class="left">
-                <Card class="description" v-if="description != null">
-                    <p slot="title">小组介绍</p>
-                    <div class="content">
-                        <p><span class="title">小组名称:</span>{{description.name}}</p>
-                        <p><span class="title">创建时间:</span>{{getTime(description.create_time)}}</p>
-                        <p><span class="title">组长:</span><router-link :to="{path: '/profile/'+description.owner}">{{description.nickname}}</router-link></p>
-                    </div>
-                </Card>
-                <Input v-if="isIn" v-model="realName" class="real_name" :maxlength="20">
-                    <span slot="prepend">组内名称</span>
-                    <Button slot="append" icon="checkmark" @click="updateRealName"></Button>
+        <Card class="title">
+            <h1>{{group.name}}</h1>
+            <span class="other">
+                <span class="leader">
+                    组长:            
+                    <router-link :to="{path: '/profile/'+group.owner}">{{group.leader}}</router-link>
+                </span>
+                <span class="create_time">创建于{{getTime(group.create_time)}}</span>
+            </span>
+        </Card>
+        <Card class="security" v-if="! isIn" style="text-align: center">
+            <h2 class="warning">你尚未加入此小组</h2>
+            <div class="password">
+                <Input v-if="group.password" v-model="password" type="password" :maxlength="6" style="width: 250px; margin: 0 auto">
+                    <Icon type="locked" slot="prepend">http://</Icon >
+                    <Button slot="append" @click="joinGroup">加入</Button>
                 </Input>
-                <div class="join">
-                    <Button key="join" v-if="!isIn" class="button" type="success" size="large" @click="joinGroup">加入小组</Button>
-                    <Button key="quit" v-else class="button" type="error" size="large" @click="quitGroup">退出小组</Button>
-                </div>
-            </Col>
-            <Col span="10" class="right">
-                <Card>
-                    <p slot="title">组员信息</p>
-                    <ul class="members">
-                        <li v-for="item in members">
-                            <img :src="$getAvatar(item.avatar)">
-                            <router-link :to="{path: '/profile/'+item.uid}" title="查看个人资料">{{item.nickname}}</router-link>
+                <Button v-else type="success" @click="joinGroup">加入小组</Button>
+            </div>
+            
+        </Card>
+        <Card class="group" v-else>
+            <Row :gutter="32" class="user" v-if="user != null">
+                <Col span="4"><img class="avatar" :src="$getAvatar(user.avatar)"/></Col>
+                <Col span="20" class="right">
+                    <div class="nickname">
+                        <router-link :to="{path: '/profile/'+user.uid}">{{user.group_name}}</router-link>
+                        <Button type="ghost" size="small" @click="changeGroupName">修改组内名称</Button>
+                    </div>
+                    <div class="join-time">
+                        {{getDistanceTime(user.join_time)}}加入小组
+                    </div>
+                    <div class="data">
+                        <div class="each">
+                            <span class="number">{{user.finished_problems}}</span>
+                            <span class="info">解决题目</span>
+                        </div>
+                        <div class="each">
+                            <span class="number">{{user.score}}</span>
+                            <span class="info">分数</span>
+                        </div>
+                        <div class="each">
+                            <span class="number">{{user.submit_times}}</span>
+                            <span class="info">提交</span>
+                        </div>
+                        <div class="each">
+                            <span class="number">{{user.ac_times}}</span>
+                            <span class="info">AC</span>
+                        </div>
+                        <div class="each">
+                            <span class="number">{{user.wa_times}}</span>
+                            <span class="info">WA</span>
+                        </div>
+                        <div class="each">
+                            <span class="number">{{user.rte_times}}</span>
+                            <span class="info">RTE</span>
+                        </div>
+                        <div class="each">
+                            <span class="number">{{user.ce_times}}</span>
+                            <span class="info">CE</span>
+                        </div>
+                        <div class="each">
+                            <span class="number">{{user.tle_times}}</span>
+                            <span class="info">TLE</span>
+                        </div>
+                    </div>
+                    <Button class="quit" size="small" type="error" icon="log-out" @click="quitGroup">退出</Button>
+                </Col>
+            </Row>
+            <div class="divider"></div>
+            <Row :gutter="16">
+                <Col span="17">
+                    <h4>组员列表</h4>
+                    <Table :data="members.data" :columns="members.columns"></Table>
+                    <Page style="margin-top: 10px; text-align: center" :total="members.total" :page-size="members.pageSize" @on-change="getMembers" simple></Page>
+                </Col>
+                <Col span="7">
+                    <h4>小组赛</h4>
+                    <ul class="contests">
+                        <li v-for="item in contests">
+                            <router-link :to="{path: '/contest/'+item.cid}">{{item.name}}</router-link>
+                            <contest-status :status="item.status"></contest-status>
                         </li>
                     </ul>
-                    <Page :current="1" :total="total" :page-size="pageSize" simple style="text-align: center"></Page>
-                </Card>
-            </Col>
-        </Row>
+                </Col>
+            </Row>
+        </Card>
     </div>
 </template>
 
 <script>
-import Format from 'date-fns/format'
-import cn from 'date-fns/locale/zh_cn'
+import Util from '@/util'
+import ContestType from '@/components/common/ContestType'
+import ContestStatus from '@/components/common/ContestStatus'
 export default {
     created() {
-        this.getGroup()
-        this.judgeIsIn()
-        this.getMembers(1)
-    },
+        this.init()
+    }, 
     data() {
         return {
-            description: null,
-            members: [],
-            pageSize: 10,
-            total: 0,
-            isIn: false,
             password: null,
-            realName: ''
+            group: {},
+            isIn: false,
+            user: null,
+
+            groupName: '',
+            members: {
+                total: 0,
+                data: [],
+                columns: [
+                    {
+                        title: '组内名称',
+                        render: (h, params) => {
+                            return h('router-link', {
+                                props: {
+                                    to: '/profile/'+params.row.uid
+                                }
+                            }, params.row.group_name)
+                        },
+                        width: 100,
+                        align: 'center'
+                    },
+                    {
+                        title: '解决题数',
+                        key: 'finished_problems',
+                        width: 85,
+                        align: 'center'
+                    },
+                    {
+                        title: '分数',
+                        key: 'score',
+                        align: 'center'
+                    },
+                    {
+                        title: '提交',
+                        key: 'submit_times',
+                        align: 'center'
+                    },
+                    {
+                        title: 'AC',
+                        key: 'ac_times',
+                        align: 'center'
+                    },
+                    {
+                        title: 'WA',
+                        key: 'wa_times',
+                        align: 'center'
+                    },
+                    {
+                        title: 'RTE',
+                        key: 'rte_times',
+                        align: 'center'
+                    },
+                    {
+                        title: 'CE',
+                        key: 'ce_times',
+                        align: 'center'
+                    },
+                    {
+                        title: 'TLE',
+                        key: 'tle_times',
+                        align: 'center'
+                    }
+                ],
+                pageSize: 10,
+            },
+            contests: []
         }
     },
     methods: {
+        init() {
+            this.getGroup()
+            this.getGroupUserInfo()
+            this.getMembers(1)
+            this.getGroupContests()
+        },
         getGroup() {
             this.$http.get('/group/'+this.getGid).then(res => {
-                this.description = res.data
+                this.group = res.data
             })
         },
-        getMembers(page) {
-            this.$http.get('/group/'+this.getGid+'/members', {
-                params: {
-                    page: page,
-                    page_size: this.pageSize
-                }
-            }).then(res => {
-                this.members = res.data.data
-                this.total = res.data.total
-            })
-        },
-        judgeIsIn() {
+        getGroupUserInfo() {
             if(this.$store.state.userInfo.isLogin) {
                 this.$http.get('/group/'+this.getGid+'/user/'+this.getUid).then(res => {
+                    this.user = res.data
                     this.isIn = true
-                    this.realName = res.data.real_name
                 }).catch(res => {
                     this.isIn = false
                 })
             }
         },
-        updateRealName() {
-            if(this.realName.length ==0 || this.realName.length >20) {
-                this.$Message.warning('组内姓名不符合要求')
-                return
-            }
-            this.$http.put('/group/'+this.getGid+'/user/'+this.getUid, {real_name: this.realName}).then(res => {
-                this.$Message.success(res.message)
-            }).catch(res => {
-                this.$Message.error(res.message)
+        getMembers(page) {
+            this.$http.get('/group/'+this.getGid+'/members', {
+                params: {
+                    page: page,
+                    page_size: this.members.pageSize
+                }
+            }).then(res => {
+                this.members.data = res.data.data
+                this.members.total = res.data.total
+            })
+        },
+        getGroupContests() {
+            this.$http.get('/group/'+this.getGid+'/contests').then(res => {
+                this.contests = res.data
             })
         },
         joinGroup() {
@@ -99,58 +213,78 @@ export default {
                 return
             }
 
-            if (this.description.password) {
-                this.$Modal.confirm({
-                    render: (h) => {
-                        return h('Input', {
-                            props: {
-                                value: this.value,
-                                autofocus: true,
-                                maxlength: 6,
-                                type: 'password',
-                                placeholder: '请输入密码'
-                            },
-                            on: {
-                                input: (val) => {
-                                    this.password = val;
-                                }
-                            },
-                            
-                        })
-                    },
-                    onOk: () => {
-                        this.doJoinGroup()
-                    },
-                })
-            } else {
-                this.doJoinGroup()
-            }
-        },
-        doJoinGroup() {
             this.$http.post('/group/'+this.getGid+'/enter', {
                 password: this.password
             }).then(res => {
                 this.$Message.success(res.message)
-                this.isIn = true
-                this.getMembers(1)
+                this.init()
             }).catch(res => {
                 this.$Message.error(res.message)
             })
         },
+        changeGroupName() {
+            this.$Modal.confirm({
+                render: (h) => {
+                    return h('Input', {
+                        props: {
+                            value: this.groupName,
+                            autofocus: true,
+                            maxlength: 20,
+                            placeholder: '请输入组内名称'
+                        },
+                        on: {
+                            input: (val) => {
+                                this.groupName = val;
+                            }
+                        }
+                    })
+                },
+                onOk: () => {
+                    if(this.groupName.length ==0 || this.groupName.length >20) {
+                        this.$Message.warning('组内姓名不符合要求')
+                        return
+                    }
+                    this.$http.put('/group/'+this.getGid+'/user/'+this.getUid, {
+                        group_name: this.groupName
+                    }).then(res => {
+                        this.$Message.success(res.message)
+                        this.getGroupUserInfo()
+                        this.getMembers()
+                    }).catch(res => {
+                        this.$Message.error(res.message)
+                    })
+                }
+            })
+        },
         quitGroup() {
-            this.$http.delete('/group/'+this.getGid+'/user/'+this.$store.state.userInfo.uid).then(res => {
-                this.isIn = false
-                this.getMembers(1)
-                this.$Message.success('退出成功')
-            }).catch(res => {
-                this.$Message.error('退出失败')
+            this.$Modal.confirm({
+                title: '确认退出小组',
+                content: '<p>一旦退出小组，组内所有数据会被清除</p>',
+                onOk: () => {
+                    this.$http.delete('/group/'+this.getGid+'/user/'+this.getUid).then(res => {
+                        this.init()
+                        this.$Message.success('退出成功')
+                    }).catch(res => {
+                        this.$Message.error('退出失败')
+                    })
+                },
             })
         },
         getTime(time) {
             return Format(new Date(time), 'YYYY-MM-DD', {
                 locale: cn
             })
+        },
+        getTime(time) {
+            return Util.getFormatTime(time, 'YYYY-MM-DD')
+        },
+        getDistanceTime(time) {
+            return Util.getDistanceTime(time)
         }
+    },
+    components: {
+        ContestType,
+        ContestStatus
     },
     computed: {
         getGid() {
@@ -162,12 +296,10 @@ export default {
     },
     watch: {
         'getGid': function() {
-            this.getGroup()
-            this.getMembers(1)
-            this.judgeIsIn()
+            this.init()
         },
         '$store.state.userInfo.isLogin': function () {
-            this.judgeIsIn()
+            this.getGroupUserInfo()
         }
     }
 }

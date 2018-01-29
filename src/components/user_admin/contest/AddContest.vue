@@ -1,5 +1,6 @@
 <template>
     <div id="container">
+        <Alert v-if="getGroup > 0">正在创建小组赛</Alert>
         <Form ref="form" :model="form" :rules="validate" :label-width="80">
             <FormItem label="比赛名称" prop="name">
                 <Input v-model="form.name" :maxlength="50"></Input>
@@ -10,13 +11,13 @@
             <FormItem label="详细描述" prop="description">
                 <Input v-model="form.description" type="textarea" :maxlength="500" :autosize="{minRows: 2,maxRows: 5}"></Input>
             </FormItem>
-            <FormItem label="是否公开">
+            <FormItem label="是否公开" v-if="getGroup == 0">
                 <i-switch v-model="form.isShare" size="large">
                     <span slot="open">公开</span>
                     <span slot="close">私密</span>
                 </i-switch>
             </FormItem>
-            <FormItem label="密码" prop="password" v-if="! form.isShare">
+            <FormItem label="密码" prop="password" v-if="! form.isShare && getGroup == 0">
                 <Input v-model="form.password" placeholder="密码不得超出6位" :maxlength="6"></Input>
             </FormItem>
             <FormItem label="比赛模式">

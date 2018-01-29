@@ -19,27 +19,55 @@ export default {
             total: 0,
             columns: [
                 {
-                    render: (h, params) => {
-                        return h('Avatar', {
-                            props: {
-                                src: this.$getAvatar(params.row.avatar)
-                            }
-                        })
-                    }
-                },
-                {
-                    title: '昵称',
+                    title: '组内名称',
                     render: (h, params) => {
                         return h('router-link', {
                             props: {
                                 to: '/profile/'+params.row.uid
                             }
-                        }, params.row.nickname)
+                        }, params.row.group_name)
                     }
                 },
                 {
-                    title: '真名',
-                    key: 'real_name'
+                    title: '解决题数',
+                    key: 'finished_problems',
+                    width: 85,
+                    align: 'center'
+                },
+                {
+                    title: '分数',
+                    key: 'score',
+                    align: 'center'
+                },
+                {
+                    title: '提交',
+                    key: 'submit_times',
+                    align: 'center'
+                },
+                {
+                    title: 'AC',
+                    key: 'ac_times',
+                    align: 'center'
+                },
+                {
+                    title: 'WA',
+                    key: 'wa_times',
+                    align: 'center'
+                },
+                {
+                    title: 'RTE',
+                    key: 'rte_times',
+                    align: 'center'
+                },
+                {
+                    title: 'CE',
+                    key: 'ce_times',
+                    align: 'center'
+                },
+                {
+                    title: 'TLE',
+                    key: 'tle_times',
+                    align: 'center'
                 },
                 {
                     title: '加入时间',
@@ -57,7 +85,7 @@ export default {
                             },
                             on: {
                                 click: () => {
-                                    this.deleteMember(params.row.nickname, params.row.uid)
+                                    this.deleteMember(params.index)
                                 }
                             }
                         }, '踢出')
@@ -80,10 +108,12 @@ export default {
                 this.data = res.data.data
             })
         },
-        deleteMember(nickname, uid) {
+        deleteMember(index) {
+            let name = this.data[index].group_name
+            let uid = this.data[index].uid
             this.$Modal.confirm({
                 title: '踢出用户',
-                content: '<p>确认踢出<b>'+nickname+'</b>?</p>',
+                content: '<p>确认踢出<b>'+name+'</b>?</p>',
                 onOk: () => {
                     this.$http.delete('/group/'+this.gid+'/user/'+uid).then(res => {
                         this.$Message.success('踢出成功')

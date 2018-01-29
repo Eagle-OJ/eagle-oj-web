@@ -11,16 +11,14 @@
                 </p>
             </Col>
         </Row>
-        <Row class="each pull_contest">
-            <Col span="5" class="title">拉入比赛</Col>
+        <Row class="each">
+            <Col span="5" class="title">创建小组赛</Col>
             <Col span="19" class="content">
-                <Alert>将你的组员全部拉入比赛中</Alert>
                 <p>
-                    <span>比赛ID：</span><InputNumber style="margin-right: 10px" v-model="cid"></InputNumber>
-                    <span>密码：</span><Input style="width: 200px" placeholder="无密码可不填" v-model="password"></Input>
-                </p>
-                <p>
-                    <Button @click="pullUsersIntoContest">提交</Button>
+                    <Alert>创建只有本小组成员才可以加入的小组比赛</Alert>
+                    <router-link :to="{path: '/user_admin/contest/add?group='+gid}">
+                        <Button type="ghost">创建小组赛</Button>
+                    </router-link>
                 </p>
             </Col>
         </Row>
@@ -33,28 +31,9 @@ export default {
     data() {
         return {
             message: '',
-            cid: 0,
-            password: ''
         }
     },
     methods: {
-        pullUsersIntoContest() {
-            if(this.cid <= 0) {
-                this.$Message.warning('比赛ID非法')
-                return
-            }
-            let temp = null
-            if(this.password.length != 0) {
-                temp = this.password
-            }
-            this.$http.post('/group/'+this.gid+'/pull_contest', {cid: this.cid, password: temp}).then(res => {
-                this.$Message.success(res.message)
-                this.password = ''
-                this.cid = 0
-            }).catch(res => {
-                this.$Message.error(res.message)
-            })
-        },
         sendMessage() {
             if(this.message.length < 10) {
                 this.$Message.warning('消息长度不得小于10个字')

@@ -149,7 +149,7 @@ export default {
         getCountDown() {
             let type = this.contest.type
             if (type == 0 || type == 2) {
-                return Util.getFormatTime(this.contest_end_time, 'YYYY-MM-DD HH:mm:ss')
+                return Util.getFormatTime(this.contest.end_time, 'YYYY-MM-DD HH:mm:ss')
             } else {
                 // 获取限定时间
                 let join = this.userInfo.join_time

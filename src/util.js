@@ -20,6 +20,15 @@ export default {
             return 'ACM模式'
         }
     },
+    getContestStatus(status) {
+        if(status == 0) {
+            return '编辑中'
+        } else if (status == 1) {
+            return '已启用'
+        } else {
+            return '已关闭'
+        }
+    },
     convertProblemStatus(text) {
         switch(text) {
             case 'AC':
