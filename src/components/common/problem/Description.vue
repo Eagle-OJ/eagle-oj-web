@@ -58,11 +58,11 @@
 			<div class="body">
 				<div class="line" v-for="(item,index) of testCases.data">
 					<div class="input">
-						<Input v-model="item.stdin" placeholder="输入字符串"></Input>
+						<Input v-model="item.stdin" type="textarea" :autosize="{minRows: 3,maxRows: 5}" placeholder="输入字符串"></Input>
 					</div>
 					<div class="space"></div>
 					<div class="output">
-						<Input v-model="item.stdout" placeholder="期望结果"></Input>
+						<Input v-model="item.stdout" type="textarea" :autosize="{minRows: 3,maxRows: 5}" placeholder="期望结果"></Input>
 					</div>
 					<div class="trash">
 						<Icon type="trash-b" @click.native="deleteTestCase(index)" />
