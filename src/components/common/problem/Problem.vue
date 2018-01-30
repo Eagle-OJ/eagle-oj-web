@@ -27,7 +27,7 @@
         </div>
         <div class="content" v-if="data">
             <keep-alive>
-                <component :is="getActive" :cid="getCid" :pid="getPid" :data="data"></component>
+                <component :is="getActive" :cid="getCid" :pid="getPid" :gid="getGid" :data="data"></component>
             </keep-alive>
         </div>
     </div>
@@ -93,11 +93,19 @@ export default {
             } else {
                 return cid
             }
+        },
+        getGid() {
+            let gid = this.$route.params.gid
+            if(gid == undefined) {
+                return 0
+            } else {
+                return gid
+            }
         }
     },
     watch: {
         'getPid': function() {
-            this.getProblem()
+            this.getData()
         }
     },
     components: {

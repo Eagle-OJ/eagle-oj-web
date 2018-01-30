@@ -82,7 +82,7 @@ import Chart from 'chart.js'
 import Util from '@/util'
 import Cookie from 'js-cookie'
 export default {
-    props: ['cid', 'pid', 'data'],
+    props: ['cid', 'pid', 'gid', 'data'],
     created() {
         this.langList = this.data.problem.lang
     },
@@ -168,9 +168,10 @@ export default {
                     return
                 }
                 this.isSubmit = true
-				this.$http.post('/user/code', {
+				this.$http.post('/code/user', {
                     contest_id: this.cid,
                     problem_id: this.pid,
+                    group_id: this.gid,
                     lang: this.lang,
                     source_code: code,
                 }).then(res => {
