@@ -100,7 +100,11 @@ export default {
             }
         },
         getGid() {
-            return this.data.contest.group
+            if (this.data.contest) {
+                return this.data.contest.group
+            } else {
+                return 0
+            }
         }
     },
     watch: {
