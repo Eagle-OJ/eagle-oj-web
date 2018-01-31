@@ -32,6 +32,16 @@ export default {
                     }
                 },
                 {
+                    title: '类型',
+                    render: (h, params) => {
+                        if(params.row.group > 0) {
+                            return '小组赛'
+                        } else {
+                            return '普通'
+                        }
+                    }
+                },
+                {
                     title: '模式',
                     render: (h, params) => {
                         return h('div', [

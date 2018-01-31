@@ -4,10 +4,15 @@
         <div class="header" v-if="data">
             <h1>{{data.problem.title}}</h1>
             <Difficult :difficult="data.problem.difficult"></Difficult>
-            <router-link v-if="getCid>0" :to="{path: '/contest/'+this.getCid+'/problems'}">
-                <Button class="favorite" icon="ios-arrow-back" type="info">返回比赛</Button>
-            </router-link>
-            <Button v-else class="favorite" icon="android-favorite-outline" type="ghost">收藏</Button>
+            <span class="tool">
+                <router-link v-if="getGid>0" :to="{path: '/group/'+this.getGid}">
+                    <Button class="favorite" icon="ios-arrow-back" type="info">返回小组</Button>
+                </router-link>
+                <router-link v-if="getCid>0" :to="{path: '/contest/'+this.getCid+'/problems'}">
+                    <Button class="favorite" icon="ios-arrow-back" type="info">返回比赛</Button>
+                </router-link>
+                <Button v-if="false" class="favorite" icon="android-favorite-outline" type="ghost">收藏</Button>
+            </span>
         </div>
         <div class="tags">
             <span>知识点：</span>
@@ -95,12 +100,7 @@ export default {
             }
         },
         getGid() {
-            let gid = this.$route.params.gid
-            if(gid == undefined) {
-                return 0
-            } else {
-                return gid
-            }
+            return this.data.contest.group
         }
     },
     watch: {

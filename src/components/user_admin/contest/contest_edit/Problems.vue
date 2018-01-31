@@ -23,7 +23,7 @@
                 <span>显示题号 </span>
                 <InputNumber style="margin-right: 10px" v-model="displayId" :min="1"></InputNumber>
                 <span>分值 </span>
-                <InputNumber v-model="score" :min="1"></InputNumber>
+                <InputNumber v-model="score" :min="1" :max="100"></InputNumber>
             </div>
             <div slot="footer">
                 <Button type="success" size="large" long :loading="loading" @click="save">保存</Button>
@@ -191,7 +191,7 @@ export default {
             })
         },
         getCommonProblems(page) {
-            this.$http.get('/problems', {
+            this.$http.get('/problems/contest', {
                 params: {
                     page: page,
                     page_size: this.problems.pageSize,

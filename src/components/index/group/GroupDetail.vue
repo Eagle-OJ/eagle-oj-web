@@ -38,10 +38,6 @@
                             <span class="info">解决题目</span>
                         </div>
                         <div class="each">
-                            <span class="number">{{user.score}}</span>
-                            <span class="info">分数</span>
-                        </div>
-                        <div class="each">
                             <span class="number">{{user.submit_times}}</span>
                             <span class="info">提交</span>
                         </div>
@@ -81,7 +77,7 @@
                     <ul class="contests">
                         <li v-for="item in contests">
                             <router-link :to="{path: '/contest/'+item.cid}">{{item.name}}</router-link>
-                            <contest-status :status="item.status"></contest-status>
+                            <contest-status :status="item.status" class="badge"></contest-status>
                         </li>
                     </ul>
                 </Col>
@@ -126,11 +122,6 @@ export default {
                         title: '解决题数',
                         key: 'finished_problems',
                         width: 85,
-                        align: 'center'
-                    },
-                    {
-                        title: '分数',
-                        key: 'score',
                         align: 'center'
                     },
                     {

@@ -81,7 +81,8 @@
                         <router-link style="float: right" :to="{path: '/contest/'+this.getCid+'/leaderboard'}">排行榜</router-link>
                     </p>
                     <div class="rank">
-                        <span style="font-size: 60px">{{userMeta.rank}}/<span style="font-size: 35px">{{userMeta.total}}</span></span>
+                        <span style="font-size: 35px" v-if="userMeta.rank == -1">暂无排名</span>
+                        <span style="font-size: 60px" v-else>{{userMeta.rank}}/<span style="font-size: 35px">{{userMeta.total}}</span></span>
                         <span class="update-time">{{getTime(userMeta.create_time)}}更新</span>
                     </div>
                 </div>

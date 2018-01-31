@@ -1,6 +1,9 @@
 <template>
     <div id="container">
         <div class="meta" v-if="meta">
+            <router-link :to="{path: '/contest/'+getCid+'/problems'}" style="float: left">
+                <Button size="small" icon="arrow-left-c" type="info">返回比赛</Button>
+            </router-link>
             <span class="total">统计人数 <span class="num">{{meta.total}}人</span></span>
             <span class="time"><span class="num">{{getTime(meta.create_time)}}</span>更新</span>
         </div>
@@ -9,8 +12,8 @@
 </template>
 
 <script>
-import DistanceInWordsToNow from 'date-fns/distance_in_words_to_now'
-import cn from 'date-fns/locale/zh_cn'
+import Util from '@/util'
+import ContestUserDetail from './ContestUserDetail'
 export default {
     created() {
         this.getRank()
@@ -19,6 +22,18 @@ export default {
         return {
             loading: false,
             columns: [
+                {
+                    type: 'expand',
+                    width: 50,
+                    render: (h, params) => {
+                        return h(ContestUserDetail, {
+                            props: {
+                                cid: this.getCid,
+                                uid: params.row.uid,
+                            }
+                        })
+                    }
+                },
                 {
                     title: '排名',
                     render: (h, params) => {
@@ -52,9 +67,9 @@ export default {
                     key: 'ac_times'
                 },
                 {
-                    title: '总耗时',
-                    render: (h, param) => {
-                        return Math.ceil(param.row.used_time/1000/60)+'分钟'
+                    title: '耗时',
+                    render: (h, params) => {
+                        return this.getParsedTime(params.row.used_time)
                     }
                 },
             ],
@@ -65,9 +80,26 @@ export default {
     methods: {
         getRank() {
             this.loading = true
-            this.$http.get('/leaderboard/contest/'+this.getCid).then(res => {
-                console.log(res)
+            this.$http.get('/leaderboard/contest', {
+                params: {
+                    cid: this.getCid
+                }
+            }).then(res => {
                 this.meta = res.data.splice(0, 1)[0]
+                if(this.meta.is_acm) {
+                    this.columns.push({
+                        title: '罚时',
+                        render: (h, params) => {
+                            return this.getParsedTime(params.row.penalty_time)
+                        }
+                    })
+                    this.columns.push({
+                        title: '总耗时',
+                        render: (h, params) => {
+                            return this.getParsedTime(params.row.penalty_time + params.row.used_time)
+                        }  
+                    })  
+                }
                 this.data = res.data
             }).catch(res => {
                 this.$Message.error(res.message)
@@ -75,11 +107,14 @@ export default {
                 this.loading = false
             })
         },
-        getTime(date) {
-            return DistanceInWordsToNow(new Date(date), {
-                addSuffix: true,
-                locale: cn
-            })
+        getTime(time) {
+            return Util.getDistanceTime(time)
+        },
+        getParsedTime(time) {
+            if(time == 0) {
+                return 'N/A'
+            }
+            return Math.ceil(time/1000/60)+'分钟'
         }
     },
     computed: {
