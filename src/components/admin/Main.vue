@@ -24,12 +24,16 @@
                                 <Icon type="android-settings"></Icon>
                                 系统设置
                             </MenuItem>
-                            <MenuItem name="judger">
+                            <!-- <MenuItem name="judger">
                                 <Icon type="code-working"></Icon>
                                 判卷机管理
-                            </MenuItem>
+                            </MenuItem> -->
                         </MenuGroup>
                         <MenuGroup title="内容管理">
+                            <MenuItem name="tag">
+                                <Icon type="pricetags"></Icon>
+                                标签管理
+                            </MenuItem>
                             <MenuItem name="auditing">
                                 <Icon type="ios-checkmark-outline"></Icon>
                                 题目审核

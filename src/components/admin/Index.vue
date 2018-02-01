@@ -1,5 +1,5 @@
 <template>
-    <div class="index">admin index</div>
+    <div class="index">Developing</div>
 </template>
 
 <script>

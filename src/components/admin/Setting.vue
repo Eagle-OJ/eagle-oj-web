@@ -21,6 +21,10 @@
             <FormItem label="url" prop="url">
                 <Input v-model="form.url"></Input>
             </FormItem>
+            <div class="little-title">判卷机设置</div>
+            <FormItem label="判卷机地址" prop="judgerUrl">
+                <Input v-model="form.judgerUrl"></Input>
+            </FormItem>
             <FormItem>
                 <Button type="primary" @click="submit">保存</Button>
             </FormItem>
@@ -41,7 +45,8 @@ export default {
                 secretKey: '',
                 bucket: '',
                 endPoint: '',
-                url: ''
+                url: '',
+                judgerUrl: ''
             },
             rules: {
                 title: [
@@ -63,6 +68,9 @@ export default {
                 url: [
                     { required: true, message: 'URL不得为空'},
                 ],
+                judgerUrl: [
+                    { required: true, message: '判卷机地址不得为空'}
+                ]
             }
         }
     },
@@ -81,6 +89,7 @@ export default {
                 this.form.bucket = oss_config.bucket
                 this.form.endPoint = oss_config.end_point
                 this.form.url = oss_config.url
+                this.form.judgerUrl = data.judger_url
             })
         },
         submit() {

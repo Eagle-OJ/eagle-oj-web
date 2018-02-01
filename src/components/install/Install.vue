@@ -33,6 +33,10 @@
                 <FormItem label="Url" prop="url">
                     <Input v-model="form.url"></Input>
                 </FormItem>
+                <div class="little-title" style="background: #5cadff">判卷机设置</div>
+                <FormItem label="判卷机地址" prop="judgerUrl">
+                    <Input v-model="form.judgerUrl"></Input>
+                </FormItem>
                 <FormItem>
                     <Button type="primary" @click="submit">提交</Button>
                 </FormItem>
@@ -43,6 +47,12 @@
 
 <script>
 export default {
+    created() {
+        if(this.$store.state.setting.is_installed) {
+            this.$router.push('/login')
+            this.$Message.warning('你已经安装过网站了')
+        }
+    },
     data() {
         return {
             form: {
@@ -55,6 +65,7 @@ export default {
                 endPoint: '',
                 bucket: '',
                 url: '',
+                judgerUrl: ''
             },
             rules: {
                 nickname: [
@@ -87,6 +98,9 @@ export default {
                 url: [
                     { required: true, message: 'URL不得为空'},
                 ],
+                judgerUrl: [
+                    { required: true, message: '判卷机地址不得为空'},
+                ]
             }
         }
     },
@@ -103,6 +117,7 @@ export default {
             this.$http.post('/setting', data).then(res => {
                 this.$Message.success(res.message)
                 this.$router.push('/login')
+                setInterval('location.reload()', 1500);
             }).catch(res => {
                 this.$Message.error(res.message)
             })

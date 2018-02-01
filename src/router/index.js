@@ -310,6 +310,13 @@ const router = new Router({
                     meta: {
                         title: '题目管理'
                     }
+                },
+                {
+                    path: 'tag',
+                    component: () => import('@/components/admin/Tag'),
+                    meta: {
+                        title: '标签管理'
+                    }
                 }
             ]
         },
@@ -349,7 +356,7 @@ const router = new Router({
 
 router.beforeEach((to, from, next) => {
     let webTitle = ''
-    if(Store.state.setting.title.length != 0) {
+    if(Store.state.setting.is_installed && Store.state.setting.title.length != 0) {
         webTitle = ' - '+Store.state.setting.title
     }
     document.title = to.meta.title+webTitle+Config.TITLE
