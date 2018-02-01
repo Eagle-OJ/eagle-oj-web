@@ -22,6 +22,14 @@
                 </p>
             </Col>
         </Row>
+        <Row class="each">
+            <Col span="5" class="title">解散小组</Col>
+            <Col span="19" class="content">
+                <p>
+                    <Button type="error" @click="dismissGroup">解散小组</Button>
+                </p>
+            </Col>
+        </Row>
     </div>
 </template>
 
@@ -45,6 +53,20 @@ export default {
                 this.message = ''
             }).catch(res => {
                 this.$Message.error(res.message)
+            })
+        },
+        dismissGroup() {
+            this.$Modal.confirm({
+                title: '解散小组',
+                content: '<p>如果组内开设有比赛，将无法解散！</p>',
+                onOk: () => {
+                    this.$http.delete('/group/'+this.gid).then(res => {
+                        this.$Message.success(res.message)
+                        this.$router.push('/user/group')
+                    }).catch(res => {
+                        this.$Message.error(res.message)
+                    })
+                },
             })
         }
     }

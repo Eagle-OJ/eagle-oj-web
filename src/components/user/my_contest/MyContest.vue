@@ -1,6 +1,6 @@
 <template>
     <div class="contest">
-        <Table :columns="columns" :data="contests"></Table>
+        <Table :loading="loading" :columns="columns" :data="contests"></Table>
         <Page style="text-align:center; margin-top:10px" :current="1" :total="total" simple @on-change="getContests"></Page>
     </div>
 </template>
@@ -13,6 +13,7 @@ export default {
     },
     data() {
         return {
+            loading: false,
             contests: [],
             columns: [
                 {
@@ -46,6 +47,7 @@ export default {
     },
     methods: {
         getContests(page) {
+            this.loading = true
             this.$http.get('/user/contests', {
                 params: {
                     page: page,
@@ -54,6 +56,8 @@ export default {
             }).then(res => {
                 this.total = res.data.total
                 this.contests = res.data.data
+            }).finally(() => {
+                this.loading = false
             })
         },
         getTime(time) {

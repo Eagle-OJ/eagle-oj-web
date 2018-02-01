@@ -25,7 +25,7 @@
                     </Col>
                 </Row>
                 <div class="problems">
-                    <Table :columns="problems.columns" :data="problems.data"></Table>
+                    <Table :loading="loading" :columns="problems.columns" :data="problems.data"></Table>
                     <div class="page">
                         <Page :total="problems.total" :page-size="problems.pageSize" size="small" show-total></Page>
                     </div>
@@ -61,6 +61,7 @@ export default {
     },
     data() {
         return {
+            loading: false,
             searchQuery: '',
             tags: [],
             problems: {
@@ -139,6 +140,7 @@ export default {
             if (this.$store.state.userInfo.isLogin) {
                 this.problems.uid = this.$store.state.userInfo.uid
             }
+            this.loading = true
             this.$http.get('/problems', {
                 params: {
                     page: page,
@@ -150,6 +152,8 @@ export default {
             }).then(res => {
                 this.problems.data = res.data.data
                 this.problems.total = res.data.total
+            }).finally(() => {
+                this.loading = false
             })
         },
         getTags() {

@@ -4,7 +4,7 @@
             <h2>管理比赛
                 <router-link to="/user_admin/contest/add"><Button style="float:right" size="small" icon="plus" type="success">创建比赛</Button></router-link>
             </h2>
-            <Table :columns="columns" :data="data"></Table>
+            <Table :loading="loading" :columns="columns" :data="data"></Table>
             <div class="pager" style="text-align: center; margin-top: 10px">
                 <Page :total="total" :page-size="pageSize" show-total @on-change="getUserContests" simple></Page>
             </div>
@@ -20,6 +20,7 @@ export default {
     },
     data() {
         return {
+            loading: false,
             columns: [
                 {
                     title: '比赛名称',
@@ -96,16 +97,19 @@ export default {
             ],
             data: [],
             total: 0,
-            pageSize: 5
+            pageSize: 10
         }
     },
     methods: {
         getUserContests(page) {
+            this.loading = true
             this.$http.get('/contests/user?page='+page+'&page_size='+this.pageSize).then(res => {
                 this.data = res.data.data
                 this.total = res.data.total
             }).catch(res => {
                 this.$Message.error(res.message)
+            }).finally(() => {
+                this.loading = false
             })
         },
         getTimeType(type, totalTime) {

@@ -3,7 +3,7 @@
         <h2>管理小组
             <router-link to="/user_admin/group/add"><Button style="float:right" size="small" icon="plus" type="success">创建小组</Button></router-link>
         </h2>
-        <Table :columns="column" :data="data"></Table>
+        <Table :loading="loading" :columns="column" :data="data"></Table>
         <div style="text-align:center;margin-top: 15px">
             <Page :current="1" :total="total" :page-size="pageSize" @on-change="getOwnGroup" simple></Page>
         </div>
@@ -17,7 +17,8 @@ export default {
     },
     data() {
         return {
-            pageSize: 5,
+            loading: false,
+            pageSize: 10,
             column: [
                 {
                     title: '小组名称',
@@ -53,6 +54,7 @@ export default {
     },
     methods: {
         getOwnGroup(page) {
+            this.loading = true
             this.$http.get('/groups/user', {
                 params: {
                     page: page,
@@ -61,6 +63,8 @@ export default {
             }).then(res => {
                 this.data = res.data.data
                 this.total = res.data.total
+            }).finally(() => {
+                this.loading = false
             })
         }
     }

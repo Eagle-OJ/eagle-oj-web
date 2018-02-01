@@ -3,7 +3,7 @@
         <router-link to="/user_admin/problem/add">
             <Button icon="plus" type="ghost">添加题目</Button>
         </router-link>
-        <Table style="margin-top: 10px" :columns="column" :data="data"></Table>
+        <Table style="margin-top: 10px" :loading="loading" :columns="column" :data="data"></Table>
         <div style="margin-top: 10px; text-align: center">
             <Page :current="1" :total="total" :page-size="pageSize" @on-change="getProblems" simple></Page>
         </div>
@@ -19,6 +19,7 @@ export default {
     },
     data() {
         return {
+            loading: false,
             column: [
                 {
                     title: '标题',
@@ -81,12 +82,13 @@ export default {
                 }
             ],
             data: [],
-            pageSize: 5,
+            pageSize: 10,
             total: 0
         }
     },
     methods: {
         getProblems(page) {
+            this.loading = true
             this.$http.get('/problems/user', {
                 params: {
                     page: page,
@@ -97,6 +99,8 @@ export default {
                 this.total = res.data.total
             }).catch(res => {
                 this.$Message.error(res.message)
+            }).finally(() => {
+                this.loading = false
             })
         },
         getTime(time) {

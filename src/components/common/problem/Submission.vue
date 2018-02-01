@@ -16,7 +16,7 @@ import ProblemResult from '@/components/common/ProblemResult'
 import DistanceInWordsToNow from 'date-fns/distance_in_words_to_now'
 import cn from 'date-fns/locale/zh_cn'
 export default {
-    props: ['cid', 'pid', 'gid'],
+    props: ['cid', 'pid'],
     created() {
         this.getSubmissions(1)
     },
@@ -91,7 +91,6 @@ export default {
                 params: {
                     cid: this.cid,
                     pid: this.pid,
-                    gid: this.gid,
                     page: page,
                     page_size: this.pageSize
                 }

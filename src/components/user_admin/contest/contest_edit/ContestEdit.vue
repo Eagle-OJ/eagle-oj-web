@@ -10,6 +10,10 @@
                 <Icon type="document-text"></Icon>
                 题目管理
             </MenuItem>
+            <MenuItem name="setting">
+                <Icon type="document-text"></Icon>
+                比赛设置
+            </MenuItem>
             <MenuItem name="back">
                 <Icon type="android-arrow-back"></Icon>
                 返回

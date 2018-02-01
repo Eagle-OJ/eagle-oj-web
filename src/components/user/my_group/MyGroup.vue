@@ -1,6 +1,6 @@
 <template>
     <div class="groups">
-        <Table :columns="columns" :data="groups"></Table>
+        <Table :loading="loading" :columns="columns" :data="groups"></Table>
         <Page style="text-align:center; margin-top:10px" :current="1" :total="total" simple @on-change="getGroups"></Page>
     </div>
 </template>
@@ -13,6 +13,7 @@ export default {
     },
     data() {
         return {
+            loading: false,
             groups: [],
             columns: [
                 {
@@ -27,7 +28,7 @@ export default {
                 },
                 {
                     title: '组内名称',
-                    key: 'real_name'
+                    key: 'group_name'
                 },
                 {
                     title: '加入时间',
@@ -42,6 +43,7 @@ export default {
     },
     methods: {
         getGroups(page) {
+            this.loading = true
             this.$http.get('/user/groups', {
                 params: {
                     page: page,
@@ -50,6 +52,8 @@ export default {
             }).then(res => {
                 this.total = res.data.total
                 this.groups = res.data.data
+            }).finally(() => {
+                this.loading = false
             })
         },
         getTime(time) {

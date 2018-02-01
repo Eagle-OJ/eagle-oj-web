@@ -36,6 +36,12 @@
                     <Button type="success" :disabled="!isEditable" @click="updateSetting()">保存设置</Button>
                 </Col>
             </Row>
+            <Row class="each-sort">
+                <Col span="4" class="left"><h2>删除题目</h2></Col>
+                <Col span="20" class="right">
+                    <Button type="error" :disabled="!isEditable" @click="deleteProblem()">删除题目</Button>
+                </Col>
+            </Row>
         </Row>
     </div>
 </template>
@@ -89,6 +95,20 @@ export default {
                 this.$Message.error(res.message)
             })
         },
+        deleteProblem() {
+            this.$Modal.confirm({
+                title: '删除警告',
+                content: '<p>如果题目已经有过提交或者被比赛引用，将无法删除!</p>',
+                onOk: () => {
+                    this.$http.delete('/problem/'+this.pid).then(res => {
+                        this.$Message.success(res.message)
+                        this.$router.push('/user/problem')
+                    }).catch(res => {
+                        this.$Message.error(res.message)
+                    })
+                },
+            });
+        }
     }
 }
 </script>
