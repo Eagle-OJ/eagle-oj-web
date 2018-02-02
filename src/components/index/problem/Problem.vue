@@ -4,7 +4,7 @@
             <Col span="16" class="left">
                 <Row class="header">
                     <Col span="10">
-                        <Input v-model="searchQuery" placeholder="输入题目编号"></Input>
+                        <Input v-model="searchQuery" placeholder="开发中" disabled></Input>
                     </Col>
                     <Col span="14" class="sort">
                         <div class="difficulty">

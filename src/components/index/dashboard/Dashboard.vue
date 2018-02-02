@@ -17,7 +17,7 @@
                         </Row>
                     </div>
 
-                    <div class="contest" v-if="item.type == 2">
+                    <div class="contest" v-if="item.type == 1">
                         <Row>
                             <Col span="3" class="img">
                                 <Icon type="trophy" color="#fea116"></Icon>

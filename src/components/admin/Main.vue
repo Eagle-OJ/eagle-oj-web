@@ -20,11 +20,11 @@
                                 <Icon type="android-notifications-none"></Icon>
                                 公告管理
                             </MenuItem>
-                            <MenuItem name="setting">
+                            <MenuItem name="setting" v-if="isRoot">
                                 <Icon type="android-settings"></Icon>
                                 系统设置
                             </MenuItem>
-                            <MenuItem name="judger">
+                            <MenuItem name="judger" v-if="isRoot">
                                 <Icon type="code-working"></Icon>
                                 判卷机管理
                             </MenuItem>
@@ -84,12 +84,17 @@ export default {
             }
         },
         checkRole() {
-            if(this.$store.state.userInfo.role < 9) {
+            if(this.$store.state.userInfo.role < 8) {
                 this.$Message.warning('你无权访问管理后台')
                 this.$router.push('/dashboard')
             }
         }
     },
+    computed: {
+        isRoot() {
+            return this.$store.state.userInfo.role == 9
+        }
+    }
 }
 </script>
 
