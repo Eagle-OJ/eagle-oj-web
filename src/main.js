@@ -64,7 +64,7 @@ if (Cookie.get('token')) {
 }
 
 Vue.prototype.$getUrl = function(url) {
-    return store.state.setting.oss_config.url+url
+    return store.state.setting.oss_url+url
 }
 
 Vue.prototype.$getAvatar = function(aid) {

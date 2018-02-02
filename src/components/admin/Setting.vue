@@ -1,32 +1,53 @@
 <template>
     <div class="setting">
-        <Form :model="form" :rules="rules" label-position="top" ref="form">
-            <div class="little-title">网站设置</div>
-            <FormItem label="网站名称" prop="title">
-                <Input v-model="form.title" placeholder="长度不超过20" :maxlength="20"></Input>
+        <div class="little-title">网站设置</div>
+        <Form inline ref="title" :model="form">
+            <FormItem prop="title" :rules="rules.title" :label-width="100" label="网站名称">
+                <Input style="width: 300px" v-model="form.title" placeholder="长度不超过20" :maxlength="20"></Input>
             </FormItem>
-            <div class="little-title">阿里云OSS设置</div>
-            <FormItem label="Access key" prop="accessKey">
-                <Input v-model="form.accessKey"></Input>
+            <FormItem :label-width="0">
+                <Button type="text" @click="handleSubmit('title')">更新</Button>
             </FormItem>
-            <FormItem label="Secret key" prop="secretKey">
-                <Input v-model="form.secretKey"></Input>
+        </Form>
+        <div class="little-title">阿里云OSS设置</div>
+        <Form inline ref="accessKey" :model="form">
+            <FormItem prop="accessKey" :rules="rules.accessKey" :label-width="100" label="Access Key">
+                <Input style="width: 300px" v-model="form.accessKey"></Input>
             </FormItem>
-            <FormItem label="Bucket" prop="bucket">
-                <Input v-model="form.bucket"></Input>
+            <FormItem :label-width="0">
+                <Button type="text" @click="handleSubmit('accessKey')">更新</Button>
             </FormItem>
-            <FormItem label="End point" prop="endPoint">
-                <Input v-model="form.endPoint"></Input>
+        </Form>
+        <Form inline ref="secretKey" :model="form">
+            <FormItem prop="secretKey" :rules="rules.secretKey" :label-width="100" label="Secret Key">
+                <Input style="width: 300px" v-model="form.secretKey"></Input>
             </FormItem>
-            <FormItem label="url" prop="url">
-                <Input v-model="form.url"></Input>
+            <FormItem :label-width="0">
+                <Button type="text" @click="handleSubmit('secretKey')">更新</Button>
             </FormItem>
-            <div class="little-title">判卷机设置</div>
-            <FormItem label="判卷机地址" prop="judgerUrl">
-                <Input v-model="form.judgerUrl"></Input>
+        </Form>
+        <Form inline ref="bucket" :model="form">
+            <FormItem prop="bucket" :rules="rules.bucket" :label-width="100" label="Bucket">
+                <Input style="width: 300px" v-model="form.bucket" ></Input>
             </FormItem>
-            <FormItem>
-                <Button type="primary" @click="submit">保存</Button>
+            <FormItem :label-width="0">
+                <Button type="text" @click="handleSubmit('bucket')">更新</Button>
+            </FormItem>
+        </Form>
+        <Form inline ref="endPoint" :model="form">
+            <FormItem prop="endPoint" :rules="rules.endPoint" :label-width="100" label="End Point">
+                <Input style="width: 300px" v-model="form.endPoint" ></Input>
+            </FormItem>
+            <FormItem :label-width="0">
+                <Button type="text" @click="handleSubmit('endPoint')">更新</Button>
+            </FormItem>
+        </Form>
+        <Form inline ref="url" :model="form">
+            <FormItem prop="url" :rules="rules.url" :label-width="100" label="URL">
+                <Input style="width: 300px" v-model="form.url" ></Input>
+            </FormItem>
+            <FormItem :label-width="0">
+                <Button type="text" @click="handleSubmit('url')">更新</Button>
             </FormItem>
         </Form>
     </div>
@@ -46,7 +67,6 @@ export default {
                 bucket: '',
                 endPoint: '',
                 url: '',
-                judgerUrl: ''
             },
             rules: {
                 title: [
@@ -68,9 +88,6 @@ export default {
                 url: [
                     { required: true, message: 'URL不得为空'},
                 ],
-                judgerUrl: [
-                    { required: true, message: '判卷机地址不得为空'}
-                ]
             }
         }
     },
@@ -82,14 +99,28 @@ export default {
                 }
             }).then(res => {
                 let data = res.data
-                let oss_config = data.oss_config
-                this.form.title = data.title
-                this.form.accessKey = oss_config.access_key
-                this.form.secretKey = oss_config.secret_key
-                this.form.bucket = oss_config.bucket
-                this.form.endPoint = oss_config.end_point
-                this.form.url = oss_config.url
-                this.form.judgerUrl = data.judger_url
+                this.form.title = data.web_title
+                this.form.accessKey = data.oss_access_key
+                this.form.secretKey = data.oss_secret_key
+                this.form.bucket = data.oss_bucket
+                this.form.endPoint = data.oss_end_point
+                this.form.url = data.oss_url
+            })
+        },
+        handleSubmit(name) {
+            this.$refs[name].validate((valid) => {
+                if(valid) {
+                    let value = this.$refs[name].model[name]
+                    this.$http.put('/setting', {
+                        key: name,
+                        value: value
+                    }).then(res => {
+                        this.$Message.success(res.message)
+                        this.$store.dispatch('setWebsite')
+                    }).catch(res => {
+                        this.$Message.error(res.message)
+                    })
+                }
             })
         },
         submit() {
@@ -118,5 +149,7 @@ export default {
         padding 5px
         color #80848f
         font-size 16px
+    input
+        width 200px
 </style>
 

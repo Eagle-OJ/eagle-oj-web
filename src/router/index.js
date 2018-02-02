@@ -356,8 +356,8 @@ const router = new Router({
 
 router.beforeEach((to, from, next) => {
     let webTitle = ''
-    if(Store.state.setting.is_installed && Store.state.setting.title.length != 0) {
-        webTitle = ' - '+Store.state.setting.title
+    if(Store.state.setting.is_installed && Store.state.setting.web_title.length != 0) {
+        webTitle = ' - '+Store.state.setting.web_title
     }
     document.title = to.meta.title+webTitle+Config.TITLE
     iView.LoadingBar.start();    

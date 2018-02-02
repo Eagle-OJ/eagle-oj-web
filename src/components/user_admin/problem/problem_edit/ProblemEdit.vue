@@ -90,9 +90,11 @@ export default {
         isEditable() {
             if(this.problem == null) {
                 return false
-            } else {
-                return this.problem.status != 2
+            } 
+            if(this.$store.state.userInfo.role >= 8) {
+                return true
             }
+            return this.problem.status != 2
         }
     }
 }

@@ -12,7 +12,7 @@
 				</a>
 				<div class="content">
 					<Spin v-if="item.response == null">
-						<Icon type="load-c" size=18 class="icon-loading"></Icon>
+						<Icon v-if="item.status != '错误'" type="load-c" size=18 class="icon-loading"></Icon>
 						<div>{{item.status}}</div>
 					</Spin>
 					<div class="response" v-else>

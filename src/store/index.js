@@ -56,7 +56,7 @@ export default new Vuex.Store({
                 path: path,
                 title: title,
                 id: id,
-                status: 'InQueue',
+                status: '队列中',
                 response: null
             })
             this.commit('getSubmission', id)
