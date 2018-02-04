@@ -39,9 +39,6 @@
 import Cookie from 'js-cookie'
 
 export default {
-	created() {
-
-	},
 	data() {
 		return {
             isLoading: false,
@@ -89,15 +86,13 @@ export default {
 			this.$refs['registerForm'].validate((valid) => {
 				if (valid) {
                     this.isLoading = true
-                    this.$http.post('/register', {
+                    this.$http.post('/account/register', {
                         'email': this.registerForm.email,
                         'nickname': this.registerForm.nickname,
                         'password': this.registerForm.password
                     }).then(res => {
                         this.$Message.success(res.message)
                         this.$router.push('/login')
-                    }).catch(res => {
-                        this.$Message.error(res.message);
                     }).finally(() => {
                         this.isLoading = false
                     })
@@ -110,7 +105,7 @@ export default {
 			this.$refs['loginForm'].validate((valid) => {
 				if (valid) {
                     this.isLoading = true
-                    this.$http.post('/login', {
+                    this.$http.post('/account/login', {
                         'email': this.loginForm.email,
                         'password': this.loginForm.password
                     }).then(res => {
@@ -127,8 +122,6 @@ export default {
                             this.$router.push('/dashboard')
                         }
                         this.$Message.success(res.message)
-                    }).catch(res => {
-                        this.$Message.error(res.message)
                     }).finally(() => {
                         this.isLoading = false
                     })
