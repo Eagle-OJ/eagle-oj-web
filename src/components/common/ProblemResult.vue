@@ -1,5 +1,5 @@
 <template>
-    <Tag :style="{background: util.getProblemStatusColor(result), color: '#fff'}">
+    <Tag :color="util.getProblemStatusColor(result)">
         {{util.convertProblemStatus(result)}}
     </Tag>
 </template>

@@ -65,9 +65,7 @@ export default {
             }
             this.$http.get(url).then(res => {
                 this.data = res.data
-			}).catch(res => {
-                this.$Message.error(res.message)
-            }).finally(() => {
+			}).finally(() => {
                 this.dataLoading = false
             })
         },

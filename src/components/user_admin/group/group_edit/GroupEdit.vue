@@ -52,14 +52,8 @@ export default {
         },
         getGroup() {
             this.loading = true
-            this.$http.get('/group/'+this.getGid, {
-                params: {
-                    is_detail: true
-                }
-            }).then(res => {
+            this.$http.get('/group/'+this.getGid).then(res => {
                 this.group = res.data
-            }).catch(res => {
-                this.$Message.error(res.message)
             }).finally(() => {
                 this.loading = false
             })

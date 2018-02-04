@@ -141,7 +141,7 @@ export default {
                 this.problems.uid = this.$store.state.userInfo.uid
             }
             this.loading = true
-            this.$http.get('/problems', {
+            this.$http.get('/problems/opened', {
                 params: {
                     page: page,
                     page_size: this.problems.pageSize,

@@ -44,7 +44,7 @@ export default {
     methods: {
         getGroups(page) {
             this.loading = true
-            this.$http.get('/user/groups', {
+            this.$http.get('/user/joined_groups', {
                 params: {
                     page: page,
                     page_size: this.pageSize

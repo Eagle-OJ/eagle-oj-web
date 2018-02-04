@@ -24,9 +24,9 @@
                 
                 <FormItem label="性别">
                     <RadioGroup v-model="user.gender">
-                        <Radio label="0">保密</Radio>
-                        <Radio label="1">男</Radio>
-                        <Radio label="2">女</Radio>
+                        <Radio :label="0">保密</Radio>
+                        <Radio :label="1">男</Radio>
+                        <Radio :label="2">女</Radio>
                     </RadioGroup>
                 </FormItem>
                 
@@ -126,8 +126,6 @@ export default {
                 }).then(res => {
                     this.$Message.success(res.message)
                     this.$store.dispatch('getUserInfo')
-                }).catch(res => {
-                    this.$Message.error(res.message)
                 })
             })
         },
@@ -147,8 +145,6 @@ export default {
                     }).then(res => {
                         this.$Message.success(res.message)
                         this.$store.dispatch('getUserInfo')
-                    }).catch(res => {
-                        this.$Message.error(res.message)
                     }).finally(() => {
                         this.loading = false
                     })

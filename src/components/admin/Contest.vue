@@ -101,8 +101,6 @@ export default {
                     this.$http.delete('/contest/'+cid).then(res => {
                         this.$Message.success(res.message)
                         this.getData(1)
-                    }).catch(res => {
-                        this.$Message.error(res.message)
                     })
                 },
             });

@@ -114,7 +114,7 @@ export default new Vuex.Store({
             })
         },
         getUserInfo() {
-            Axios.get('/user/info').then(res => {
+            Axios.get('/user').then(res => {
                 this.commit('login', res.data)
             }) 
         },

@@ -119,7 +119,6 @@ export default {
 		table
 			width 100%
 			font-size 15px
-			font-family  "Helvetica Neue",Helvetica,Arial,sans-serif
 			td
 				height 34px
 				border-bottom dashed 0.5px lightgray

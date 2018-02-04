@@ -128,13 +128,12 @@ export default {
         },
         getContestUserData() {
             this.loading = true
-            this.$http.get('/contest/'+this.getCid+'/data').then(res => {
+            this.$http.get('/contest/'+this.getCid+'/user_data').then(res => {
                 this.userInfo = res.data.user
                 this.userMeta = res.data.meta
                 this.problems = res.data.problems
             }).catch(res => {
                 this.$router.push('/contest/'+this.getCid)
-                this.$Message.error('你没有加入比赛')
             }).finally(() => {
                 this.loading = false
             })

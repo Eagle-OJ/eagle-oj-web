@@ -111,8 +111,6 @@ export default {
                     this.$http.delete('/announcement/'+aid).then(res => {
                         this.$Message.success(res.message)
                         _this.get()
-                    }).catch(res => {
-                        this.$Message.error(res.message)
                     })
                 }
             })
@@ -136,8 +134,6 @@ export default {
                     this.get()
                     this.reset()
                     this.isShowModal = false
-                }).catch(res => {
-                    this.$Message.error(res.message)
                 })
             } else {
                 this.$http.post('/announcement', {title: this.title, content: this.content}).then(res => {
@@ -145,8 +141,6 @@ export default {
                     this.get()
                     this.reset()
                     this.isShowModal = false
-                }).catch(res => {
-                    this.$Message.error(res.message)
                 })
             }
             this.resetLoading()

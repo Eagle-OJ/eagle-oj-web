@@ -63,6 +63,7 @@
                         </div>
                     </div>
                     <Button class="quit" size="small" type="error" icon="log-out" @click="quitGroup">退出</Button>
+                    <span class="invite">邀请链接：{{getUrl}}</span>
                 </Col>
             </Row>
             <div class="divider"></div>
@@ -283,6 +284,9 @@ export default {
         },
         getUid() {
             return this.$store.state.userInfo.uid
+        },
+        getUrl() {
+            return window.location.href
         }
     },
     watch: {

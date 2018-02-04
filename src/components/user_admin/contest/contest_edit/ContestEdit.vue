@@ -53,12 +53,8 @@ export default {
         },
         getContest() {
             this.loading = true
-            this.$http.get('/contest/'+this.getCid, {
-                is_detail: true
-            }).then(res => {
+            this.$http.get('/contest/'+this.getCid).then(res => {
                 this.contest = res.data
-            }).catch(res => {
-                this.$Message.error(res.message)
             }).finally(() => {
                 this.loading = false
             })

@@ -96,8 +96,6 @@ export default {
             }).then(res => {
                 this.total = res.data.total
                 this.data = res.data.data
-            }).catch(res => {
-                this.$Message.error(res.message)
             })
         },
         view(pid) {
@@ -109,8 +107,6 @@ export default {
             }).then(res => {
                 this.$Message.success(res.message)
                 this.getProblems(1)
-            }).catch(res => {
-                this.$Message.error(res.message)
             })
         },
     }

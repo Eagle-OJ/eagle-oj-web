@@ -117,8 +117,6 @@ export default {
                     }).then(res => {
                         this.$Message.success(res.message)
                         this.$store.dispatch('setWebsite')
-                    }).catch(res => {
-                        this.$Message.error(res.message)
                     })
                 }
             })
@@ -133,8 +131,6 @@ export default {
         update() {
             this.$http.put('/setting', this.form).then(res => {
                 this.$Message.success(res.message)
-            }).catch(res => {
-                this.$Message.error(res.message)
             })
         }
     }

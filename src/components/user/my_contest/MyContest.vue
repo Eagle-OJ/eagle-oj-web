@@ -48,7 +48,7 @@ export default {
     methods: {
         getContests(page) {
             this.loading = true
-            this.$http.get('/user/contests', {
+            this.$http.get('/user/joined_contests', {
                 params: {
                     page: page,
                     page_size: this.pageSize

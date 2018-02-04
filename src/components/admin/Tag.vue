@@ -83,8 +83,6 @@ export default {
                     }).then(res => {
                         this.$Message.success(res.message)
                         this.getData()
-                    }).catch(res => {
-                        this.$Message.error(res.message)
                     })
                 }
             })
@@ -93,8 +91,6 @@ export default {
             this.loading = true
             this.$http.get('/tags').then(res => {
                 this.data = res.data
-            }).catch(res => {
-                this.$Message.error(res.message)
             }).finally(() => {
                 this.loading = false
             })
@@ -107,8 +103,6 @@ export default {
                     this.$http.delete('/tag/'+tid).then(res => {
                         this.$Message.success(res.message)
                         this.getData()
-                    }).catch(res => {
-                        this.$Message.error(res.message)
                     })
                 },
             })
@@ -139,8 +133,6 @@ export default {
                     }).then(res => {
                         this.$Message.success(res.message)
                         this.getData()
-                    }).catch(res => {
-                        this.$Message.error(res.message)
                     })
                 },
                 okText: '更新'

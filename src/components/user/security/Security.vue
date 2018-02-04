@@ -36,15 +36,13 @@ export default {
         submit() {
             this.$refs['form'].validate((valid) => {
                 if (valid) {
-                    this.$http.put('/user/password', {
+                    this.$http.put('/user/profile/password', {
                         origin_password: this.form.originPassword,
                         new_password: this.form.newPassword
                     }).then(res => {
                         this.$Message.success(res.message)
                         this.$router.push('/login')
                         this.$store.commit('logout')
-                    }).catch(res => {
-                        this.$Message.error(res.message)
                     })
                 } else {
                     this.$Message.error('请按要求填写');

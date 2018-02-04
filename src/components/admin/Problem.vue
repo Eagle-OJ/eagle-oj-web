@@ -82,7 +82,7 @@ export default {
     },
     methods: {
         getData(page) {
-            this.$http.get('/problems/all', {
+            this.$http.get('/problems', {
                 params: {
                     page: page,
                     page_size: this.pageSize
@@ -102,8 +102,6 @@ export default {
                     this.$http.delete('/problem/'+pid).then(res => {
                         this.$Message.success(res.message)
                         this.getData(1)
-                    }).catch(res => {
-                        this.$Message.error(res.message)
                     })
                 },
             });

@@ -107,8 +107,6 @@ export default {
                     this.$http.delete('/judger/'+this.data[index].jid).then(res => {
                         this.$Message.success(res.message)
                         this.getData()
-                    }).catch(res => {
-                        this.$Message.error(res.message)
                     })
                 },
             })
@@ -139,8 +137,6 @@ export default {
                     this.$Message.success(res.message)
                     this.modal = false
                     this.getData()
-                }).catch(res => {
-                    this.$Message.error(res.message)
                 })
             } else {
                 this.$http.post('/judger', {

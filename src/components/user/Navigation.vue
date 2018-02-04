@@ -12,11 +12,11 @@
                 </MenuItem>
                 <MenuItem name="my_contest">
                     <Icon type="compose"></Icon>
-                    我的比赛
+                    加入的比赛
                 </MenuItem>
                 <MenuItem name="my_group">
                     <Icon type="ios-people"></Icon>
-                    我的小组
+                    加入的小组
                 </MenuItem>
                 <MenuItem name="my_zone">
                     <Icon type="aperture"></Icon>

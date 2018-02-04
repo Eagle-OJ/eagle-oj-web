@@ -102,15 +102,13 @@ export default {
             this.$http.post('/contest/'+this.getCid+'/enter', {password: this.password}).then(res => {
                 this.$Message.success(res.message)
                 this.redirectToContest()
-            }).catch(res => {
-                this.$Message.error(res.message)
             })
         },
         redirectToContest() {
             this.$router.push('/contest/'+this.getCid+'/problems')
         },
         getContest() {
-            this.$http.get('/contest/'+this.getCid).then(res => {
+            this.$http.get('/contest/'+this.getCid+'/info').then(res => {
                 this.data = res.data
             })
         },
@@ -119,10 +117,12 @@ export default {
         },
         getContestUserInfo() {
             if (this.$store.state.userInfo.isLogin) {
-                this.$http.get('/contest/'+this.getCid+'/data').then(res => {
-                    this.isEnter = true
-                }).catch(res => {
-                    this.isEnter = false
+                this.$http.get('/contest/'+this.getCid+'/user_data').then(res => {
+                    if(res.data) {
+                        this.isEnter = true
+                    } else {
+                        this.isEnter = false
+                    }
                 })
             }
         },
