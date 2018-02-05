@@ -88,11 +88,8 @@ export default {
             })
         },
         getData() {
-            this.loading = true
             this.$http.get('/tags').then(res => {
                 this.data = res.data
-            }).finally(() => {
-                this.loading = false
             })
         },
         deleteTag(tid) {

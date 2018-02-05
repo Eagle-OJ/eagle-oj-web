@@ -38,16 +38,12 @@ export default {
         getModerators() {
             this.$http.get('/problem/'+this.pid+'/moderators').then(res => {
                 this.moderators = res.data
-            }).catch(res => {
-                this.$Message.error(res.message)
             })
         },
         deleteModerator(uid) {
             this.$http.delete('/problem/'+this.pid+"/moderator/"+uid).then(res => {
                 this.$Message.success(res.message)
                 this.getModerators()
-            }).catch(res => {
-                this.$Message.error(res.message)
             })
         },
         addModerator() {
@@ -55,15 +51,12 @@ export default {
                 this.$Message.warning('请输入邮箱')
                 return
             }
-
             this.$http.post('/problem/'+this.pid+"/moderator", {
                 email: this.email
             }).then(res => {
                 this.$Message.success(res.message)
                 this.email = ''
                 this.getModerators()
-            }).catch(res => {
-                this.$Message.error(res.message)
             })
         },
         getModeratorUrl() {

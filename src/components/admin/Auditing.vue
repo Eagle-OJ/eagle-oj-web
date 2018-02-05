@@ -1,7 +1,6 @@
 <template>
     <div class="auditing">
-        <Table border :columns="columns" :data="data"></Table>
-
+        <Table :columns="columns" :data="data"></Table>
     </div>
 </template>
 

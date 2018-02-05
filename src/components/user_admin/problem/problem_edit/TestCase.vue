@@ -4,7 +4,7 @@
             <Button icon="plus" type="success" :disabled="!isEditable" @click="addTestCase">添加测试用例</Button>
         </div>
         <Table :columns="columns" :data="data"></Table>
-        <Modal class="modal" v-model="showModal" title="测试用例编辑" @on-ok="save()" :loading="loading">
+        <Modal class="modal" v-model="showModal" title="测试用例编辑">
             <div class="each-line">
                 <label for="input">输入</label>
                 <Input id="input" v-model="test_case.stdin" type="textarea" :maxlength="1000"></Input>
@@ -18,6 +18,9 @@
                 <div>
                     <InputNumber id="strength" :max="9" :min="1" v-model="test_case.strength"></InputNumber>
                 </div>
+            </div>
+            <div slot="footer">
+                <Button type="primary" @click="save()">保存</Button>
             </div>
         </Modal>
     </div>
@@ -99,7 +102,6 @@ export default {
                 stdout: '',
                 strength: 1
             },
-            loading: true,
             isEdit: false,
         }
     },
@@ -124,7 +126,6 @@ export default {
         save() {
             if (this.test_case.stdout.length == 0) {
                 this.$Message.warning('输出不得为空')
-                this.resetLoading()
                 return
             }
             if(this.isEdit) {
@@ -137,8 +138,6 @@ export default {
                     this.$Message.success(res.message)
                     this.showModal = false
                     this.getTestCases()
-                }).catch(res => {
-                    this.$Message.error(res.message)
                 })
             } else {
                 // add testCase
@@ -150,11 +149,8 @@ export default {
                     this.$Message.success(res.message)
                     this.showModal = false
                     this.getTestCases()
-                }).catch(res => {
-                    this.$Message.error(res.message)
                 })
             }
-            this.resetLoading()
         },
         deleteTestCase(index) {
             let tid = this.data[index].tid
@@ -165,8 +161,6 @@ export default {
                     this.$http.delete('/problem/'+this.pid+"/test_case/"+tid).then(res => {
                         this.$Message.success(res.message)
                         this.getTestCases()
-                    }).catch(res => {
-                        this.$Message.error(res.message)
                     })
                 }
             });
@@ -174,8 +168,6 @@ export default {
         getTestCases() {
             this.$http.get('/problem/'+this.pid+'/test_cases').then(res => {
                 this.data = res.data
-            }).catch(res => {
-                this.$Message.error(res.message)
             })
         },
         resetTestCase() {
@@ -183,12 +175,6 @@ export default {
             this.test_case.stdin = ''
             this.test_case.stdout = ''
             this.test_case.strength = 1
-        },
-        resetLoading() {
-            this.loading = false;
-            this.$nextTick(() => {
-                this.loading = true;
-            });
         },
     },
     watch: {

@@ -93,7 +93,8 @@ export default {
                     }).then(res => {
                         this.$Message.success(res.message)
                         this.$router.push('/login')
-                    }).finally(() => {
+                        this.isLoading = false
+                    }).catch(res => {
                         this.isLoading = false
                     })
 				} else {
@@ -122,7 +123,8 @@ export default {
                             this.$router.push('/dashboard')
                         }
                         this.$Message.success(res.message)
-                    }).finally(() => {
+                        this.isLoading = false
+                    }).catch(res => {
                         this.isLoading = false
                     })
 				} else {

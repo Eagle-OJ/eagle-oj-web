@@ -1,6 +1,6 @@
 <template>
     <div class="main">
-        <Menu class="top" mode="horizontal" theme="dark" active-name="1">
+        <Menu class="top" mode="horizontal" theme="dark">
             <div class="layout-logo">管 理 中 心</div>
             <router-link to="/">
                 <Button class="back" type="primary">返回首页</Button>
@@ -10,7 +10,7 @@
         <div class="layout-content">
             <Row>
                 <Col span="5">
-                    <Menu width="auto" @on-select="goTo">
+                    <Menu width="auto" @on-select="goTo" :active-name="getActiveName">
                         <MenuGroup title="网站">
                             <MenuItem name="overview">
                                 <Icon type="monitor"></Icon>
@@ -93,6 +93,14 @@ export default {
     computed: {
         isRoot() {
             return this.$store.state.userInfo.role == 9
+        },
+        getActiveName() {
+            let path = this.$route.path
+            if (path === '/admin') {
+                return 'overview'
+            } else {
+                return path.replace('/admin/', '')
+            }
         }
     }
 }

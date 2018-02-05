@@ -22,14 +22,14 @@
             </FormItem>
             <FormItem label="比赛模式">
                 <RadioGroup v-model="form.contestType">
-                    <Radio label="0">普通</Radio>
-                    <Radio label="1">ACM</Radio>
+                    <Radio :label="0">普通</Radio>
+                    <Radio :label="1">ACM</Radio>
                 </RadioGroup>
             </FormItem>
             <FormItem label="时间模式">
                 <RadioGroup v-model="form.timeType">
-                    <Radio label="0">普通</Radio>
-                    <Radio label="1">限时</Radio>
+                    <Radio :label="0">普通</Radio>
+                    <Radio :label="1">限时</Radio>
                 </RadioGroup>
             </FormItem>
             <FormItem label="限时设置" v-if="form.timeType==1">
@@ -140,9 +140,8 @@ export default {
                     this.$http.post('/contest', data).then(res => {
                         this.$Message.success(res.message)
                         this.$router.push('/user_admin/contest/'+res.data+'/edit')
+                        this.loading = false
                     }).catch(res => {
-                        this.$Message.error(res.message)
-                    }).finally(() => {
                         this.loading = false
                     })
                 } else {

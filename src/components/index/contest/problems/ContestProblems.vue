@@ -132,9 +132,10 @@ export default {
                 this.userInfo = res.data.user
                 this.userMeta = res.data.meta
                 this.problems = res.data.problems
+                this.loading = false
             }).catch(res => {
                 this.$router.push('/contest/'+this.getCid)
-            }).finally(() => {
+                this.$Message.error('你没有加入此比赛')
                 this.loading = false
             })
         },

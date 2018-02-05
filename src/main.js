@@ -22,47 +22,47 @@ Axios.defaults.baseURL = Config.API_URL
 
 // Add a request interceptor
 Axios.interceptors.request.use(function (config) {
-    // Do something before request is sent
-    let token = Cookie.get('token')
-    if(token !== undefined) {
-        config.headers.Authorization = token
-    }
-    return config;
+        // Do something before request is sent
+        let token = Cookie.get('token')
+        if(token !== undefined) {
+            config.headers.Authorization = token
+        }
+        return config;
     }, function (error) {
-    // Do something with request error
-    return Promise.reject(error);
+        // Do something with request error
+        return Promise.reject(error);
 });
 
 // Add a response interceptor
 Axios.interceptors.response.use(function (response) {
-    // Do something with response data
-    return response.data;
+        // Do something with response data
+        return response.data;
     }, function (error) {
-    // Do something with response error
-    if (error.response) {
-        switch (error.response.status) {
-            case 400:
-                iView.Message.error(error.response.data.message)
-                break
-            case 401:
-                // 返回 401 清除token信息并跳转到登录页面
-                iView.Message.error('请登入')
-                store.commit('logout')
-                router.replace({
-                    path: '/login',
-                    query: {redirect: router.currentRoute.fullPath}
-                })
-                break
-            case 403:
-                iView.Message.error('你无权进行此操作')
-                break
-            case 404:
-                iView.Message.error('无法找到请求页面')
-                break    
-            case 500:
-                iView.Message.error('服务器出错')
-                break
-        }
+        // Do something with response error
+        if (error.response) {
+            switch (error.response.status) {
+                case 400:
+                    iView.Message.error(error.response.data.message)
+                    break
+                case 401:
+                    // 返回 401 清除token信息并跳转到登录页面
+                    iView.Message.error('请登入')
+                    store.commit('logout')
+                    router.replace({
+                        path: '/login',
+                        query: {redirect: router.currentRoute.fullPath}
+                    })
+                    break
+                case 403:
+                    iView.Message.error('你无权进行此操作')
+                    break
+                case 404:
+                    iView.Message.error('无法找到请求页面')
+                    break    
+                case 500:
+                    iView.Message.error('服务器出错')
+                    break
+            }
         return Promise.reject(error.response.data);                
     } else {
         return Promise.reject(error); 

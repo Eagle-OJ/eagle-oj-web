@@ -180,11 +180,8 @@ export default {
     },
     methods: {
         getProblems() {
-            this.$http.get('/contest/'+this.cid+"/problems", {
-                params: {
-                    is_detail: true
-                }
-            }).then(res => {
+            this.$http.get('/contest/'+this.cid+"/problems")
+            .then(res => {
                 this.data = res.data
             }).catch(res => {
                 this.$Message.error(res.message)
@@ -234,9 +231,8 @@ export default {
                     this.$Message.success(res.message)
                     this.getProblems()
                     this.editModal = false
+                    this.loading = false
                 }).catch(res => {
-                    this.$Message.error(res.message)
-                }).finally(() => {
                     this.loading = false
                 })
             } else {
@@ -249,9 +245,8 @@ export default {
                     this.$Message.success(res.message)
                     this.getProblems()
                     this.editModal = false
+                    this.loading = false
                 }).catch(res => {
-                    this.$Message.error(res.message)
-                }).finally(() => {
                     this.loading = false
                 })
             }

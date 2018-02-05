@@ -55,7 +55,8 @@ export default {
             this.loading = true
             this.$http.get('/contest/'+this.getCid).then(res => {
                 this.contest = res.data
-            }).finally(() => {
+                this.loading = false
+            }).catch(res => {
                 this.loading = false
             })
         }

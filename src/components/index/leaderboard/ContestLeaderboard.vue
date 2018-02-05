@@ -101,9 +101,8 @@ export default {
                     })  
                 }
                 this.data = res.data
+                this.loading = false
             }).catch(res => {
-                this.$Message.error(res.message)
-            }).finally(() => {
                 this.loading = false
             })
         },

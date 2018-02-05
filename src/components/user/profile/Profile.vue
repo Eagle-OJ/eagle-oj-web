@@ -145,7 +145,8 @@ export default {
                     }).then(res => {
                         this.$Message.success(res.message)
                         this.$store.dispatch('getUserInfo')
-                    }).finally(() => {
+                        this.loading = false
+                    }).catch(res => {
                         this.loading = false
                     })
 				} else {

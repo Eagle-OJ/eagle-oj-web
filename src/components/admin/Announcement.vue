@@ -4,9 +4,12 @@
             <Button @click="add">添加公告</Button>
         </div>
         <Table :columns="columns" :data="data"></Table>
-        <Modal v-model="isShowModal" title="公告编辑" @on-ok="save" :loading="loading">
+        <Modal v-model="isShowModal" title="公告编辑">
             <p style="margin-bottom: 10px"><Input v-model="title" placeholder="标题，最多50字" :maxlength="50"></Input></p>
             <p><Input v-model="content" type="textarea" :autosize="{minRows: 5,maxRows: 10}" placeholder="最多500字" :maxlength="500"></Input></p>
+            <div slot="footer">
+                <Button @click="save()" type="primary">保存</Button>
+            </div>
         </Modal>
     </div>
 </template>
@@ -21,7 +24,6 @@ export default {
         return {
             isShowModal: false,
             isEdit: false,
-            loading: true,
             columns: [
                 {
                     type: 'expand',
@@ -124,7 +126,6 @@ export default {
 
             if(this.content.length == 0 || this.content.length > 500) {
                 this.$Message.warning('内容格式不符')
-                this.resetLoading()
                 return
             }
 
@@ -143,18 +144,11 @@ export default {
                     this.isShowModal = false
                 })
             }
-            this.resetLoading()
         },
         reset() {
             this.title = ''
             this.content = ''
             this.aid = 0
-        },
-        resetLoading() {
-            this.loading = false;
-            this.$nextTick(() => {
-                this.loading = true;
-            });
         },
         getTime(time) {
             return Util.getFormatTime(time, 'YYYY-MM-DD HH:mm:ss')

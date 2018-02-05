@@ -65,9 +65,8 @@ export default {
             this.loading = true
             this.$http.get('/problem/'+this.getPid).then(res => {
                 this.problem = res.data.problem
+                this.loading = false
             }).catch(res => {
-                this.$Message.error(res.message)
-            }).finally(() => {
                 this.loading = false
             })
         }

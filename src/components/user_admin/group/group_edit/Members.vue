@@ -35,11 +35,6 @@ export default {
                     align: 'center'
                 },
                 {
-                    title: '分数',
-                    key: 'score',
-                    align: 'center'
-                },
-                {
                     title: '提交',
                     key: 'submit_times',
                     align: 'center'
@@ -101,7 +96,6 @@ export default {
                 params: {
                     page: page,
                     page_size: this.pageSize,
-                    isDetail: true
                 }
             }).then(res => {
                 this.total = res.data.total

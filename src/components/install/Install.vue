@@ -110,8 +110,6 @@ export default {
                 this.$Message.success(res.message)
                 this.$router.push('/login')
                 this.$store.dispatch('setWebsite')
-            }).catch(res => {
-                this.$Message.error(res.message)
             })
         }
     }

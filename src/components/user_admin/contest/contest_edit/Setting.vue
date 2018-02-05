@@ -21,8 +21,6 @@ export default {
                     this.$http.delete('/contest/'+this.cid).then(res => {
                         this.$Message.success(res.message)
                         this.$router.push('/user/contest')
-                    }).catch(res => {
-                        this.$Message.error(res.message)
                     })
                 },
             });

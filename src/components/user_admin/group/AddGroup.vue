@@ -55,9 +55,8 @@ export default {
                     this.$http.post('/group', {name: this.form.name, password: password}).then(res => {
                         this.$router.push('/user_admin/group/'+res.data+"/edit")
                         this.$Message.success(res.message)
+                        this.loading = false
                     }).catch(res => {
-                        this.$Message.error(res.message)
-                    }).finally(() => {
                         this.loading = false
                     })
                 } else {

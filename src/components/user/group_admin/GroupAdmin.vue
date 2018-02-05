@@ -1,9 +1,9 @@
 <template>
     <div class="group">
-        <h2>管理小组
-            <router-link to="/user_admin/group/add"><Button style="float:right" size="small" icon="plus" type="success">创建小组</Button></router-link>
-        </h2>
-        <Table :loading="loading" :columns="column" :data="data"></Table>
+        <router-link to="/user_admin/group/add">
+            <Button icon="plus" type="ghost">创建小组</Button>
+        </router-link>
+        <Table style="margin-top: 10px" :loading="loading" :columns="column" :data="data"></Table>
         <div style="text-align:center;margin-top: 15px">
             <Page :current="1" :total="total" :page-size="pageSize" @on-change="getOwnGroup" simple></Page>
         </div>
@@ -63,7 +63,8 @@ export default {
             }).then(res => {
                 this.data = res.data.data
                 this.total = res.data.total
-            }).finally(() => {
+                this.loading = false
+            }).catch(res => {
                 this.loading = false
             })
         }

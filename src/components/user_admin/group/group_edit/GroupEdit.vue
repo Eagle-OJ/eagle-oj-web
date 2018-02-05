@@ -54,7 +54,8 @@ export default {
             this.loading = true
             this.$http.get('/group/'+this.getGid).then(res => {
                 this.group = res.data
-            }).finally(() => {
+                this.loading = false
+            }).catch(res => {
                 this.loading = false
             })
         }

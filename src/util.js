@@ -75,5 +75,14 @@ export default {
     },
     getFormatTime(time, formatString) {
         return format(new Date(time), formatString)
+    },
+    getUserRole(type) {
+        if (type == 0) {
+            return '普通用户'
+        } else if (type == 8) {
+            return '管理员'
+        } else {
+            return 'ROOT'
+        }
     }
 }

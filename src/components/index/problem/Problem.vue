@@ -152,7 +152,8 @@ export default {
             }).then(res => {
                 this.problems.data = res.data.data
                 this.problems.total = res.data.total
-            }).finally(() => {
+                this.loading = false
+            }).catch(res => {
                 this.loading = false
             })
         },

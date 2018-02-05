@@ -57,9 +57,8 @@ export default {
                     this.loading = true
                     this.$http.put('/group/'+this.gid, {name: this.form.name, password: password}).then(res => {
                         this.$Message.success(res.message)
+                        this.loading = false
                     }).catch(res => {
-                        this.$Message.error(res.message)
-                    }).finally(() => {
                         this.loading = false
                     })
                 } else {

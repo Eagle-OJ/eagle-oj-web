@@ -32,7 +32,7 @@
                     </a>
                     <DropdownMenu slot="list">
                         <DropdownItem name="/user">个人中心</DropdownItem>
-                        <DropdownItem name="logout">退出</DropdownItem>
+                        <DropdownItem name="/logout">退出</DropdownItem>
                     </DropdownMenu>
                 </Dropdown>
                 <router-link to="/user">
@@ -48,7 +48,7 @@
 export default {
     methods: {
         goTo(name) {
-            if (name == 'logout') {
+            if (name == '/logout') {
                 this.$store.commit('logout')
             } else {
                 this.$router.push(name)

@@ -52,7 +52,8 @@ export default {
             }).then(res => {
                 this.total = res.data.total
                 this.groups = res.data.data
-            }).finally(() => {
+                this.loading = false
+            }).catch(res => {
                 this.loading = false
             })
         },

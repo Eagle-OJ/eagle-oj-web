@@ -97,9 +97,8 @@ export default {
             }).then(res => {
                 this.data = res.data.data
                 this.total = res.data.total
+                this.loading = false
             }).catch(res => {
-                this.$Message.error('获取失败')
-            }).finally(() => {
                 this.loading = false
             })
         },

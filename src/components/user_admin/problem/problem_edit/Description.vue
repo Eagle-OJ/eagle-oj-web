@@ -65,10 +65,10 @@
                 <label for="difficult">难度</label>
                 <div id="difficult">
                     <RadioGroup id="difficult" v-model="form.difficult">
-                        <Radio label="0">简单</Radio>
-                        <Radio label="1">中等</Radio>
-                        <Radio label="2">困难</Radio>
-                        <Radio label="3">专家</Radio>
+                        <Radio :label="0">简单</Radio>
+                        <Radio :label="1">中等</Radio>
+                        <Radio :label="2">困难</Radio>
+                        <Radio :label="3">专家</Radio>
                     </RadioGroup>
                 </div>
             </div>
@@ -177,9 +177,8 @@ export default {
             this.loading = true
             this.$http.put('/problem/'+this.pid, data).then(res => {
                 this.$Message.success(res.message)
+                this.loading = false
             }).catch(res => {
-                this.$Message.error(res.message)
-            }).finally(() => {
                 this.loading = false
             })
         },

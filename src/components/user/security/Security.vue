@@ -41,7 +41,6 @@ export default {
                         new_password: this.form.newPassword
                     }).then(res => {
                         this.$Message.success(res.message)
-                        this.$router.push('/login')
                         this.$store.commit('logout')
                     })
                 } else {

@@ -1,6 +1,6 @@
 <template>
     <div class="navigation" >
-        <Menu :active-name="name" width="auto" @on-select="goTo">
+        <Menu :active-name="getActiveName" width="auto" @on-select="goTo">
             <MenuGroup title="个人信息">
                 <MenuItem name="edit">
                     <Icon type="document-text"></Icon>
@@ -68,6 +68,14 @@ export default {
     computed: {
         getUid() {
             return this.$store.state.userInfo.uid
+        },
+        getActiveName() {
+            let path = this.$route.path
+            if(path === '/user') {
+                return 'edit'
+            } else {
+                return path.replace('/user/', '')
+            }
         }
     }
 }
