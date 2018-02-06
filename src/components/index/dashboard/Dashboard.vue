@@ -176,7 +176,9 @@ export default {
             })
         },
         randomDoProblem() {
-            this.$router.push('/problem/1')
+            this.$http.get('/problem/random').then(res => {
+                this.$router.push('/problem/'+res.data)
+            })
         }
     }
 }

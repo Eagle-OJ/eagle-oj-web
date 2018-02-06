@@ -8,7 +8,7 @@
                     </Col>
                     <Col span="2">
                         <router-link :to="{path: '/problems', query: {difficult: getDifficult, tag: this.getTag}}">
-                            <Button shape="circle" icon="android-refresh" type="primary"></Button>
+                            <Button shape="circle" icon="android-refresh" type="primary">清除</Button>
                         </router-link>
                     </Col>
                     <Col span="12" class="sort">
@@ -37,6 +37,9 @@
                 </div>
             </Col>
             <Col span="8" class="right">
+                <div class="random">
+                    <Button icon="shuffle" long type="ghost" @click="randomDoProblem()">随机做题</Button>
+                </div>
                 <Card class="tags">
                     <p slot="title">
                         <Icon type="navicon-round"></Icon>
@@ -189,6 +192,11 @@ export default {
                 difficult: this.getDifficult,
                 tag: name
             }})
+        },
+        randomDoProblem() {
+            this.$http.get('/problem/random').then(res => {
+                this.$router.push('/problem/'+res.data)
+            })
         }
     },
     components: {
