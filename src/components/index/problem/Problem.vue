@@ -4,9 +4,14 @@
             <Col span="16" class="left">
                 <Row class="header">
                     <Col span="10">
-                        <Input v-model="searchQuery" placeholder="开发中" disabled></Input>
+                        <Input v-model="problems.query" placeholder="搜索关键词" @on-enter="doQuery"></Input>
                     </Col>
-                    <Col span="14" class="sort">
+                    <Col span="2">
+                        <router-link :to="{path: '/problems', query: {difficult: getDifficult, tag: this.getTag}}">
+                            <Button shape="circle" icon="android-refresh" type="primary"></Button>
+                        </router-link>
+                    </Col>
+                    <Col span="12" class="sort">
                         <div class="difficulty">
                             <Dropdown trigger="click" style="margin-left: 20px" @on-click="changeDifficult">
                                 <a href="javascript:void(0)">
@@ -62,7 +67,6 @@ export default {
     data() {
         return {
             loading: false,
-            searchQuery: '',
             tags: [],
             problems: {
                 columns: [
@@ -132,6 +136,7 @@ export default {
                 total: 0,
                 pageSize: 10,
                 uid: -1,
+                query: ''
             },
         }
     },
@@ -147,7 +152,8 @@ export default {
                     page_size: this.problems.pageSize,
                     difficult: this.getDifficult,
                     tag: this.getTag,
-                    uid: this.problems.uid
+                    uid: this.problems.uid,
+                    query: this.getQuery
                 }
             }).then(res => {
                 this.problems.data = res.data.data
@@ -160,6 +166,16 @@ export default {
         getTags() {
             this.$http.get('/tags').then(res => {
                 this.tags = res.data
+            })
+        },
+        doQuery() {
+            this.$router.push({
+                path: '/problems',
+                query: {
+                    difficult: this.getDifficult,
+                    tag: this.getTag,
+                    query: this.problems.query
+                }
             })
         },
         changeDifficult(item) {
@@ -194,6 +210,13 @@ export default {
             } else {
                 return tag
             }
+        },
+        getQuery() {
+            let query = this.$route.query.query
+            if(query != undefined) {
+                this.problems.query = query
+            }
+            return query == undefined? 'null': query
         }
     },
     watch: {
@@ -204,6 +227,9 @@ export default {
             this.getProblems(1)
         },
         'getDifficult': function() {
+            this.getProblems(1)
+        },
+        'getQuery': function() {
             this.getProblems(1)
         }
     }

@@ -17,7 +17,7 @@
                     <RadioGroup v-model="form.role">
                         <Radio :label="0">普通用户</Radio>
                         <Radio :label="8">管理员</Radio>
-                        <Radio :label="9">ROOT</Radio>
+                        <Radio :label="9" v-if="$store.state.userInfo.role==9">ROOT</Radio>
                     </RadioGroup>
                 </FormItem>
                 <FormItem label="性别">
@@ -156,6 +156,7 @@ export default {
             this.$http.put('/user/'+this.form.uid, form).then(res => {
                 this.$Message.success(res.message)
                 this.modal = false
+                this.getData(1)
             })
         },
         getTime(time) {

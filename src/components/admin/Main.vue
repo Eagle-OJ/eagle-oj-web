@@ -28,6 +28,10 @@
                                 <Icon type="code-working"></Icon>
                                 判卷机管理
                             </MenuItem>
+                            <MenuItem name="cache" v-if="false && isRoot">
+                                <Icon type="wrench"></Icon>
+                                缓存管理
+                            </MenuItem>
                         </MenuGroup>
                         <MenuGroup title="内容管理">
                             <MenuItem name="tag">

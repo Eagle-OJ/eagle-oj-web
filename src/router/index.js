@@ -277,6 +277,13 @@ const router = new Router({
                     }
                 },
                 {
+                    path: 'cache',
+                    component: () => import('@/components/admin/cache'),
+                    meta: {
+                        title: '缓存管理'
+                    }
+                },
+                {
                     path: 'user',
                     component: () => import('@/components/admin/User'),
                     meta: {
