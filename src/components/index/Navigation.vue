@@ -32,6 +32,7 @@
                     </a>
                     <DropdownMenu slot="list">
                         <DropdownItem name="/user">个人中心</DropdownItem>
+                        <DropdownItem name="/admin" v-if="$store.state.userInfo.role>=8">管理中心</DropdownItem>
                         <DropdownItem name="/logout">退出</DropdownItem>
                     </DropdownMenu>
                 </Dropdown>

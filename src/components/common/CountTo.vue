@@ -133,7 +133,7 @@ export default {
         });
     },
     watch: {
-        endVal (val) {
+        'endVal': function() {
             let endVal = 0;
             if (this.simplify) {
                 let res = this.transformValue(this.endVal);
@@ -142,8 +142,9 @@ export default {
             } else {
                 endVal = this.endVal;
             }
-            this.counter.update(endVal);
+            this.counter.update;
         }
+        
     }
 };
 </script>
