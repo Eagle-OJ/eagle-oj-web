@@ -2,6 +2,7 @@
     <div id="container" class="dashboard">
         <Row>
             <Col span="16" class="left">
+                <div class="none-message" v-if="message.data.length==0">暂无消息</div>
                 <template v-for="item in message.data">
                     <div class="message" v-if="item.type == 0">
                         <Row>
