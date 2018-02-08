@@ -76,6 +76,7 @@
                 <Col span="7">
                     <h4>小组赛</h4>
                     <ul class="contests">
+                        <li v-if="contests.length == 0">暂无比赛</li>
                         <li v-for="item in contests">
                             <router-link :to="{path: '/contest/'+item.cid}">{{item.name}}</router-link>
                             <contest-status :status="item.status" class="badge"></contest-status>
@@ -176,8 +177,12 @@ export default {
         getGroupUserInfo() {
             if(this.$store.state.userInfo.isLogin) {
                 this.$http.get('/group/'+this.getGid+'/user/'+this.getUid).then(res => {
-                    this.user = res.data
-                    this.isIn = true
+                    if(res.data) {
+                        this.user = res.data
+                        this.isIn = true
+                    } else {
+                        this.isIn = false
+                    }    
                 }).catch(res => {
                     this.isIn = false
                 })
@@ -210,8 +215,6 @@ export default {
             }).then(res => {
                 this.$Message.success(res.message)
                 this.init()
-            }).catch(res => {
-                this.$Message.error(res.message)
             })
         },
         changeGroupName() {
@@ -241,9 +244,7 @@ export default {
                     }).then(res => {
                         this.$Message.success(res.message)
                         this.getGroupUserInfo()
-                        this.getMembers()
-                    }).catch(res => {
-                        this.$Message.error(res.message)
+                        this.getMembers(1)
                     })
                 }
             })
@@ -256,8 +257,6 @@ export default {
                     this.$http.delete('/group/'+this.getGid+'/user/'+this.getUid).then(res => {
                         this.init()
                         this.$Message.success('退出成功')
-                    }).catch(res => {
-                        this.$Message.error('退出失败')
                     })
                 },
             })

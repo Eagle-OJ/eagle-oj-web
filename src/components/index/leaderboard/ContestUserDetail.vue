@@ -38,6 +38,10 @@ export default {
                     key: 'score'
                 },
                 {
+                    title: '错误次数',
+                    key: 'wrong_times'
+                },
+                {
                     title: '用时',
                     render: (h, params) => {
                         return this.getParsedTime(params.row.used_time)
@@ -73,13 +77,13 @@ export default {
         },
         getTime(time) {
             if(time == 0) {
-                return 'N/A'
+                return '无'
             }
             return Util.getDistanceTime(time)
         },
         getParsedTime(time) {
             if(time == 0) {
-                return 'N/A'
+                return '无'
             }
             return Math.ceil(time/1000/60)+'分钟'
         },

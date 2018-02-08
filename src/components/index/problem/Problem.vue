@@ -7,9 +7,7 @@
                         <Input v-model="problems.query" placeholder="搜索关键词" @on-enter="doQuery"></Input>
                     </Col>
                     <Col span="2">
-                        <router-link :to="{path: '/problems', query: {difficult: getDifficult, tag: this.getTag}}">
-                            <Button shape="circle" icon="android-refresh" type="primary">清除</Button>
-                        </router-link>
+                        <Button shape="circle" icon="android-refresh" type="primary" @click="clearQuery">清除</Button>
                     </Col>
                     <Col span="12" class="sort">
                         <div class="difficulty">
@@ -198,6 +196,10 @@ export default {
                 this.$Message.success('祝你好运')
                 this.$router.push('/problem/'+res.data)
             })
+        },
+        clearQuery() {
+            this.problems.query = ''
+            this.$router.push({path: '/problems', query: {difficult: this.getDifficult, tag: this.getTag}})
         }
     },
     components: {

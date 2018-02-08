@@ -52,7 +52,7 @@ export default {
                 },
                 {
                     title: '分数',
-                    key: 'score'
+                    key: 'total_score'
                 },
                 {
                     title: '完成题数',
@@ -69,7 +69,7 @@ export default {
                 {
                     title: '耗时',
                     render: (h, params) => {
-                        return this.getParsedTime(params.row.used_time)
+                        return this.getParsedTime(params.row.total_used_time)
                     }
                 },
             ],
@@ -96,7 +96,7 @@ export default {
                     this.columns.push({
                         title: '总耗时',
                         render: (h, params) => {
-                            return this.getParsedTime(params.row.penalty_time + params.row.used_time)
+                            return this.getParsedTime(params.row.penalty_time + params.row.total_used_time)
                         }  
                     })  
                 }
@@ -111,7 +111,7 @@ export default {
         },
         getParsedTime(time) {
             if(time == 0) {
-                return 'N/A'
+                return '无'
             }
             return Math.ceil(time/1000/60)+'分钟'
         }

@@ -169,6 +169,11 @@ export default {
             this.form.name = res.name
             this.form.slogan = res.slogan
             this.form.description = res.description
+            if(res.status == 1) {
+                this.form.isOpen = true
+            } else {
+                this.form.isOpen = false
+            }
             if(res.password == undefined) {
                 this.form.isShare = true
             } else {
