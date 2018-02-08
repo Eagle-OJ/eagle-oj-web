@@ -12,11 +12,10 @@ export default {
 
 <style lang="stylus" scoped>
     .footer
-        margin-top 50px
         text-align: center
-        padding: 10px 0
+        height 40px
+        line-height 40px
         color: #9ea7b4
-        background: #f5f7f9
 </style>
 
 

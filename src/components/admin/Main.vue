@@ -68,9 +68,6 @@
                 </Col>
             </Row>
         </div>
-        <div class="layout-copy">
-            2017-2018 &copy; Eagle-OJ
-        </div>
     </div>
 </template>
 

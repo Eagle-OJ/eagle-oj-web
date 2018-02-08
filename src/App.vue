@@ -16,7 +16,7 @@
 						<div>{{item.status}}</div>
 					</Spin>
 					<div class="response" v-else>
-                        <ProblemResult :result="item.response.result"></ProblemResult>
+						<ProblemResult :result="item.response.result"></ProblemResult>
 						<Tag color="green">{{item.response.memory}} M</Tag>
 						<Tag color="green">{{item.response.time}} S</Tag>
 						<router-link :to="{path: '/submission/'+item.id}">
@@ -27,18 +27,21 @@
 			</div>
 		</div>
 		<router-view/>
+		<v-footer id="footer"></v-footer>
 	</div>
 </template>
 
 <script>
 import ProblemResult from '@/components/common/ProblemResult'
+import Footer from '@/components/index/Footer'
+
 export default {
 	name: 'app',
 	mounted() {
 		if (document.getElementsByClassName("loading")[0]) {
 			document.body.removeChild(document.getElementsByClassName("loading")[0])
 		}
-    },
+	},
 	methods: {
 		removeNotice(index) {
 			this.$store.commit('deleteSubmission', index)
@@ -49,17 +52,20 @@ export default {
 		getSubmissions() {
 			return this.$store.state.submissions
 		}
-    },
-    components: {
-        ProblemResult
-    }
+	},
+	components: {
+		ProblemResult,
+		'v-footer': Footer
+	}
 }
 </script>
 
 <style lang="stylus">
 #app
-	width 100%
-	height 100%
+	min-width 100%
+	min-height 100%
+	position relative
+	padding-bottom 50px
 	#global-submission
 		position fixed
 		top 24px
@@ -110,4 +116,8 @@ export default {
 	#container
 		max-width 1000px
 		margin 0 auto
+	#footer
+		position absolute
+		bottom 0
+		width 100%
 </style>
