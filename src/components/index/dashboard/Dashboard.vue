@@ -178,6 +178,7 @@ export default {
         },
         randomDoProblem() {
             this.$http.get('/problem/random').then(res => {
+                this.$Message.success('祝你好运')
                 this.$router.push('/problem/'+res.data)
             })
         }

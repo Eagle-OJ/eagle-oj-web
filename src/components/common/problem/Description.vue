@@ -264,11 +264,11 @@ export default {
 
 			this.quill.inputFormat = new Quill(document.getElementById('input_format'), config)
 			this.quill.inputFormat.enable(false)
-			this.quill.inputFormat.setContents(this.data.problem.description)
+			this.quill.inputFormat.setContents(this.data.problem.input_format)
 
 			this.quill.outputFormat = new Quill(document.getElementById('output_format'), config)
 			this.quill.outputFormat.enable(false)
-			this.quill.outputFormat.setContents(this.data.problem.description)
+			this.quill.outputFormat.setContents(this.data.problem.output_format)
 		},
 		mountEditor() {
 			let editor = ace.edit('editor-container')
