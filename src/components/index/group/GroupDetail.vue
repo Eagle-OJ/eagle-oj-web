@@ -170,7 +170,7 @@ export default {
             this.getGroupContests()
         },
         getGroup() {
-            this.$http.get('/group/'+this.getGid).then(res => {
+            this.$http.get('/group/'+this.getGid+'/info').then(res => {
                 this.group = res.data
             })
         },
