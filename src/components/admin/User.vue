@@ -57,7 +57,13 @@ export default {
                 },
                 {
                     title: '名称',
-                    key: 'nickname'
+                    render: (h, params) => {
+                        return h('router-link', {
+                            props: {
+                                to: '/profile/'+params.row.uid
+                            }
+                        }, params.row.nickname)
+                    }
                 },
                 {
                     title: '邮箱',
@@ -79,19 +85,6 @@ export default {
                     title: '操作',
                     render: (h, params) => {
                         return h('div', [
-                            h('Button', {
-                                props: {
-                                    type: 'ghost'
-                                },
-                                on: {
-                                    click: () => {
-                                        this.$router.push('/profile/'+params.row.uid)
-                                    }
-                                },
-                                style: {
-                                    marginRight: '10px'
-                                }
-                            }, '浏览'),
                             h('Button', {
                                 props: {
                                     type: 'ghost'

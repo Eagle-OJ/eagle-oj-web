@@ -20,7 +20,14 @@ export default {
                 },
                 {
                     title: '名称',
-                    key: 'title'
+                    key: 'title',
+                    render: (h, params) => {
+                        return h('router-link', {
+                            props: {
+                                to: '/problem/'+params.row.pid
+                            }
+                        }, params.row.title)
+                    }
                 },
                 {
                     title: '难度',
@@ -40,20 +47,6 @@ export default {
                             h('Button', {
                                 props: {
                                     type: 'primary',
-                                    size: 'small'
-                                },
-                                style: {
-                                    marginRight: '10px'
-                                },
-                                on: {
-                                    click: () => {
-                                        this.view(params.row.pid)
-                                    }
-                                }
-                            }, '查看'),
-                            h('Button', {
-                                props: {
-                                    type: 'success',
                                     size: 'small'
                                 },
                                 style: {
@@ -96,9 +89,6 @@ export default {
                 this.total = res.data.total
                 this.data = res.data.data
             })
-        },
-        view(pid) {
-            this.$router.push('/problem/'+pid)
         },
         auditing(pid, isAccepted) {
             this.$http.post('/problem/'+pid+'/auditing', {
