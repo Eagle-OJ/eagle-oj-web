@@ -1,67 +1,72 @@
 <template>
     <div class="setting">
-        <h1>创建小组</h1>
-        <Form ref="form" :model="form" :label-width="80" :rules="validateRule">
-            <FormItem label="小组名称" prop="name">
-                <Input v-model="form.name" :maxlength="20"></Input>
-            </FormItem>
-            <FormItem label="是否公开">
-                <i-switch v-model="form.isSecret" size="large">
-                    <span slot="close">公开</span>
-                    <span slot="open">私密</span>
-                </i-switch>
-            </FormItem>
-            <FormItem label="小组密码" v-if="form.isSecret">
-                <Input v-model="form.password" placeholder="密码不得超出6位" :maxlength="6"></Input>
-            </FormItem>
-            <FormItem>
-                <Button type="primary" @click="createGroup()" :loading="loading">创建</Button>
-            </FormItem>
-        </Form>
+        <Row class="each">
+            <Col span="5" class="title">发送通知</Col>
+            <Col span="19" class="content">
+                <p>
+                    <Alert>给你的组员发送消息</Alert>
+                    <Input v-model="message" :minlength="10">
+                        <Button slot="append" icon="android-send" @click="sendMessage"></Button>
+                    </Input>
+                </p>
+            </Col>
+        </Row>
+        <Row class="each">
+            <Col span="5" class="title">创建小组赛</Col>
+            <Col span="19" class="content">
+                <p>
+                    <Alert>创建只有本小组成员才可以加入的小组比赛</Alert>
+                    <router-link :to="{path: '/user_admin/contest/add?group='+gid}">
+                        <Button type="ghost">创建小组赛</Button>
+                    </router-link>
+                </p>
+            </Col>
+        </Row>
+        <Row class="each">
+            <Col span="5" class="title">解散小组</Col>
+            <Col span="19" class="content">
+                <p>
+                    <Button type="error" @click="dismissGroup">解散小组</Button>
+                </p>
+            </Col>
+        </Row>
     </div>
 </template>
 
 <script>
 export default {
+    props: ['gid'],
     data() {
         return {
-            loading: false,
-            form: {
-                name: '',
-                password: '',
-                isSecret: false,
-            },
-            validateRule: {
-                name: [
-                    { required: true, message: '名称不得为空'},
-                    { type: 'string', max: 20, message: '长度不得超出20' }
-                ]
-            }
+            message: '',
         }
     },
     methods: {
-        createGroup() {
-            this.$refs['form'].validate((valid) => {
-                if (valid) {
-                    let password = null
-                    if (this.form.isSecret) {
-                        if (this.form.password.length == 0) {
-                            this.$Message.warning('密码不得为空')
-                            return
-                        } 
-                        password = this.form.password
-                    }
-                    this.loading = true
-                    this.$http.post('/user/group', {name: this.form.name, password: password}).then(res => {
-                        this.$router.push('/user_admin/group/'+res.data+"/edit")
+        sendMessage() {
+            if(this.message.length < 10) {
+                this.$Message.warning('消息长度不得小于10个字')
+                return
+            }
+
+            this.$http.post('/group/'+this.gid+'/message', {message: this.message}).then(res => {
+                this.$Message.success(res.message)
+                this.message = ''
+            }).catch(res => {
+                this.$Message.error(res.message)
+            })
+        },
+        dismissGroup() {
+            this.$Modal.confirm({
+                title: '解散小组',
+                content: '<p>如果组内开设有比赛，将无法解散！</p>',
+                onOk: () => {
+                    this.$http.delete('/group/'+this.gid).then(res => {
+                        this.$Message.success(res.message)
+                        this.$router.push('/user/group')
                     }).catch(res => {
                         this.$Message.error(res.message)
-                    }).finally(() => {
-                        this.loading = false
                     })
-                } else {
-                    this.$Message.error('请按要求填写')
-                }
+                },
             })
         }
     }
@@ -69,7 +74,15 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
-
+    .setting
+        .each
+            margin-bottom 15px
+            border-bottom 1px solid #ddd
+            .title
+                font-size 18px
+            .content
+                p
+                    margin-bottom 10px
 </style>
 
 

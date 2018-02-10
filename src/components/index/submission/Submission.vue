@@ -38,10 +38,7 @@ export default {
     methods: {
         getStatus() {
             this.$http.get('/code/'+this.getId).then(res => {
-                console.log(res)
                 this.data = res.data
-            }).catch(res => {
-                this.$Message.error('此任务已经不存在')
             })
         }
     },

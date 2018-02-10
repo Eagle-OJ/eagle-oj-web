@@ -99,8 +99,6 @@ export default {
             this.$http.get('/profile/'+this.getUid).then(res => {
                 this.profile = res.data
                 this.updateTimesChart()
-            }).catch(res => {
-                this.$Message.error(res.message)
             })
         },
         getUserProblem() {
@@ -136,11 +134,11 @@ export default {
                 for(let i=0; i<data.length; i++) {
                     let log = data[i]
                     this.logData.label.push(log.date)
-                    this.logData.AC.push(log.ac_times)
-                    this.logData.CE.push(log.ce_times)
-                    this.logData.RTE.push(log.rte_times)
-                    this.logData.WA.push(log.wa_times)
-                    this.logData.TLE.push(log.tle_times)
+                    this.logData.AC.push(log.ac_times? log.ac_times: 0)
+                    this.logData.CE.push(log.ce_times? log.ce_times: 0)
+                    this.logData.RTE.push(log.rte_times? log.rte_times: 0)
+                    this.logData.WA.push(log.wa_times? log.wa_times: 0)
+                    this.logData.TLE.push(log.tle_times? log.tle_times: 0)
                 }
                 this.updateLogChart()
             })
@@ -178,7 +176,7 @@ export default {
         },
         updateTimesChart() {
             this.timesChart.data.datasets = [{
-                data: [
+                data: [  
                     this.profile.ac_times,
                     this.profile.ce_times,
                     this.profile.rte_times,

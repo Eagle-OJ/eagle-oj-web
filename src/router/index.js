@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import Store from '@/store'
 import Cookie from 'js-cookie'
 import Config from '@/env.js'
 import iView from 'iview'
@@ -7,6 +8,13 @@ Vue.use(Router)
 
 const router = new Router({
     routes: [
+        {
+            path: '/install',
+            component: () => import('@/components/install/Install'),
+            meta: {
+                title: '网站安装'
+            }
+        },
         {
             path: '/',
             component: () => import('@/components/index/Main'),
@@ -22,7 +30,8 @@ const router = new Router({
                     path: '/dashboard',
                     component: () => import('@/components/index/dashboard/Dashboard'),
                     meta: {
-                        title: '主页'
+                        title: '主页',
+                        requireAuth: true
                     }
                 },
                 {
@@ -57,7 +66,7 @@ const router = new Router({
                     path: '/contest/:cid/problems',
                     component: () => import('@/components/index/contest/problems/ContestProblems'),
                     meta: {
-                        title: 'xxx比赛',
+                        title: '比赛',
                         requireAuth: true
                     }
                 },
@@ -65,7 +74,7 @@ const router = new Router({
                     path: '/contest/:cid/problem/:pid',
                     component: () => import('@/components/index/problem/ProblemDetail'),
                     meta: {
-                        title: 'xx比赛的题目',
+                        title: '比赛题目详情',
                         requireAuth: true
                     }                    
                 },
@@ -137,10 +146,10 @@ const router = new Router({
                     }
                 }, 
                 {
-                    path: 'history',
-                    component: () => import('@/components/user/history/History'),
+                    path: 'security',
+                    component: () => import('@/components/user/security/Security'),
                     meta: {
-                        title: '我的记录'
+                        title: '账号安全'
                     }
                 },
                 {
@@ -212,7 +221,7 @@ const router = new Router({
                     path: 'contest/:cid/edit',
                     component: () => import('@/components/user_admin/contest/contest_edit/ContestEdit'),
                     meta: {
-                        title: 'xxx比赛编辑'
+                        title: '比赛编辑'
                     }
                 },
                 {
@@ -241,9 +250,79 @@ const router = new Router({
             children: [
                 {
                     path: '/',
-                    component: () => import('@/components/admin/index/Index'),
+                    component: () => import('@/components/admin/Index'),
                     meta: {
-                        title: '首页-管理中心'
+                        title: '管理中心'
+                    }
+                },
+                {
+                    path: 'announcement',
+                    component: () => import('@/components/admin/Announcement'),
+                    meta: {
+                        title: '公告管理'
+                    }
+                },
+                {
+                    path: 'setting',
+                    component: () => import('@/components/admin/Setting'),
+                    meta: {
+                        title: '系统设置'
+                    }
+                },
+                {
+                    path: 'judger',
+                    component: () => import('@/components/admin/Judger'),
+                    meta: {
+                        title: '判卷机管理'
+                    }
+                },
+                {
+                    path: 'cache',
+                    component: () => import('@/components/admin/cache'),
+                    meta: {
+                        title: '缓存管理'
+                    }
+                },
+                {
+                    path: 'user',
+                    component: () => import('@/components/admin/User'),
+                    meta: {
+                        title: '用户管理'
+                    }
+                },
+                {
+                    path: 'group',
+                    component: () => import('@/components/admin/Group'),
+                    meta: {
+                        title: '小组管理'
+                    }
+                },
+                {
+                    path: 'contest',
+                    component: () => import('@/components/admin/Contest'),
+                    meta: {
+                        title: '比赛管理'
+                    }
+                },
+                {
+                    path: 'auditing',
+                    component: () => import('@/components/admin/Auditing'),
+                    meta: {
+                        title: '审核管理'
+                    }
+                },
+                {
+                    path: 'problem',
+                    component: () => import('@/components/admin/Problem'),
+                    meta: {
+                        title: '题目管理'
+                    }
+                },
+                {
+                    path: 'tag',
+                    component: () => import('@/components/admin/Tag'),
+                    meta: {
+                        title: '标签管理'
                     }
                 }
             ]
@@ -283,10 +362,15 @@ const router = new Router({
 })
 
 router.beforeEach((to, from, next) => {
-    document.title = to.meta.title+Config.TITLE
+    let webTitle = ''
+    if(Store.state.setting.is_installed && Store.state.setting.web_title.length != 0) {
+        webTitle = ' - '+Store.state.setting.web_title
+    }
+    document.title = to.meta.title+webTitle+Config.TITLE
     iView.LoadingBar.start();    
     if(to.matched.some(record => record.meta.requireAuth)) {
         if (!Cookie.get('token')) {
+            iView.Message.warning('请登入')
             next({
                 path: '/login',
                 query: { redirect: to.fullPath }

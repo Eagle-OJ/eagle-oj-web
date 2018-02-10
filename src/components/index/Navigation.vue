@@ -1,5 +1,5 @@
 <template>
-	<div class="navigation">
+	<div id="navigation" class="navigation">
 		<div id="container">
 			<div class="logo">
                 <router-link to="/">
@@ -11,10 +11,10 @@
 					<router-link to="/dashboard" active-class="active">主页</router-link>
 				</li>
 				<li>
-					<router-link to="/contest" active-class="active">比赛</router-link>
-				</li>
-				<li>
 					<router-link to="/problems" active-class="active">题目</router-link>
+				</li>
+                <li>
+					<router-link to="/contest" active-class="active">比赛</router-link>
 				</li>
 				<li>
 					<router-link to="/leaderboard" active-class="active">排行榜</router-link>
@@ -32,11 +32,12 @@
                     </a>
                     <DropdownMenu slot="list">
                         <DropdownItem name="/user">个人中心</DropdownItem>
-                        <DropdownItem name="logout">退出</DropdownItem>
+                        <DropdownItem name="/admin" v-if="$store.state.userInfo.role>=8">管理中心</DropdownItem>
+                        <DropdownItem name="/logout">退出</DropdownItem>
                     </DropdownMenu>
                 </Dropdown>
                 <router-link to="/user">
-                    <img class="avatar" :src="$getUrl($store.state.userInfo.avatar)"/>
+                    <img class="avatar" :src="$getAvatar($store.state.userInfo.avatar)"/>
                 </router-link>
             </div>
 		</div>
@@ -48,7 +49,7 @@
 export default {
     methods: {
         goTo(name) {
-            if (name == 'logout') {
+            if (name == '/logout') {
                 this.$store.commit('logout')
             } else {
                 this.$router.push(name)
@@ -59,8 +60,8 @@ export default {
 </script>
 
 
-<style lang="stylus" scoped>
-    .navigation
+<style lang="stylus">
+    #navigation.navigation
         background white
         height 70px
         box-shadow 8px 1px 3px 0 rgba(0,34,77,.1)
@@ -115,6 +116,8 @@ export default {
                 line-height 0
                 height auto
                 float none
+                .ivu-select-dropdown
+                    z-index 1000
 </style>
 
 

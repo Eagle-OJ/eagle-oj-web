@@ -12,8 +12,12 @@ export default new Vuex.Store({
             isLogin: false,
         },
         setting: {
-            oss_url: '',
-            lang: {}
+            is_installed: false,
+            lang: {},
+            oss_config: {
+                url: ''
+            },
+            title: ''
         },
         submissions: [
             // {
@@ -52,7 +56,7 @@ export default new Vuex.Store({
                 path: path,
                 title: title,
                 id: id,
-                status: 'InQueue',
+                status: '队列中',
                 response: null
             })
             this.commit('getSubmission', id)
@@ -102,10 +106,15 @@ export default new Vuex.Store({
         setWebsite() {
             Axios.get('/setting').then(res => {
                 this.commit('setWebsite', res.data)
+                if(! res.data.is_installed) {
+                    router.push('/install')
+                }
+            }).catch(res => {
+                router.push('/500')
             })
         },
         getUserInfo() {
-            Axios.get('/user/info').then(res => {
+            Axios.get('/user').then(res => {
                 this.commit('login', res.data)
             }) 
         },

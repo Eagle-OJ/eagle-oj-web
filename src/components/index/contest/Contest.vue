@@ -52,8 +52,7 @@
 </template>
 
 <script>
-import util from '@/util'
-import format from 'date-fns/format'
+import Util from '@/util'
 import ContestType from '@/components/common/ContestType'
 
 export default {
@@ -69,12 +68,15 @@ export default {
     },
     methods: {
         getContests(page) {
-            this.$http.get('/contest?page='+page+'&page_size='+this.pageSize).then(res => {
+            this.$http.get('/contests/opened', {
+                params: {
+                    page: page,
+                    page_size: this.pageSize
+                }
+            }).then(res => {
                 res = res.data
                 this.total = res.total
                 this.data = res.data
-            }).catch(res => {
-                this.$Message.error(res.message)
             })
         },
         getContestStatus(startTime, endTime) {
@@ -91,7 +93,7 @@ export default {
             }
         },
         getTime(time) {
-            return format(new Date(time), 'YYYY-MM-DD HH:mm:ss')
+            return Util.getFormatTime(time, 'YYYY-MM-DD HH:mm:ss')
         }
     },
     components: {
@@ -117,7 +119,6 @@ export default {
 		table
 			width 100%
 			font-size 15px
-			font-family  "Helvetica Neue",Helvetica,Arial,sans-serif
 			td
 				height 34px
 				border-bottom dashed 0.5px lightgray

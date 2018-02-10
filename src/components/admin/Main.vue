@@ -1,7 +1,7 @@
 <template>
     <div class="main">
-        <Menu class="top" mode="horizontal" theme="dark" active-name="1">
-            <div class="layout-logo"></div>
+        <Menu class="top" mode="horizontal" theme="dark">
+            <div class="layout-logo">管 理 中 心</div>
             <router-link to="/">
                 <Button class="back" type="primary">返回首页</Button>
             </router-link>
@@ -10,31 +10,53 @@
         <div class="layout-content">
             <Row>
                 <Col span="5">
-                    <Menu active-name="1-2" width="auto">
-                        <MenuGroup title="首页">
-                            <MenuItem name="3">
-                                <Icon type="heart"></Icon>
+                    <Menu width="auto" @on-select="goTo" :active-name="getActiveName">
+                        <MenuGroup title="网站">
+                            <MenuItem name="overview">
+                                <Icon type="monitor"></Icon>
                                 网站概览
+                            </MenuItem>
+                            <MenuItem name="announcement">
+                                <Icon type="android-notifications-none"></Icon>
+                                公告管理
+                            </MenuItem>
+                            <MenuItem name="setting" v-if="isRoot">
+                                <Icon type="android-settings"></Icon>
+                                系统设置
+                            </MenuItem>
+                            <MenuItem name="judger" v-if="isRoot">
+                                <Icon type="code-working"></Icon>
+                                判卷机管理
+                            </MenuItem>
+                            <MenuItem name="cache" v-if="false && isRoot">
+                                <Icon type="wrench"></Icon>
+                                缓存管理
                             </MenuItem>
                         </MenuGroup>
                         <MenuGroup title="内容管理">
-                            <MenuItem name="3">
-                                <Icon type="heart"></Icon>
-                                成员管理
+                            <MenuItem name="tag">
+                                <Icon type="pricetags"></Icon>
+                                标签管理
                             </MenuItem>
-                            <MenuItem name="3">
+                            <MenuItem name="auditing">
+                                <Icon type="ios-checkmark-outline"></Icon>
+                                题目审核
+                            </MenuItem>
+                            <MenuItem name="problem">
                                 <Icon type="heart"></Icon>
+                                题目管理
+                            </MenuItem>
+                            <MenuItem name="user">
+                                <Icon type="android-person"></Icon>
+                                用户管理
+                            </MenuItem>
+                            <MenuItem name="contest">
+                                <Icon type="compose"></Icon>
                                 比赛管理
                             </MenuItem>
-                            <MenuItem name="4">
-                                <Icon type="heart-broken"></Icon>
+                            <MenuItem name="group">
+                                <Icon type="ios-people"></Icon>
                                 小组管理
-                            </MenuItem>
-                        </MenuGroup>
-                        <MenuGroup title="系统设置">
-                            <MenuItem name="3">
-                                <Icon type="heart"></Icon>
-                                判卷机管理
                             </MenuItem>
                         </MenuGroup>
                     </Menu>
@@ -46,15 +68,42 @@
                 </Col>
             </Row>
         </div>
-        <div class="layout-copy">
-            2011-2016 &copy; Eagle-OJ
-        </div>
     </div>
 </template>
 
 <script>
 export default {
-  
+    created() {
+        this.checkRole()
+    },
+    methods: {
+        goTo(name) {
+            if(name == 'overview') {
+                this.$router.push('/admin')
+            } else {
+                this.$router.push('/admin/'+name)
+            }
+        },
+        checkRole() {
+            if(this.$store.state.userInfo.role < 8) {
+                this.$Message.warning('你无权访问管理后台')
+                this.$router.push('/dashboard')
+            }
+        }
+    },
+    computed: {
+        isRoot() {
+            return this.$store.state.userInfo.role == 9
+        },
+        getActiveName() {
+            let path = this.$route.path
+            if (path === '/admin') {
+                return 'overview'
+            } else {
+                return path.replace('/admin/', '')
+            }
+        }
+    }
 }
 </script>
 
@@ -72,6 +121,10 @@ export default {
             position: relative
             top: 15px
             left: 20px
+            line-height 30px
+            text-align center
+            font-size 15px
+            color #fff
         .back
             float right 
             position: relative
@@ -84,12 +137,11 @@ export default {
         background: #fff
         border-radius: 4px
         .layout-content-main
-            padding: 10px;
-
+            padding: 10px
     .layout-copy
-        text-align: center;
-        padding: 10px 0 20px;
-        color: #9ea7b4;
+        text-align: center
+        padding: 10px 0 20px
+        color: #9ea7b4
 </style>
 
 

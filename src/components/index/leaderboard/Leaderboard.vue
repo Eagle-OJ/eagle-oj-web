@@ -1,160 +1,109 @@
 <template>
     <div id="container">
-		<div class="left">
-			<div class="medals">
-				<div style="width: 100%;text-align: center" class="contest-title"><p style="color: #FF5722;font-size: 40px;text-shadow: -1px -1px 0 rgba(200, 0, 0, .7)">公 开 排 行榜</p></div>
-				<div style="margin-left: 35px;margin-top: 10px">
-					<embed src="/static/gold.svg" type="image/svg+xml" width="150px" height="150px" style="margin-left: 150px"/>
-					<div class="first"><img src="/static/touxiang.jpg"><br><router-link to="/profile/1" title="查看资料">狗蛋</router-link></div>
-
-				</div>
-				<div style="height: 300px">
-
-					<div class="other"><embed src="/static/silver.svg" type="image/svg+xml" width="150px" height="150px"/>
-						<div class="other-img"><img src="/static/touxiang.jpg"><br><router-link to="/profile/1" title="查看资料">狗蛋</router-link></div>
+        <Row :gutter="24">
+            <Col span="13" class="left">
+                <div class="content">
+                    <h2>Leader!</h2>
+                    <div class="first" v-if="best[0]">
+                        <div class="medal">
+                            <embed src="/static/gold.svg" type="image/svg+xml" width="150px" height="150px"/>
+                        </div>
+                        <div class="profile">
+                            <img class="avatar" :src="$getAvatar(best[0].avatar)">
+                            <router-link :to="{path: '/profile/'+best[0].uid}" title="查看资料">{{best[0].nickname}}</router-link>
+                        </div>
                     </div>
-
-
-					<div class="other" style="margin-left: 210px"><embed src="/static/cuprum.svg" type="image/svg+xml" width="150px" height="150px">
-						<div class="other-img"><img src="/static/touxiang.jpg"><br><router-link to="/profile/1" title="查看资料">狗蛋</router-link></div>
+                    <div class="second-third" v-if="best[1]">
+                        <div class="second">
+                            <div class="medal">
+                                <embed src="/static/silver.svg" type="image/svg+xml" width="150px" height="150px"/>
+                            </div>
+                            <div class="profile">
+                                <img class="avatar" :src="$getAvatar(best[1].avatar)">
+                                <router-link :to="{path: '/profile/'+best[1].uid}" title="查看资料">{{best[1].nickname}}</router-link>
+                            </div>
+                        </div>
+                        <div class="third"  v-if="best[2]">
+                            <div class="medal">
+                                <embed src="/static/cuprum.svg" type="image/svg+xml" width="150px" height="150px"/>
+                            </div>
+                            <div class="profile">
+                                <img class="avatar" :src="$getAvatar(best[2].avatar)">
+                                <router-link :to="{path: '/profile/'+best[2].uid}" title="查看资料">{{best[2].nickname}}</router-link>
+                            </div>
+                        </div>
                     </div>
-				</div>
-				<div class="join-contest"><a to="#" title="跳转至题目页">不甘心？赶紧做题吧！</a></div>
-			</div>
-		</div>
-		<div class="right">
-			<div class="tips">
-				<p>当前数据截至：2017-10-01</p>
-			</div>
-			<div class="rank-list">
-
-				<div class="rank-head" style="margin-left: 5px">
-					<div style="flex: 1">排名</div>
-					<div style="flex: 3">昵称</div>
-					<div style="flex: 2">积分</div>
-					<div style="flex: 2">通过率</div>
-				</div>
-				<div class="rank-body" v-for="i in 12">
-					<div class="rank-sequence">{{i}}</div>
-					<div class="rank-nickname"><router-link to="/profile/1" title="查看资料">狗蛋</router-link></div>
-					<div class="rank-credit">2300</div>
-					<div class="rank-percent">80%</div>
-				</div>
-				<Page :total="40" size="small" show-total style="text-align: right; margin-top: 40px"></Page>
-			</div>
-		</div>
-		<div style="clear: both"></div>
+                </div>
+            </Col>
+            <Col span="11" class="right">
+                <div class="content">
+                    <div class="rank-head" style="margin-left: 5px">
+                        <div class="flex3">昵称</div>
+                        <div class="flex2">解决题数</div>
+                        <div class="flex2">提交次数</div>
+                        <div class="flex2">通过率</div>
+                    </div>
+                    <div class="rank-body" v-for="item in people">
+                        <div class="flex3">
+                            <router-link :to="{path: '/profile/'+item.uid}" title="查看资料">{{item.nickname}}</router-link>
+                        </div>
+                        <div class="flex2">{{item.finished_problems}}</div>
+                        <div class="flex2">{{item.submit_times}}</div>
+                        <div class="flex2">{{getACRate(item.ac_times, item.submit_times)}}</div>
+                    </div>
+                    <Page :total="total" :page-size="pageSize" @on-change="getPeople" size="small" show-total style="text-align: right;"></Page>
+                </div>
+            </Col>
+        </Row>
 	</div>
 </template>
 
 <script>
+import Util from '@/util'
 export default {
-
+    created() {
+        this.getBest()
+        this.getPeople(1)
+    },
+    data() {
+        return {
+            best: [],
+            people: [],
+            pageSize: 15,
+            total: 0,
+        }
+    },
+    methods: {
+        getBest() {
+            this.$http.get('/leaderboard', {
+                params: {
+                    page: 1,
+                    page_size: 3
+                }
+            }).then(res => {
+                this.best = res.data.data
+            })
+        },
+        getPeople(page) {
+            this.$http.get('/leaderboard', {
+                params: {
+                    page: page,
+                    page_size: this.pageSize
+                }
+            }).then(res => {
+                this.people = res.data.data
+                this.total = res.data.total
+            })
+        },
+        getACRate(ac, total) {
+            return Util.getACRate(ac, total)
+        }
+    }
 }
 </script>
 
 <style lang="stylus" scoped>
-	#container
-		font-family  "Helvetica Neue",Helvetica,Arial,sans-serif
-		.left
-			float left
-			margin-bottom 150px
-			.medals
-				margin-top 50px
-				border-radius 20px
-				height 590px
-				width 520px
-				box-shadow: 0px 0px 50px 0px rgba(0, 0, 0, 0.15)
-				font-size 18px
-				padding-top 20px
-				.first
-					margin-top 10px
-					text-align center
-					width 50px
-					margin-left 200px
-				.other
-					margin-left 0px
-					float left
-					.other-img
-						text-align center
-				a
-					color #464c5b
-				a:hover
-					color #2d8cf0
-					text-decoration underline
-
-			.medals img
-				width 50px
-				height 50px
-			.join-contest
-				height 100px
-				width 340px
-				padding-top 40px
-				text-align center
-				background coral
-				font-size 18px
-				border-radius 20px
-				margin-left 100px
-				a
-					color white
-				a:hover
-					color white
-					text-decoration underline
-			.join-contest:hover
-				cursor pointer
-				background orangered
-		.right
-			float  right
-			.rank-list
-				border-radius  20px
-				padding 10px 20px 20px 15px
-				box-shadow: 0px 0px 50px 0px rgba(0, 0, 0, 0.15)
-				width 450px
-				font-size 15px
-				.rank-head
-					height 34px
-					display flex
-					border-bottom  dashed 1px lightgray
-					margin-top 30px
-				.rank-body
-					line-height 34px
-					height 34px
-					border-bottom  dashed 1px lightgray
-					margin-left 10px
-					display flex
-					a
-						color  #464c5b
-					a:hover
-						color #2d8cf0
-						text-decoration underline
-					.rank-sequence
-						flex 1
-					.rank-nickname
-						flex 3
-					.rank-credit
-						color #66CD00
-						flex 2
-					.rank-percent
-						flex 2
-				.rank-body:hover
-					background #f0f0f4
-					right 10%
-					transform scale(1.25,1.25)
-					box-shadow 1px 2px 10px rgba(0, 0, 0, 0.3)
-					border-bottom none
-					padding-left 10px
-			.tips
-				margin-left 40px
-				height 100px
-				margin-top 75px
-				margin-bottom 30px
-				background #2d8cf0
-				border-radius 20px
-				font-size 18px
-				text-align center
-				color white
-				width 340px
-				padding 35px 30px 30px 30px
+	@import 'leaderboard.styl'
 </style>
 
 

@@ -1,108 +1,124 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <!-- <meta name="viewport" content="width=device-width,initial-scale=1.0"> -->
-    <title>eagle-oj-web</title>
-    <link href="https://cdn.bootcss.com/quill/1.3.4/quill.snow.min.css" rel="stylesheet">  
-    <link href="https://cdn.bootcss.com/KaTeX/0.9.0-alpha1/katex.min.css" rel="stylesheet">  
-    <style>
-        body {
-            background-color: #dedede;
-            font-size: 12px;
-        }   
-        .loading {
-            height: 9em;
-            left: 50%;
-            margin: -7.5em;
-            padding: 3em;
-            position: absolute;
-            top: 50%;
-            width: 9em;
-            transform: rotateX(45deg) rotateZ(45deg);
-            transform-style: preserve-3d;
-        }
-
-        .cube,.cube:after,.cube:before {
-            content: '';
-            float: left;
-            height: 3em;
-            position: absolute;
-            width: 3em;
-        }
-
-        /* Top */
-        .cube {
-            background-color: #05afd1;
-            position: relative;
-            transform: translateZ(3em);
-            transform-style: preserve-3d;
-            transition: .25s;
-            box-shadow: 13em 13em 1.5em rgba(0, 0, 0, 0.1);
-            animation: anim 1s infinite;
-        }
-        .cube:after {
-            background-color: #049dbc;
-            transform: rotateX(-90deg) translateY(3em);
-            transform-origin: 100% 100%;
-        }
-        .cube:before {
-            background-color: #048ca7;
-            transform: rotateY(90deg) translateX(3em);
-            transform-origin: 100% 0;
-        }
-        .cube:nth-child(1) {
-            animation-delay: 0.05s;
-        }
-        .cube:nth-child(2) {
-            animation-delay: 0.1s;
-        }
-        .cube:nth-child(3) {
-            animation-delay: 0.15s;
-        }
-        .cube:nth-child(4) {
-            animation-delay: 0.2s;
-        }
-        .cube:nth-child(5) {
-            animation-delay: 0.25s;
-        }
-        .cube:nth-child(6) {
-            animation-delay: 0.3s;
-        }
-        .cube:nth-child(7) {
-            animation-delay: 0.35s;
-        }
-        .cube:nth-child(8) {
-            animation-delay: 0.4s;
-        }
-        .cube:nth-child(9) {
-            animation-delay: 0.45s;
-        }
-
-        @keyframes anim {
-            50% {
-                transform: translateZ(0.5em);
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1.0">
+        <title>eagle-oj-web</title>
+        <link href="https://cdn.bootcss.com/quill/1.3.4/quill.snow.min.css" rel="stylesheet">
+        <link href="https://cdn.bootcss.com/KaTeX/0.9.0-alpha1/katex.min.css" rel="stylesheet">
+        <style type="text/css">
+            html, body {
+                height: 100%;
             }
-        }
-    </style>
-    <script src="/static/prefixfree.min.js"></script>
-  </head>
-  <body>
-    <div id="app"></div>
-    <div class='loading'>
-        <div class='cube'></div>
-        <div class='cube'></div>
-        <div class='cube'></div>
-        <div class='cube'></div>
-        <div class='cube'></div>
-        <div class='cube'></div>
-        <div class='cube'></div>
-        <div class='cube'></div>
-        <div class='cube'></div>
-    </div>
-    <!-- built files will be auto injected -->
-    <script src="https://cdn.bootcss.com/ace/1.2.9/ace.js"></script>
-    <script src="https://cdn.bootcss.com/quill/1.3.4/quill.min.js"></script>
-    <script src="https://cdn.bootcss.com/KaTeX/0.9.0-alpha1/katex.min.js"></script>
-  </body>
+            .loading {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                margin-left: -20px;
+                margin-top: -20px;
+            }
+            .sk-folding-cube {
+                margin: 20px auto;
+                width: 40px;
+                height: 40px;
+                position: relative;
+                -webkit-transform: rotateZ(45deg);
+                transform: rotateZ(45deg);
+            }
+            .sk-folding-cube .sk-cube {
+                float: left;
+                width: 50%;
+                height: 50%;
+                position: relative;
+                -webkit-transform: scale(1.1);
+                -ms-transform: scale(1.1);
+                transform: scale(1.1); 
+            }
+            .sk-folding-cube .sk-cube:before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-color: #1abc9c;
+                -webkit-animation: sk-foldCubeAngle 2.4s infinite linear both;
+                animation: sk-foldCubeAngle 2.4s infinite linear both;
+                -webkit-transform-origin: 100% 100%;
+                -ms-transform-origin: 100% 100%;
+                transform-origin: 100% 100%;
+            }
+            .sk-folding-cube .sk-cube2 {
+                -webkit-transform: scale(1.1) rotateZ(90deg);
+                transform: scale(1.1) rotateZ(90deg);
+            }
+            .sk-folding-cube .sk-cube3 {
+                -webkit-transform: scale(1.1) rotateZ(180deg);
+                transform: scale(1.1) rotateZ(180deg);
+            }
+            .sk-folding-cube .sk-cube4 {
+                -webkit-transform: scale(1.1) rotateZ(270deg);
+                transform: scale(1.1) rotateZ(270deg);
+            }
+            .sk-folding-cube .sk-cube2:before {
+                -webkit-animation-delay: 0.3s;
+                animation-delay: 0.3s;
+            }
+            .sk-folding-cube .sk-cube3:before {
+                -webkit-animation-delay: 0.6s;
+                animation-delay: 0.6s; 
+            }
+            .sk-folding-cube .sk-cube4:before {
+                -webkit-animation-delay: 0.9s;
+                animation-delay: 0.9s;
+            }
+            @-webkit-keyframes sk-foldCubeAngle {
+                0%, 10% {
+                    -webkit-transform: perspective(140px) rotateX(-180deg);
+                    transform: perspective(140px) rotateX(-180deg);
+                    opacity: 0; 
+                } 25%, 75% {
+                    -webkit-transform: perspective(140px) rotateX(0deg);
+                    transform: perspective(140px) rotateX(0deg);
+                    opacity: 1; 
+                } 90%, 100% {
+                    -webkit-transform: perspective(140px) rotateY(180deg);
+                    transform: perspective(140px) rotateY(180deg);
+                    opacity: 0; 
+                } 
+            }
+
+            @keyframes sk-foldCubeAngle {
+                0%, 10% {
+                    -webkit-transform: perspective(140px) rotateX(-180deg);
+                    transform: perspective(140px) rotateX(-180deg);
+                    opacity: 0; 
+                } 25%, 75% {
+                    -webkit-transform: perspective(140px) rotateX(0deg);
+                    transform: perspective(140px) rotateX(0deg);
+                    opacity: 1; 
+                } 90%, 100% {
+                    -webkit-transform: perspective(140px) rotateY(180deg);
+                    transform: perspective(140px) rotateY(180deg);
+                    opacity: 0; 
+                }
+            }
+        </style>
+    </head>
+
+    <body>
+        <div id="app"></div>
+        <!-- built files will be auto injected -->
+        <div class="loading">
+            <div class="sk-folding-cube">
+                <div class="sk-cube1 sk-cube"></div>
+                <div class="sk-cube2 sk-cube"></div>
+                <div class="sk-cube4 sk-cube"></div>
+                <div class="sk-cube3 sk-cube"></div>
+            </div>
+        </div>
+        <script src="https://cdn.bootcss.com/ace/1.2.9/ace.js"></script>
+        <script src="https://cdn.bootcss.com/quill/1.3.4/quill.min.js"></script>
+        <script src="https://cdn.bootcss.com/KaTeX/0.9.0-alpha1/katex.min.js"></script>
+    </body>
 </html>

@@ -4,9 +4,12 @@
             <Col span="16" class="left">
                 <Row class="header">
                     <Col span="10">
-                        <Input v-model="searchQuery" placeholder="输入题目编号"></Input>
+                        <Input v-model="problems.query" placeholder="搜索关键词" @on-enter="doQuery"></Input>
                     </Col>
-                    <Col span="14" class="sort">
+                    <Col span="2">
+                        <Button shape="circle" icon="android-refresh" type="primary" @click="clearQuery">清除</Button>
+                    </Col>
+                    <Col span="12" class="sort">
                         <div class="difficulty">
                             <Dropdown trigger="click" style="margin-left: 20px" @on-click="changeDifficult">
                                 <a href="javascript:void(0)">
@@ -25,13 +28,16 @@
                     </Col>
                 </Row>
                 <div class="problems">
-                    <Table :columns="problems.colums" :data="problems.data"></Table>
+                    <Table :loading="loading" :columns="problems.columns" :data="problems.data"></Table>
                     <div class="page">
                         <Page :total="problems.total" :page-size="problems.pageSize" size="small" show-total></Page>
                     </div>
                 </div>
             </Col>
             <Col span="8" class="right">
+                <div class="random">
+                    <Button icon="shuffle" long type="ghost" @click="randomDoProblem()">随机做题</Button>
+                </div>
                 <Card class="tags">
                     <p slot="title">
                         <Icon type="navicon-round"></Icon>
@@ -47,24 +53,6 @@
                         <span class="number">{{item.used}}</span>
                     </router-link>
                 </Card>
-                <Card class="user_info">
-                    <i-circle :size="200" :percent="75">
-                        <div class="detail">
-                            <h1>64</h1>
-                            <p>已做过</p>
-                            <span>
-                                通过率
-                                <i>75%</i>
-                            </span>
-                        </div>
-                    </i-circle>
-                    <div class="cover">
-                        <p>登入查看信息</p>
-                    </div>
-                </Card>
-                <Card>
-                    i dont know
-                </Card>
             </Col>
         </Row>
     </div>
@@ -79,10 +67,10 @@ export default {
     },
     data() {
         return {
-            searchQuery: '',
+            loading: false,
             tags: [],
             problems: {
-                colums: [
+                columns: [
                     {
                         title: '状态',
                         render: (h, params) => {
@@ -149,6 +137,7 @@ export default {
                 total: 0,
                 pageSize: 10,
                 uid: -1,
+                query: ''
             },
         }
     },
@@ -157,22 +146,37 @@ export default {
             if (this.$store.state.userInfo.isLogin) {
                 this.problems.uid = this.$store.state.userInfo.uid
             }
-            this.$http.get('/problem', {
+            this.loading = true
+            this.$http.get('/problems/opened', {
                 params: {
                     page: page,
                     page_size: this.problems.pageSize,
                     difficult: this.getDifficult,
                     tag: this.getTag,
-                    uid: this.problems.uid
+                    uid: this.problems.uid,
+                    query: this.getQuery
                 }
             }).then(res => {
-                this.problems.data = res.data.problems
+                this.problems.data = res.data.data
                 this.problems.total = res.data.total
+                this.loading = false
+            }).catch(res => {
+                this.loading = false
             })
         },
         getTags() {
             this.$http.get('/tags').then(res => {
                 this.tags = res.data
+            })
+        },
+        doQuery() {
+            this.$router.push({
+                path: '/problems',
+                query: {
+                    difficult: this.getDifficult,
+                    tag: this.getTag,
+                    query: this.problems.query
+                }
             })
         },
         changeDifficult(item) {
@@ -186,6 +190,16 @@ export default {
                 difficult: this.getDifficult,
                 tag: name
             }})
+        },
+        randomDoProblem() {
+            this.$http.get('/problem/random').then(res => {
+                this.$Message.success('祝你好运')
+                this.$router.push('/problem/'+res.data)
+            })
+        },
+        clearQuery() {
+            this.problems.query = ''
+            this.$router.push({path: '/problems', query: {difficult: this.getDifficult, tag: this.getTag}})
         }
     },
     components: {
@@ -207,6 +221,13 @@ export default {
             } else {
                 return tag
             }
+        },
+        getQuery() {
+            let query = this.$route.query.query
+            if(query != undefined) {
+                this.problems.query = query
+            }
+            return query == undefined? 'null': query
         }
     },
     watch: {
@@ -217,6 +238,9 @@ export default {
             this.getProblems(1)
         },
         'getDifficult': function() {
+            this.getProblems(1)
+        },
+        'getQuery': function() {
             this.getProblems(1)
         }
     }

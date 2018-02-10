@@ -1,3 +1,7 @@
+import distanceInWordsToNow from 'date-fns/distance_in_words_to_now'
+import format from 'date-fns/format'
+import cn from 'date-fns/locale/zh_cn'
+
 export default {
     getContestTimeType(type, totalTime) {
         if (type == 1 || type == 3) {
@@ -11,9 +15,18 @@ export default {
     },
     getContestType(type) {
         if (type == 0 || type == 1) {
-            return '普通比赛'
+            return 'OI模式'
         } else {
-            return 'ACM比赛'
+            return 'ACM模式'
+        }
+    },
+    getContestStatus(status) {
+        if(status == 0) {
+            return '编辑中'
+        } else if (status == 1) {
+            return '已启用'
+        } else {
+            return '已关闭'
         }
     },
     convertProblemStatus(text) {
@@ -55,6 +68,21 @@ export default {
             totalTimes = parseFloat(totalTimes)
             ACTimes = parseFloat(ACTimes)
             return ((ACTimes/totalTimes)*100).toFixed(2)+'%'
+        }
+    },
+    getDistanceTime(time) {
+        return distanceInWordsToNow(new Date(time), {locale: cn, addSuffix: true})
+    },
+    getFormatTime(time, formatString) {
+        return format(new Date(time), formatString)
+    },
+    getUserRole(type) {
+        if (type == 0) {
+            return '普通用户'
+        } else if (type == 8) {
+            return '管理员'
+        } else {
+            return 'ROOT'
         }
     }
 }

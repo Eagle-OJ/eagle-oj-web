@@ -1,7 +1,7 @@
 <template>
     <div class="profile">
         <div class="avatar">
-            <img :src="$getUrl($store.state.userInfo.avatar)"/>
+            <img :src="$getAvatar($store.state.userInfo.avatar)"/>
             <label for="avatarUpload">
                 <Icon type="upload"></Icon> 上传头像
             </label>
@@ -18,18 +18,15 @@
                 <FormItem label="昵称" prop="nickname">
                     <Input v-model="user.nickname" :maxlength="20"></Input>
                 </FormItem>
-                <FormItem label="真实姓名" prop="realName">
-                    <Input v-model="user.realName" :maxlength="20"></Input>
-                </FormItem>
                 <FormItem label="签名" prop="motto">
                     <Input type="textarea" :maxlength="50" :autosize="{minRows: 2,maxRows: 5}" v-model="user.motto"></Input>
                 </FormItem>
                 
                 <FormItem label="性别">
                     <RadioGroup v-model="user.gender">
-                        <Radio label="0">保密</Radio>
-                        <Radio label="1">男</Radio>
-                        <Radio label="2">女</Radio>
+                        <Radio :label="0">保密</Radio>
+                        <Radio :label="1">男</Radio>
+                        <Radio :label="2">女</Radio>
                     </RadioGroup>
                 </FormItem>
                 
@@ -72,16 +69,12 @@ export default {
                 avatar: '',
                 email: '',
                 nickname: '',
-                realName: '',
                 motto: '',
                 gender: 0,
             },
             validate: {
                 nickname: [
                     { required: true, message: '请输入昵称' },
-                    { type: 'string', max: 20, message: '最大不要超出20个字', trigger: 'blur' }
-                ],
-                realName: [
                     { type: 'string', max: 20, message: '最大不要超出20个字', trigger: 'blur' }
                 ],
                 motto: [
@@ -96,7 +89,6 @@ export default {
             this.user.avatar = temp.avatar
             this.user.email = temp.email
             this.user.nickname = temp.nickname
-            this.user.realName = temp.real_name
             this.user.motto = temp.motto
             this.user.gender = temp.gender
         },
@@ -134,8 +126,6 @@ export default {
                 }).then(res => {
                     this.$Message.success(res.message)
                     this.$store.dispatch('getUserInfo')
-                }).catch(res => {
-                    this.$Message.error(res.message)
                 })
             })
         },
@@ -150,15 +140,13 @@ export default {
                     this.loading = true
                     this.$http.post('/user/profile/edit', {
                         nickname: this.user.nickname,
-                        real_name: this.user.realName,
                         motto: this.user.motto,
                         gender: this.user.gender
                     }).then(res => {
                         this.$Message.success(res.message)
                         this.$store.dispatch('getUserInfo')
+                        this.loading = false
                     }).catch(res => {
-                        this.$Message.error(res.message)
-                    }).finally(() => {
                         this.loading = false
                     })
 				} else {

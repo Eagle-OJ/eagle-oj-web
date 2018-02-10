@@ -1,5 +1,6 @@
 <template>
     <div id="container">
+        <Alert v-if="contest.group > 0">正在编辑小组赛</Alert>
         <Menu mode="horizontal" :active-name="getActive" @on-select="goTo">
             <MenuItem name="description">
                 <Icon type="ios-paper"></Icon>
@@ -10,8 +11,8 @@
                 题目管理
             </MenuItem>
             <MenuItem name="setting">
-                <Icon type="settings"></Icon>
-                设置
+                <Icon type="document-text"></Icon>
+                比赛设置
             </MenuItem>
             <MenuItem name="back">
                 <Icon type="android-arrow-back"></Icon>
@@ -52,11 +53,10 @@ export default {
         },
         getContest() {
             this.loading = true
-            this.$http.get('/user/contest/'+this.getCid).then(res => {
+            this.$http.get('/contest/'+this.getCid).then(res => {
                 this.contest = res.data
+                this.loading = false
             }).catch(res => {
-                this.$Message.error(res.message)
-            }).finally(() => {
                 this.loading = false
             })
         }

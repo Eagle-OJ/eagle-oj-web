@@ -1,7 +1,7 @@
 <template>
 	<div class="description">
 		<Row :gutter="5" class="content">
-            <Alert v-if="contest && contest.status!=1" show-icon type="error">本比赛已经不得参加！</Alert>
+            <Alert v-if="data.contest && !data.contest.status" show-icon type="error">本比赛已经不得参加！</Alert>
 			<Col span="18" class="left">
 				<div>
 					<h2>描述</h2>
@@ -17,7 +17,7 @@
 				</div>
 				<div class="samples">
 					<h2>样例</h2>
-					<div v-for="item in problem.samples" class="each">
+					<div v-for="item in data.problem.samples" class="each">
 						<h5>输入</h5>
 						<pre>{{item.input}}</pre>
 						<h5>输出</h5>
@@ -28,7 +28,7 @@
 			<Col span="6" class="right">
 				<div class="contributor">
 					<span>出题人：</span>
-					<router-link :to="{path: '/profile/'+problem.owner}">{{problem.author}}</router-link>
+					<router-link :to="{path: '/profile/'+data.problem.owner}">{{data.author.nickname}}</router-link>
 				</div>
 				<Card class="chart">
 					<div>
@@ -40,19 +40,16 @@
 
 		<Row class="editor">
 			<div class="toolbar">
-				<Select v-model="lang" @on-change="changeLang" style="width:150px;margin-right:10px">
+				<Select v-model="lang" @on-change="changeLang" placeholder="选择编程语言" style="width:150px;margin-right:10px">
 					<Option v-for="item in langList" :value="item" :key="item">{{$getLang(item)}}</Option>
 				</Select>
-				<Tooltip content="使用以前代码" placement="top">
-					<Button type="ghost" icon="android-time">回退</Button>
-				</Tooltip>
 			</div>
 			<div id="editor-container">
 
 			</div>
 			<div class="submit">
 				<Button type="ghost" shape="circle" icon="play" style="margin-right:5px" @click="runTest" :loading="isSubmit">测试运行</Button>
-				<Button type="primary" shape="circle" icon="upload" @click="submitCode(false)" :loading="isSubmit" :disabled="contest!=null && contest.status!=1">提交代码</Button>
+				<Button type="primary" shape="circle" icon="upload" @click="submitCode(false)" :loading="isSubmit" :disabled="! isPermitSubmitCode">提交代码</Button>
 			</div>
 		</Row>
 
@@ -61,11 +58,11 @@
 			<div class="body">
 				<div class="line" v-for="(item,index) of testCases.data">
 					<div class="input">
-						<Input v-model="item.stdin" placeholder="输入字符串"></Input>
+						<Input v-model="item.stdin" type="textarea" :autosize="{minRows: 3,maxRows: 5}" placeholder="输入字符串"></Input>
 					</div>
 					<div class="space"></div>
 					<div class="output">
-						<Input v-model="item.stdout" placeholder="期望结果"></Input>
+						<Input v-model="item.stdout" type="textarea" :autosize="{minRows: 3,maxRows: 5}" placeholder="期望结果"></Input>
 					</div>
 					<div class="trash">
 						<Icon type="trash-b" @click.native="deleteTestCase(index)" />
@@ -85,9 +82,9 @@ import Chart from 'chart.js'
 import Util from '@/util'
 import Cookie from 'js-cookie'
 export default {
-    props: ['cid', 'pid', 'problem', 'contest'],
+    props: ['cid', 'pid', 'gid', 'data'],
     created() {
-        this.langList = this.problem.lang
+        this.langList = this.data.problem.lang
     },
 	mounted() {
 	   	this.mountEditor()
@@ -142,7 +139,7 @@ export default {
 				return
 			}
 			let path = this.$route.fullPath
-			let title = this.problem.title
+			let title = this.data.problem.title
 			if (isTestMode) {
 				// test mode
 				if (this.testCases.data.length==0) {
@@ -171,9 +168,10 @@ export default {
                     return
                 }
                 this.isSubmit = true
-				this.$http.post('/user/code', {
+				this.$http.post('/code/user', {
                     contest_id: this.cid,
                     problem_id: this.pid,
+                    group_id: this.gid,
                     lang: this.lang,
                     source_code: code,
                 }).then(res => {
@@ -211,11 +209,11 @@ export default {
 				data: {
 					datasets: [{
 						data: [
-							this.problem.AC,
-							this.problem.CE,
-							this.problem.RTE,
-							this.problem.TLE,
-							this.problem.WA],
+							this.data.problem.ac_times,
+							this.data.problem.ce_times,
+							this.data.problem.rte_times,
+							this.data.problem.tle_times,
+							this.data.problem.wa_times],
 						backgroundColor: [
 							Util.getProblemStatusColor('AC'),
 							Util.getProblemStatusColor('CE'),
@@ -242,7 +240,7 @@ export default {
 					},
 					title: {
 						display: true,
-						text: '提 交 次 数 - '+this.problem.submitTimes+'次'
+						text: '提 交 次 数 - '+this.data.problem.submit_times+'次'
 					},
 					animation: {
 						animateScale: true,
@@ -262,15 +260,15 @@ export default {
 			}
 			this.quill.description = new Quill(document.getElementById('description'), config)
 			this.quill.description.enable(false)
-			this.quill.description.setContents(this.problem.description)
+			this.quill.description.setContents(this.data.problem.description)
 
 			this.quill.inputFormat = new Quill(document.getElementById('input_format'), config)
 			this.quill.inputFormat.enable(false)
-			this.quill.inputFormat.setContents(this.problem.description)
+			this.quill.inputFormat.setContents(this.data.problem.input_format)
 
 			this.quill.outputFormat = new Quill(document.getElementById('output_format'), config)
 			this.quill.outputFormat.enable(false)
-			this.quill.outputFormat.setContents(this.problem.description)
+			this.quill.outputFormat.setContents(this.data.problem.output_format)
 		},
 		mountEditor() {
 			let editor = ace.edit('editor-container')
@@ -280,6 +278,15 @@ export default {
 			document.getElementById('editor-container').style.fontSize='14px';
 		}
     },
+    computed: {
+        isPermitSubmitCode() {
+            if (this.cid > 0) {
+                return this.data.contest.status
+            } else {
+                return true
+            }
+        }
+    }
 }
 </script>
 

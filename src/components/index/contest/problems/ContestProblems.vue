@@ -81,7 +81,8 @@
                         <router-link style="float: right" :to="{path: '/contest/'+this.getCid+'/leaderboard'}">排行榜</router-link>
                     </p>
                     <div class="rank">
-                        <span style="font-size: 60px">{{userMeta.rank}}/<span style="font-size: 35px">{{userMeta.total}}</span></span>
+                        <span style="font-size: 35px" v-if="userMeta.rank == -1">暂无排名</span>
+                        <span style="font-size: 60px" v-else>{{userMeta.rank}}/<span style="font-size: 35px">{{userMeta.total}}</span></span>
                         <span class="update-time">{{getTime(userMeta.create_time)}}更新</span>
                     </div>
                 </div>
@@ -102,10 +103,7 @@
 
 <script>
 import CountDown from '@/components/index/contest/CountDown'
-import format from 'date-fns/format'
 import Difficult from '@/components/common/Difficult'
-import DistanceInWordsToNow from 'date-fns/distance_in_words_to_now'
-import cn from 'date-fns/locale/zh_cn'
 import Util from '@/util'
 export default {
     created() {
@@ -130,22 +128,19 @@ export default {
         },
         getContestUserData() {
             this.loading = true
-            this.$http.get('/user/contest/'+this.getCid+'/data').then(res => {
+            this.$http.get('/contest/'+this.getCid+'/user_data').then(res => {
                 this.userInfo = res.data.user
                 this.userMeta = res.data.meta
                 this.problems = res.data.problems
+                this.loading = false
             }).catch(res => {
                 this.$router.push('/contest/'+this.getCid)
-                this.$Message.error('你没有加入比赛')
-            }).finally(() => {
+                this.$Message.error('你没有加入此比赛')
                 this.loading = false
             })
         },
         getTime(time) {
-            return DistanceInWordsToNow(new Date(time), {
-                addSuffix: true,
-                locale: cn
-            })
+            return Util.getDistanceTime(time)
         },
     },
     computed: {
@@ -155,12 +150,12 @@ export default {
         getCountDown() {
             let type = this.contest.type
             if (type == 0 || type == 2) {
-                return format(new Date(this.contest.end_time), 'YYYY-MM-DD HH:mm:ss')
+                return Util.getFormatTime(this.contest.end_time, 'YYYY-MM-DD HH:mm:ss')
             } else {
                 // 获取限定时间
                 let join = this.userInfo.join_time
                 let total = this.contest.total_time
-                return format(new Date(join+total), 'YYYY-MM-DD HH:mm:ss')
+                return Util.getFormatTime(join+total, 'YYYY-MM-DD HH:mm:ss')
             }
         }
     },

@@ -11,19 +11,16 @@
                 </Col>
             </Row>
         </div>
-        <v-footer></v-footer>
     </div>
 </template>
 
 <script>
 import TopNavigation from '@/components/index/Navigation'
 import LeftNavigation from '@/components/user/Navigation'
-import Footer from '@/components/index/Footer'
 export default {
     components: {
         'v-top-nav': TopNavigation,
         'v-left-nav': LeftNavigation,
-        'v-footer': Footer
     }
 }
 </script>

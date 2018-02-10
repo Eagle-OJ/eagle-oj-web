@@ -5,7 +5,7 @@
 				<router-link to="/register" active-class="active" class="register">注册</router-link>
 				<router-link to="/login" active-class="active" class="login">登入</router-link>
 			</div>
-			<Form v-if="getSwitch=='register'" ref="registerForm" :model="registerForm" :rules="registerForm.ruleValidate" @keyup.enter.native="handleRegister()">
+			<Form key="register" v-if="getSwitch=='register'" ref="registerForm" :model="registerForm" :rules="registerForm.ruleValidate" @keyup.enter.native="handleRegister()">
 
 				<FormItem prop="nickname">
 					<Input v-model="registerForm.nickname" placeholder="昵称"><Icon type="ios-person-outline" slot="prepend"></Icon></Input>
@@ -20,7 +20,7 @@
 					<Button type="error" @click="handleRegister()" :loading="isLoading" long>注 册</Button>
 				</FormItem>
 			</Form>
-			<Form v-else ref="loginForm" :model="loginForm" :rules="loginForm.ruleValidate" @keyup.enter.native="handleLogin()">
+			<Form key="login" v-else ref="loginForm" :model="loginForm" :rules="loginForm.ruleValidate" @keyup.enter.native="handleLogin()">
 				<FormItem prop="email">
 					<Input v-model="loginForm.email" placeholder="邮箱"><Icon type="email" slot="prepend"></Icon></Input>
 				</FormItem>
@@ -39,9 +39,6 @@
 import Cookie from 'js-cookie'
 
 export default {
-	created() {
-
-	},
 	data() {
 		return {
             isLoading: false,
@@ -89,16 +86,15 @@ export default {
 			this.$refs['registerForm'].validate((valid) => {
 				if (valid) {
                     this.isLoading = true
-                    this.$http.post('/register', {
+                    this.$http.post('/account/register', {
                         'email': this.registerForm.email,
                         'nickname': this.registerForm.nickname,
                         'password': this.registerForm.password
                     }).then(res => {
                         this.$Message.success(res.message)
                         this.$router.push('/login')
+                        this.isLoading = false
                     }).catch(res => {
-                        this.$Message.error(res.message);
-                    }).finally(() => {
                         this.isLoading = false
                     })
 				} else {
@@ -110,7 +106,7 @@ export default {
 			this.$refs['loginForm'].validate((valid) => {
 				if (valid) {
                     this.isLoading = true
-                    this.$http.post('/login', {
+                    this.$http.post('/account/login', {
                         'email': this.loginForm.email,
                         'password': this.loginForm.password
                     }).then(res => {
@@ -127,9 +123,8 @@ export default {
                             this.$router.push('/dashboard')
                         }
                         this.$Message.success(res.message)
+                        this.isLoading = false
                     }).catch(res => {
-                        this.$Message.error(res.message)
-                    }).finally(() => {
                         this.isLoading = false
                     })
 				} else {

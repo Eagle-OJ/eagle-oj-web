@@ -1,148 +1,306 @@
 <template>
     <div id="container">
-        <div class="group">
-            <div class="left">
-                <div class="holder">
-                    <p>
-                        <Tooltip content="带有皇冠图标的为组长" placement="top">
-                            <Icon type="help-circled" style="margin-right: 8px"></Icon>
-                        </Tooltip>
-                        组员信息
-                    </p>
-
-                    <div class="holder-info">
-                        <img src="/static/captain.png" width="29px" height="18px" style="position:absolute;left: 3px;top:13px">
-                        <img src="/static/touxiang.jpg" width="40px" height="40px" style="position:absolute;left: 40px;top:0px">
-                        <a href="#" title="查看个人资料" style="position:absolute;left: 90px;top:13px">狗蛋狗蛋</a>
-                    </div>
-                </div>
-                <div class="members">
-                    <table cellpadding="0" cellspacing="0">
-                        <tr v-for="i in 10">
-                            <td>{{i}}</td>
-                            <td><img src="/static/touxiang.jpg" width="30x" height="30px"></td>
-                            <td><a href="#" title="查看个人资料">Keira Knightley</a></td>
-                        </tr>
-                    </table>
-                    <Page :current="2" :total="50" simple style="text-align: right;margin-top: 10px"></Page>
-                </div>
+        <Card class="title">
+            <h1>{{group.name}}</h1>
+            <span class="other">
+                <span class="leader">
+                    组长:            
+                    <router-link :to="{path: '/profile/'+group.owner}">{{group.leader}}</router-link>
+                </span>
+                <span class="create_time">创建于{{getTime(group.create_time)}}</span>
+            </span>
+        </Card>
+        <Card class="security" v-if="! isIn" style="text-align: center">
+            <h2 class="warning">你尚未加入此小组</h2>
+            <div class="password">
+                <Input v-if="group.password" v-model="password" type="password" :maxlength="6" style="width: 250px; margin: 0 auto">
+                    <Icon type="locked" slot="prepend">http://</Icon >
+                    <Button slot="append" @click="joinGroup">加入</Button>
+                </Input>
+                <Button v-else type="success" @click="joinGroup">加入小组</Button>
             </div>
-
-            <div class="right">
-                <div class="group">
-                    <p>小组说明</p>
-                    <img src="/static/touxiang.jpg" width="100px" height="100px">
-                    <div class="group-info">
-                        小组名称:<span class="group-name">大红鹰第一小组</span><br>
-                        创建时间:<span class="group-time">2017-10-10</span><br>
-                        组长:<span class="captain">狗蛋狗蛋</span>
+            
+        </Card>
+        <Card class="group" v-else>
+            <Row :gutter="32" class="user" v-if="user != null">
+                <Col span="4"><img class="avatar" :src="$getAvatar(user.avatar)"/></Col>
+                <Col span="20" class="right">
+                    <div class="nickname">
+                        <router-link :to="{path: '/profile/'+user.uid}">{{user.group_name}}</router-link>
+                        <Button type="ghost" size="small" @click="changeGroupName">修改组内名称</Button>
                     </div>
-                </div>
-                <div class="no-name">
-                    <button>加入小组<br><span style="font-size: 14px">join </span></button>
-                </div>
-            </div>
-        </div>
-        <div style="clear: both"></div>
+                    <div class="join-time">
+                        {{getDistanceTime(user.join_time)}}加入小组
+                    </div>
+                    <div class="data">
+                        <div class="each">
+                            <span class="number">{{user.finished_problems}}</span>
+                            <span class="info">解决题目</span>
+                        </div>
+                        <div class="each">
+                            <span class="number">{{user.submit_times}}</span>
+                            <span class="info">提交</span>
+                        </div>
+                        <div class="each">
+                            <span class="number">{{user.ac_times}}</span>
+                            <span class="info">AC</span>
+                        </div>
+                        <div class="each">
+                            <span class="number">{{user.wa_times}}</span>
+                            <span class="info">WA</span>
+                        </div>
+                        <div class="each">
+                            <span class="number">{{user.rte_times}}</span>
+                            <span class="info">RTE</span>
+                        </div>
+                        <div class="each">
+                            <span class="number">{{user.ce_times}}</span>
+                            <span class="info">CE</span>
+                        </div>
+                        <div class="each">
+                            <span class="number">{{user.tle_times}}</span>
+                            <span class="info">TLE</span>
+                        </div>
+                    </div>
+                    <Button class="quit" size="small" type="error" icon="log-out" @click="quitGroup">退出</Button>
+                    <span class="invite">邀请链接：{{getUrl}}</span>
+                </Col>
+            </Row>
+            <div class="divider"></div>
+            <Row :gutter="16">
+                <Col span="17">
+                    <h4>组员列表</h4>
+                    <Table :data="members.data" :columns="members.columns"></Table>
+                    <Page style="margin-top: 10px; text-align: center" :total="members.total" :page-size="members.pageSize" @on-change="getMembers" simple></Page>
+                </Col>
+                <Col span="7">
+                    <h4>小组赛</h4>
+                    <ul class="contests">
+                        <li v-if="contests.length == 0">暂无比赛</li>
+                        <li v-for="item in contests">
+                            <router-link :to="{path: '/contest/'+item.cid}">{{item.name}}</router-link>
+                            <contest-status :status="item.status" class="badge"></contest-status>
+                        </li>
+                    </ul>
+                </Col>
+            </Row>
+        </Card>
     </div>
 </template>
 
 <script>
+import Util from '@/util'
+import ContestType from '@/components/common/ContestType'
+import ContestStatus from '@/components/common/ContestStatus'
 export default {
+    created() {
+        this.init()
+    }, 
+    data() {
+        return {
+            password: null,
+            group: {},
+            isIn: false,
+            user: null,
 
+            groupName: '',
+            members: {
+                total: 0,
+                data: [],
+                columns: [
+                    {
+                        title: '组内名称',
+                        render: (h, params) => {
+                            return h('router-link', {
+                                props: {
+                                    to: '/profile/'+params.row.uid
+                                }
+                            }, params.row.group_name)
+                        },
+                        width: 100,
+                        align: 'center'
+                    },
+                    {
+                        title: '解决题数',
+                        key: 'finished_problems',
+                        width: 85,
+                        align: 'center'
+                    },
+                    {
+                        title: '提交',
+                        key: 'submit_times',
+                        align: 'center'
+                    },
+                    {
+                        title: 'AC',
+                        key: 'ac_times',
+                        align: 'center'
+                    },
+                    {
+                        title: 'WA',
+                        key: 'wa_times',
+                        align: 'center'
+                    },
+                    {
+                        title: 'RTE',
+                        key: 'rte_times',
+                        align: 'center'
+                    },
+                    {
+                        title: 'CE',
+                        key: 'ce_times',
+                        align: 'center'
+                    },
+                    {
+                        title: 'TLE',
+                        key: 'tle_times',
+                        align: 'center'
+                    }
+                ],
+                pageSize: 10,
+            },
+            contests: []
+        }
+    },
+    methods: {
+        init() {
+            this.getGroup()
+            this.getGroupUserInfo()
+            this.getMembers(1)
+            this.getGroupContests()
+        },
+        getGroup() {
+            this.$http.get('/group/'+this.getGid+'/info').then(res => {
+                this.group = res.data
+            })
+        },
+        getGroupUserInfo() {
+            if(this.$store.state.userInfo.isLogin) {
+                this.$http.get('/group/'+this.getGid+'/user/'+this.getUid).then(res => {
+                    if(res.data) {
+                        this.user = res.data
+                        this.isIn = true
+                    } else {
+                        this.isIn = false
+                    }    
+                }).catch(res => {
+                    this.isIn = false
+                })
+            }
+        },
+        getMembers(page) {
+            this.$http.get('/group/'+this.getGid+'/members', {
+                params: {
+                    page: page,
+                    page_size: this.members.pageSize
+                }
+            }).then(res => {
+                this.members.data = res.data.data
+                this.members.total = res.data.total
+            })
+        },
+        getGroupContests() {
+            this.$http.get('/group/'+this.getGid+'/contests').then(res => {
+                this.contests = res.data
+            })
+        },
+        joinGroup() {
+            if (! this.$store.state.userInfo.isLogin) {
+                this.$Message.warning('请先登入')
+                return
+            }
+
+            this.$http.post('/group/'+this.getGid+'/enter', {
+                password: this.password
+            }).then(res => {
+                this.$Message.success(res.message)
+                this.init()
+            })
+        },
+        changeGroupName() {
+            this.$Modal.confirm({
+                render: (h) => {
+                    return h('Input', {
+                        props: {
+                            value: this.groupName,
+                            autofocus: true,
+                            maxlength: 20,
+                            placeholder: '请输入组内名称'
+                        },
+                        on: {
+                            input: (val) => {
+                                this.groupName = val;
+                            }
+                        }
+                    })
+                },
+                onOk: () => {
+                    if(this.groupName.length ==0 || this.groupName.length >20) {
+                        this.$Message.warning('组内姓名不符合要求')
+                        return
+                    }
+                    this.$http.put('/group/'+this.getGid+'/user/'+this.getUid, {
+                        group_name: this.groupName
+                    }).then(res => {
+                        this.$Message.success(res.message)
+                        this.getGroupUserInfo()
+                        this.getMembers(1)
+                    })
+                }
+            })
+        },
+        quitGroup() {
+            this.$Modal.confirm({
+                title: '确认退出小组',
+                content: '<p>一旦退出小组，组内所有数据会被清除</p>',
+                onOk: () => {
+                    this.$http.delete('/group/'+this.getGid+'/user/'+this.getUid).then(res => {
+                        this.init()
+                        this.$Message.success('退出成功')
+                    })
+                },
+            })
+        },
+        getTime(time) {
+            return Format(new Date(time), 'YYYY-MM-DD', {
+                locale: cn
+            })
+        },
+        getTime(time) {
+            return Util.getFormatTime(time, 'YYYY-MM-DD')
+        },
+        getDistanceTime(time) {
+            return Util.getDistanceTime(time)
+        }
+    },
+    components: {
+        ContestType,
+        ContestStatus
+    },
+    computed: {
+        getGid() {
+            return this.$route.params.gid
+        },
+        getUid() {
+            return this.$store.state.userInfo.uid
+        },
+        getUrl() {
+            return window.location.href
+        }
+    },
+    watch: {
+        'getGid': function() {
+            this.init()
+        },
+        '$store.state.userInfo.isLogin': function () {
+            this.getGroupUserInfo()
+        }
+    }
 }
 </script>
 
 <style lang="stylus" scoped>
-    .group
-        margin-top 40px
-        .left
-            float left
-            width 30%
-            .holder
-                overflow hidden
-                border-radius 10px
-                border 1px solid #DDD
-                font-size 17px
-                box-shadow 3px 3px 30px 0px rgba(0,0,0,0.15)
-                p
-                    font-size 18px
-                    background #f8f8f9
-                    padding-left 14px
-                    padding-top 5px
-                .holder-info
-                    height: 45px
-                    position relative
-                    a
-                        color  #464c5b
-                        &:hover
-                            text-decoration underline
-                            color #2d8cf0
-            .members
-                padding-left 10px
-                margin-top 10px
-                border 1px solid #ddd
-                font-size 14px
-                width 80%
-                border-radius 10px
-                padding-bottom 10px
-                margin-left 7px
-                td
-                    padding-left 20px
-                    border-bottom 1px #ddd solid
-                    height 45px
-                a
-                    color  #464c5b
-                a:hover
-                    text-decoration underline
-                    color #2d8cf0
-        .right
-            float right
-            width 60%
-            margin-left 100px
-            .group
-                padding 10px 0px 10px 8px
-                margin-top 10px
-                position relative
-                border-left 2px #ddd solid
-                border-bottom 2px #ddd solid
-                border-top 1px #ddd solid
-                border-right 1px #ddd solid
-                box-shadow 3px -3px 20px 0px rgba(0,0,0,0.15)
-                p
-                    padding-left 10px
-                    font-size 20px
-                    font-weight bold
-                    color  #464c5b
-                    width 90px
-                .group-info
-                    margin-top 10px
-                    font-size 17px
-                    position absolute
-                    top 28%
-                    left 30%
-                    line-height 30px
-            .no-name
-                margin-top 30px
-                width 100%
-                height 380px
-                padding-left 40%
-                padding-top 25%
-                background url("/static/button_bg.jpg") no-repeat
-                button
-                    border-radius 10px
-                    padding 10px
-                    width 160px
-                    font-size 17px
-                    letter-spacing 2px
-                    background #2ec866
-                    border none
-                    color white
-                button:hover
-                    background #090
-                    cursor pointer
-                button:focus
-                    outline none
+    @import 'GroupDetail.styl'
 </style>
 
 

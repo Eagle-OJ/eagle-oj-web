@@ -1,12 +1,12 @@
 <template>
     <div class="contest">
         <div class="wrapper admin">
-            <h2>管理比赛
-                <router-link to="/user_admin/contest/add"><Button style="float:right" size="small" icon="plus" type="success">创建比赛</Button></router-link>
-            </h2>
-            <Table :columns="columns" :data="data"></Table>
+            <router-link to="/user_admin/contest/add">
+                <Button icon="plus" type="ghost">创建比赛</Button>
+            </router-link>
+            <Table style="margin-top: 10px" :loading="loading" :columns="columns" :data="data"></Table>
             <div class="pager" style="text-align: center; margin-top: 10px">
-                <Page :total="total" :page-size="pageSize" size="small" show-total @on-change="getUserContests"></Page>
+                <Page :total="total" :page-size="pageSize" show-total @on-change="getUserContests" simple></Page>
             </div>
         </div>
     </div>
@@ -20,6 +20,7 @@ export default {
     },
     data() {
         return {
+            loading: false,
             columns: [
                 {
                     title: '比赛名称',
@@ -29,6 +30,16 @@ export default {
                                 to: '/contest/'+params.row.cid
                             }
                         }, params.row.name)
+                    }
+                },
+                {
+                    title: '类型',
+                    render: (h, params) => {
+                        if(params.row.group > 0) {
+                            return '小组赛'
+                        } else {
+                            return '普通'
+                        }
                     }
                 },
                 {
@@ -86,16 +97,23 @@ export default {
             ],
             data: [],
             total: 0,
-            pageSize: 5
+            pageSize: 10
         }
     },
     methods: {
         getUserContests(page) {
-            this.$http.get('/user/contest?page='+page+'&page_size='+this.pageSize).then(res => {
+            this.loading = true
+            this.$http.get('/contests/user', {
+                params: {
+                    page: page,
+                    page_size: this.pageSize
+                }
+            }).then(res => {
                 this.data = res.data.data
                 this.total = res.data.total
+                this.loading = false
             }).catch(res => {
-                this.$Message.error(res.message)
+                this.loading = false
             })
         },
         getTimeType(type, totalTime) {

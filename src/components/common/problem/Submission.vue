@@ -87,7 +87,7 @@ export default {
                 return
             }
             this.loading = true
-            this.$http.get('/user/code', {
+            this.$http.get('/submissions', {
                 params: {
                     cid: this.cid,
                     pid: this.pid,
@@ -97,9 +97,8 @@ export default {
             }).then(res => {
                 this.data = res.data.data
                 this.total = res.data.total
+                this.loading = false
             }).catch(res => {
-                this.$Message.error('获取失败')
-            }).finally(() => {
                 this.loading = false
             })
         },

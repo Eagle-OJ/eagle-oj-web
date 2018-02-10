@@ -1,10 +1,10 @@
 <template>
     <div class="test_case">
         <div class="header">
-            <Button icon="plus" type="success" @click="addTestCase">添加测试用例</Button>
+            <Button icon="plus" type="success" :disabled="!isEditable" @click="addTestCase">添加测试用例</Button>
         </div>
         <Table :columns="columns" :data="data"></Table>
-        <Modal class="modal" v-model="showAddModal" title="添加测试用例" @on-ok="doAddTestCase()" :mask-closable="false">
+        <Modal class="modal" v-model="showModal" title="测试用例编辑">
             <div class="each-line">
                 <label for="input">输入</label>
                 <Input id="input" v-model="test_case.stdin" type="textarea" :maxlength="1000"></Input>
@@ -19,31 +19,17 @@
                     <InputNumber id="strength" :max="9" :min="1" v-model="test_case.strength"></InputNumber>
                 </div>
             </div>
-        </Modal>
-        <Modal class="modal" v-model="showEditModal" title="编辑测试用例" @on-ok="doEditTestCase()" ok-text="更新" :mask-closable="false">
-            <div class="each-line">
-                <label for="input">输入</label>
-                <Input v-model="test_case.stdin" type="textarea"></Input>
-            </div>
-            <div class="each-line">
-                <label for="input">输入</label>
-                <Input v-model="test_case.stdout" type="textarea"></Input>
-            </div>
-            <div class="each-line">
-                <label for="input">分值比</label>
-                <div>
-                    <InputNumber :max="9" :min="1" v-model="test_case.strength"></InputNumber>
-                </div>
+            <div slot="footer">
+                <Button type="primary" @click="save()">保存</Button>
             </div>
         </Modal>
     </div>
 </template>
 
 <script>
-import distanceInWordsToNow from 'date-fns/distance_in_words_to_now'
-import cn from 'date-fns/locale/zh_cn'
+import Util from '@/util'
 export default {
-    props: ['pid'],
+    props: ['pid', 'isEditable'],
     created() {
         this.getTestCases()
     },
@@ -81,6 +67,7 @@ export default {
                                 props: {
                                     type: 'primary',
                                     size: 'small',
+                                    disabled: ! this.isEditable,
                                 },
                                 style: {
                                     marginRight: '10px'
@@ -94,11 +81,12 @@ export default {
                             h('Button', {
                                 props: {
                                     type: 'error',
-                                    size: 'small'
+                                    size: 'small',
+                                    disabled: ! this.isEditable,
                                 },
                                 on: {
                                     click: () => {
-                                        this.deleteTestCase(params.row.tid)
+                                        this.deleteTestCase(params.index)
                                     }
                                 }
                             }, '删除')
@@ -107,81 +95,79 @@ export default {
                 }
             ],
             data: [],
-            showAddModal: false,
-            showEditModal: false,
+            showModal: false,
             test_case: {
                 tid: 0,
                 stdin: '',
                 stdout: '',
                 strength: 1
-            }
+            },
+            isEdit: false,
         }
     },
     methods: {
         getTime(time) {
-            return distanceInWordsToNow(new Date(time), {locale: cn})
+            return Util.getDistanceTime(time)
         },
         addTestCase() {
             this.resetTestCase()
-            this.showAddModal = true
-        },
-        doAddTestCase() {
-            if (this.test_case.stdout.length == 0) {
-                this.$Message.warning('输出不得为空')
-                return
-            }
-            this.$http.post('/user/problem/'+this.pid+"/test_cases", {
-                stdin: this.test_case.stdin,
-                stdout: this.test_case.stdout,
-                strength: this.test_case.strength
-            }).then(res => {
-                this.$Message.success(res.message)
-                this.showAddModal = false
-                this.getTestCases()
-            }).catch(res => {
-                this.$Message.error(res.message)
-            })
+            this.isEdit = false
+            this.showModal = true
         },
         editTestCase(index) {
             this.resetTestCase()
-            this.showEditModal = true
+            this.isEdit = true
+            this.showModal = true
             this.test_case.tid = this.data[index].tid
             this.test_case.stdin = this.data[index].stdin
             this.test_case.stdout = this.data[index].stdout
             this.test_case.strength = this.data[index].strength
         },
-        doEditTestCase() {
-            this.$http.put('/user/problem/'+this.pid+'/test_case/'+this.test_case.tid, {
-                stdin: this.test_case.stdin,
-                stdout: this.test_case.stdout,
-                strength: this.test_case.strength
-            }).then(res => {
-                this.$Message.success(res.message)
-                this.showEditModal = false
-                this.getTestCases()
-            }).catch(res => {
-                this.$Message.error(res.message)
-            })
+        save() {
+            if (this.test_case.stdout.length == 0) {
+                this.$Message.warning('输出不得为空')
+                return
+            }
+            if(this.isEdit) {
+                // edit testCase
+                this.$http.put('/problem/'+this.pid+'/test_case/'+this.test_case.tid, {
+                    stdin: this.test_case.stdin,
+                    stdout: this.test_case.stdout,
+                    strength: this.test_case.strength
+                }).then(res => {
+                    this.$Message.success(res.message)
+                    this.showModal = false
+                    this.getTestCases()
+                })
+            } else {
+                // add testCase
+                this.$http.post('/problem/'+this.pid+"/test_case", {
+                    stdin: this.test_case.stdin,
+                    stdout: this.test_case.stdout,
+                    strength: this.test_case.strength
+                }).then(res => {
+                    this.$Message.success(res.message)
+                    this.showModal = false
+                    this.getTestCases()
+                })
+            }
         },
-        deleteTestCase(tid) {
+        deleteTestCase(index) {
+            let tid = this.data[index].tid
             this.$Modal.confirm({
                 title: '确认删除',
-                content: '<p>删除此测试用例不会存在</p>',
+                content: '<p>真的删除吗？</p>',
                 onOk: () => {
-                    this.$http.delete('/user/problem/'+this.pid+"/test_case/"+tid).then(res => {
+                    this.$http.delete('/problem/'+this.pid+"/test_case/"+tid).then(res => {
                         this.$Message.success(res.message)
                         this.getTestCases()
-                    }).catch(res => {
-                        this.$Message.error(res.message)
                     })
                 }
             });
         },
         getTestCases() {
-            this.$http.get('/user/problem/'+this.pid+'/test_cases').then(res => {
+            this.$http.get('/problem/'+this.pid+'/test_cases').then(res => {
                 this.data = res.data
-            }).catch(res => {
-                this.$Message.error(res.message)
             })
         },
         resetTestCase() {
@@ -189,7 +175,7 @@ export default {
             this.test_case.stdin = ''
             this.test_case.stdout = ''
             this.test_case.strength = 1
-        }
+        },
     },
     watch: {
         pid: function() {

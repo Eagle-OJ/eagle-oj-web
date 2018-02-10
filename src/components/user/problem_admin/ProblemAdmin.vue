@@ -3,16 +3,15 @@
         <router-link to="/user_admin/problem/add">
             <Button icon="plus" type="ghost">添加题目</Button>
         </router-link>
-        <Table style="margin-top: 10px" :columns="column" :data="data"></Table>
+        <Table style="margin-top: 10px" :loading="loading" :columns="column" :data="data"></Table>
         <div style="margin-top: 10px; text-align: center">
-            <Page :current="1" :total="page.page_count" :page-size="page.page_size" @on-change="getProblems" simple></Page>
+            <Page :current="1" :total="total" :page-size="pageSize" @on-change="getProblems" simple></Page>
         </div>
     </div>
 </template>
 
 <script>
-import distanceInWordsToNow from 'date-fns/distance_in_words_to_now'
-import cn from 'date-fns/locale/zh_cn'
+import Util from '@/util'
 import Difficult from '@/components/common/Difficult'
 export default {
     created() {
@@ -20,6 +19,7 @@ export default {
     },
     data() {
         return {
+            loading: false,
             column: [
                 {
                     title: '标题',
@@ -82,23 +82,28 @@ export default {
                 }
             ],
             data: [],
-            page: {
-                page_size: 5,
-                page_count: 0
-            }
+            pageSize: 10,
+            total: 0
         }
     },
     methods: {
         getProblems(page) {
-            this.$http.get('/user/problem?page='+page+'&page_size='+this.page.page_size).then(res => {
+            this.loading = true
+            this.$http.get('/problems/user', {
+                params: {
+                    page: page,
+                    page_size: this.pageSize
+                }
+            }).then(res => {
                 this.data = res.data.data
-                this.page.page_count = res.data.page_count
+                this.total = res.data.total
+                this.loading = false
             }).catch(res => {
-                this.$Message.error(res.message)
+                this.loading = false
             })
         },
         getTime(time) {
-            return distanceInWordsToNow(new Date(time), {locale: cn})
+            return Util.getDistanceTime(time)
         },
     }
 }

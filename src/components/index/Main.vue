@@ -2,17 +2,14 @@
 	<div>
 		<v-nav></v-nav>
 		<router-view/>
-        <v-footer></v-footer>
 	</div>
 </template>
 
 <script>
 import Navigation from '@/components/index/Navigation'
-import Footer from '@/components/index/Footer'
 export default {
 	components: {
         'v-nav': Navigation,
-        'v-footer': Footer
 	}
 }
 </script>

@@ -10,25 +10,25 @@
             <FormItem label="详细描述" prop="description">
                 <Input v-model="form.description" type="textarea" :maxlength="500" :autosize="{minRows: 2,maxRows: 5}"></Input>
             </FormItem>
-            <FormItem label="是否公开">
+            <FormItem label="是否公开" v-if="contest.group == 0">
                 <i-switch v-model="form.isShare" size="large">
                     <span slot="open">公开</span>
                     <span slot="close">私密</span>
                 </i-switch>
             </FormItem>
-            <FormItem label="密码" prop="password" v-if="! form.isShare">
+            <FormItem label="密码" prop="password" v-if="! form.isShare && contest.group == 0">
                 <Input v-model="form.password" placeholder="密码不得超出6位" :maxlength="6"></Input>
             </FormItem>
             <FormItem label="比赛模式">
                 <RadioGroup v-model="form.contestType">
-                    <Radio label="0">普通</Radio>
-                    <Radio label="1">ACM</Radio>
+                    <Radio :label="0">普通</Radio>
+                    <Radio :label="1">ACM</Radio>
                 </RadioGroup>
             </FormItem>
             <FormItem label="时间模式">
                 <RadioGroup v-model="form.timeType">
-                    <Radio label="0">普通</Radio>
-                    <Radio label="1">限时</Radio>
+                    <Radio :label="0">普通</Radio>
+                    <Radio :label="1">限时</Radio>
                 </RadioGroup>
             </FormItem>
             <FormItem label="限时设置" v-if="form.timeType==1">
@@ -37,6 +37,12 @@
             </FormItem>
             <FormItem label="有效时间">
                 <DatePicker type="datetimerange" format="yyyy-MM-dd HH:mm" style="width: 300px" :options="disabledDate" v-model="form.timeRange"></DatePicker>
+            </FormItem>
+            <FormItem label="是否开启">
+                <i-switch v-model="form.isOpen" size="large">
+                    <span slot="open">开启</span>
+                    <span slot="close">关闭</span>
+                </i-switch>
             </FormItem>
             <FormItem>
                 <Button style="float: right" type="primary" :loading="loading" @click="handleSubmit">更新比赛</Button>
@@ -66,7 +72,8 @@ export default {
                     m: 0,
                 },
                 contestType: 0,
-                timeType: 0
+                timeType: 0,
+                isOpen: false
             },
             disabledDate: {
                 disabledDate (date) {
@@ -128,6 +135,11 @@ export default {
                         }
                     }
 
+                    let status = 0
+                    if(this.form.isOpen) {
+                        status = 1
+                    }
+
                     let data = {
                         name: this.form.name,
                         slogan: this.form.slogan,
@@ -136,15 +148,15 @@ export default {
                         type: type,
                         total_time: totalTime,
                         start_time: startTime,
-                        end_time: endTime
+                        end_time: endTime,
+                        status: status
                     }
                     this.loading = true
-                    this.$http.put('/user/contest/'+this.cid, data).then(res => {
+                    this.$http.put('/contest/'+this.cid, data).then(res => {
                         this.$Message.success(res.message)
                         this.$parent.getContest()
+                        this.loading = false
                     }).catch(res => {
-                        this.$Message.error(res.message)
-                    }).finally(() => {
                         this.loading = false
                     })
                 } else {
@@ -157,6 +169,11 @@ export default {
             this.form.name = res.name
             this.form.slogan = res.slogan
             this.form.description = res.description
+            if(res.status == 1) {
+                this.form.isOpen = true
+            } else {
+                this.form.isOpen = false
+            }
             if(res.password == undefined) {
                 this.form.isShare = true
             } else {
