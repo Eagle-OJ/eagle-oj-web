@@ -1,11 +1,14 @@
 <template>
-    <div class="submission">
+    <div class="all-submissions">
         <p class="refresh">
-            <Button @click="getSubmissions(1)" type="primary" icon="refresh" shape="circle">刷新</Button>
+            <Button @click="getData(1)" type="primary" icon="refresh" shape="circle">刷新</Button>
         </p>
-        <Table :loading="loading" :columns="column" :data="data"></Table>
-        <div style="text-align:center; margin-top:10px">
-            <Page :current="1" :total="total" :page-size="pageSize" @on-change="getSubmissions" simple></Page>
+        <div class="no" v-if="data == null">
+            只有你解出这道题或者是管理才能查看他人解答
+        </div>
+        <div class="yes" v-else>
+            <Table :loading="loading" :data="data" :columns="columns"></Table>
+            <Page :total="total" :page-size="pageSize" @on-change="getData" simple style="text-align: center; margin-top: 10px"></Page>
         </div>
     </div>
 </template>
@@ -16,11 +19,21 @@ import Util from '@/util'
 export default {
     props: ['cid', 'pid'],
     created() {
-        this.getSubmissions(1)
+        this.getData(1)
     },
     data() {
         return {
-            column: [
+            columns: [
+                {
+                    title: '作者',
+                    render: (h, params) => {
+                        return h('router-link', {
+                            props: {
+                                to: '/profile/'+params.row.owner
+                            }
+                        }, params.row.nickname)
+                    }
+                },
                 {
                     title: '编程语言',
                     render: (h, params) => {
@@ -75,26 +88,26 @@ export default {
             data: [],
             pageSize: 5,
             total: 0,
-            loading: false,
+            loading: false
         }
     },
     methods: {
-        getSubmissions(page) {
-            if (! this.$store.state.userInfo.isLogin) {
-                this.$Message.warning('请先登入')
-                return
-            }
+        getData(page) {
             this.loading = true
-            this.$http.get('/submissions', {
+            this.$http.get('/submissions/all', {
                 params: {
-                    cid: this.cid,
                     pid: this.pid,
+                    cid: this.cid,
                     page: page,
                     page_size: this.pageSize
                 }
             }).then(res => {
-                this.data = res.data.data
-                this.total = res.data.total
+                if (res.data) {
+                    this.data = res.data.data
+                    this.total = res.data.total
+                } else {
+                    this.data = null
+                }
                 this.loading = false
             }).catch(res => {
                 this.loading = false
@@ -103,21 +116,20 @@ export default {
         parseTime(time) {
             return Util.getDistanceTime(time)
         }
-    },
-    watch: {
-        '$store.state.userInfo.isLogin': function() {
-            this.getSubmissions(1)
-        }
     }
 }
 </script>
 
 <style lang="stylus" scoped>
-    .submission
-        position relative
+    .all-submissions
         .refresh
             text-align right
             margin-bottom 10px
+        .no
+            color #ccc
+            text-align center
+            padding 2rem 0
+            font-size 1rem
 </style>
 
 

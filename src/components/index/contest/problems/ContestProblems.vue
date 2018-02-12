@@ -122,7 +122,7 @@ export default {
     },
     methods: {
         getContestInfo() {
-            this.$http.get('/contest/'+this.getCid).then(res => {
+            this.$http.get('/contest/'+this.getCid+'/info').then(res => {
                 this.contest = res.data
             })
         },

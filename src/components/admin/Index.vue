@@ -1,5 +1,9 @@
 <template>
     <div class="index">
+        <h2>代办事项</h2>
+        <Card style="margin-bottom: 10px">
+            <p><router-link to="/admin/auditing">待审核题目({{data.auditingProblems}})</router-link></p>
+        </Card>
         <h2>数据概览</h2>
         <Row :gutter="12">
             <Col span="6">
@@ -50,7 +54,8 @@ export default {
                 users: 0,
                 contests: 0,
                 groups: 0,
-                problems: 0
+                problems: 0,
+                auditingProblems: 0,
             },
             mainStyle: {
                 fontSize: '20px'
@@ -70,6 +75,7 @@ export default {
                 this.data.contests = data.contests
                 this.data.groups = data.groups
                 this.data.problems = data.problems
+                this.data.auditingProblems = data.auditing_problems
             })
         }
     },

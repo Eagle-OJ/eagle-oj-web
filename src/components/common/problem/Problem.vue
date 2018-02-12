@@ -24,16 +24,18 @@
                     <Icon type="ios-paper"></Icon>
                     题目
                 </MenuItem>
-                <MenuItem name="submission">
+                <MenuItem name="submission" v-if="isLogin">
                     <Icon type="code"></Icon>
                     我的提交
+                </MenuItem>
+                <MenuItem name="all-submission" v-if="isLogin">
+                    <Icon type="code-working"></Icon>
+                    所有提交
                 </MenuItem>
             </Menu>
         </div>
         <div class="content" v-if="data">
-            <keep-alive>
-                <component :is="getActive" :cid="getCid" :pid="getPid" :gid="getGid" :data="data"></component>
-            </keep-alive>
+            <component :is="getActive" :cid="getCid" :pid="getPid" :gid="getGid" :data="data"></component>
         </div>
     </div>
 </template>
@@ -41,6 +43,7 @@
 <script>
 import Description from './Description.vue'
 import Submission from './Submission.vue'
+import AllSubmission from './AllSubmission.vue'
 import Difficult from '@/components/common/Difficult'
 export default {
     created() {
@@ -104,6 +107,9 @@ export default {
             } else {
                 return 0
             }
+        },
+        isLogin() {
+            return this.$store.state.userInfo.isLogin
         }
     },
     watch: {
@@ -114,6 +120,7 @@ export default {
     components: {
         Description,
         Submission,
+        AllSubmission,
         Difficult
     },
 }

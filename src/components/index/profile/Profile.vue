@@ -36,14 +36,7 @@
             <Col span="15">
                 <Card class="right">
                     <p slot="title">最近做题</p>
-                    <ul>
-                        <li v-for="item in userProblems" :key="item.pid">
-                            <router-link :to="{path: '/problem/'+item.pid}">                            
-                                {{item.title}}
-                            </router-link>
-                            <ProblemResult style="float: right; margin-top:6px" :result="item.status"></ProblemResult>
-                        </li>
-                    </ul>
+                    <Table :show-header="false" :data="userProblems.data" :columns="userProblems.columns"></Table>
                 </Card>
             </Col>
         </Row>
@@ -76,7 +69,31 @@ export default {
         return {
             util: Util,
             profile: null,
-            userProblems: [],
+            userProblems: {
+                data: [],
+                columns: [
+                    {
+                        render: (h, params) => {
+                            return h('router-link', {
+                                props: {
+                                    to: {
+                                        path: '/problem/'+params.row.pid
+                                    }
+                                }
+                            }, params.row.title)
+                        }
+                    },
+                    {
+                        render: (h, params) => {
+                            return h(ProblemResult, {
+                                props: {
+                                    result: params.row.status
+                                }
+                            })
+                        }
+                    }
+                ]
+            },
             timesChart: null,
             logData: {
                 label: [],
@@ -102,14 +119,14 @@ export default {
             })
         },
         getUserProblem() {
-            this.$http.get('/problem_user', {
+            this.$http.get('/user_log/problem_history', {
                 params: {
                     uid: this.getUid,
                     page: 1,
                     page_size: 10
                 }
             }).then(res => {
-                this.userProblems = res.data.data
+                this.userProblems.data = res.data.data
             })
         },
         getUserLog(type) {
@@ -124,7 +141,7 @@ export default {
             } else {
                 this.logData.title = '最近一月'
             }
-            this.$http.get('/user_log', {
+            this.$http.get('/user_log/coding_frequency', {
                 params: {
                     uid: this.getUid,
                     time: type
