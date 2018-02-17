@@ -17,24 +17,8 @@
                 <FormItem label="网站名称" prop="title">
                     <Input v-model="form.title" placeholder="长度不超过20" :maxlength="20"></Input>
                 </FormItem>
-                <div class="little-title" style="background: #19be6b">阿里云OSS设置</div>
-                <FormItem label="Access key" prop="accessKey">
-                    <Input v-model="form.accessKey"></Input>
-                </FormItem>
-                <FormItem label="Secret key" prop="secretKey">
-                    <Input v-model="form.secretKey"></Input>
-                </FormItem>
-                <FormItem label="End point" prop="endPoint">
-                    <Input v-model="form.endPoint"></Input>
-                </FormItem>
-                <FormItem label="Bucket" prop="bucket">
-                    <Input v-model="form.bucket"></Input>
-                </FormItem>
-                <FormItem label="Url" prop="url">
-                    <Input v-model="form.url"></Input>
-                </FormItem>
                 <FormItem>
-                    <Button type="primary" @click="submit">提交</Button>
+                    <Button type="success" @click="submit">提交</Button>
                 </FormItem>
             </Form>
         </div>
@@ -56,11 +40,6 @@ export default {
                 email: 'admin@admin.com',
                 password: '',
                 title: '',
-                secretKey: '',
-                accessKey: '',
-                endPoint: '',
-                bucket: '',
-                url: '',
             },
             rules: {
                 nickname: [
@@ -78,21 +57,6 @@ export default {
                     { required: true, message: '网站名称不得为空'},
                     { type: 'string', max: 20, message: '网站标题最大长度不能超出20'}
                 ],
-                secretKey: [
-                    { required: true, message: 'Secret key不得为空'},
-                ],
-                accessKey: [
-                    { required: true, message: 'Access key不得为空'},
-                ],
-                endPoint: [
-                    { required: true, message: 'End point不得为空'},
-                ],
-                bucket: [
-                    { required: true, message: 'Bucket不得为空'},
-                ],
-                url: [
-                    { required: true, message: 'URL不得为空'},
-                ],
             }
         }
     },
@@ -106,7 +70,7 @@ export default {
         },
         doInstall() {
             let data = this.form
-            this.$http.post('/setting', data).then(res => {
+            this.$http.post('/setting/install', data).then(res => {
                 this.$Message.success(res.message)
                 this.$router.push('/login')
                 this.$store.dispatch('setWebsite')

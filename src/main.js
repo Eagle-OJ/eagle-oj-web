@@ -78,11 +78,15 @@ if (Cookie.get('token')) {
 }
 
 Vue.prototype.$getUrl = function(url) {
-    return store.state.setting.oss_url+url
+    if(store.state.setting.is_open_storage) {
+        return store.state.setting.oss_url+url
+    } else {
+        return ''
+    }
 }
 
 Vue.prototype.$getAvatar = function(aid) {
-    if(aid == 0) {
+    if(aid == 0 || !store.state.setting.is_open_storage) {
         return '/static/default_avatar.jpg'
     } else {
         return '/api/avatar?aid='+aid

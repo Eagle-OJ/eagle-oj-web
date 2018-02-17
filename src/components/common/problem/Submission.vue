@@ -65,7 +65,7 @@ export default {
                             },
                             on: {
                                 click: () => {
-                                    window.open(this.$getUrl(params.row.url))
+                                    this.seeCode(params.row.url)
                                 }
                             },
                         }, '查看源码')
@@ -102,6 +102,13 @@ export default {
         },
         parseTime(time) {
             return Util.getDistanceTime(time)
+        },
+        seeCode(url) {
+            if(this.$store.state.setting.is_open_storage && url) {
+                window.open(this.$getUrl(url))
+            } else {
+                this.$Message.warning('此代码没有储存，无法查看')
+            }
         }
     },
     watch: {

@@ -1,6 +1,25 @@
 <template>
     <div class="setting">
-        <div class="little-title">网站设置</div>
+        <div class="nav">
+            <Menu mode="horizontal" :active-name="getActive" @on-select="goTo">
+                <MenuItem name="global">
+                    <Icon type="ios-paper"></Icon>
+                    全局设置
+                </MenuItem>
+                <MenuItem name="storage">
+                    <Icon type="ios-people"></Icon>
+                    存储设置
+                </MenuItem>
+                <MenuItem name="mail">
+                    <Icon type="settings"></Icon>
+                    邮件设置
+                </MenuItem>
+            </Menu>
+        </div>
+        <div class="content">
+            <component :is="getActive"></component>
+        </div>
+        <!-- <div class="little-title">网站设置</div>
         <Form inline ref="title" :model="form">
             <FormItem prop="title" :rules="rules.title" :label-width="100" label="网站名称">
                 <Input style="width: 300px" v-model="form.title" placeholder="长度不超过20" :maxlength="20"></Input>
@@ -49,11 +68,14 @@
             <FormItem :label-width="0">
                 <Button type="text" @click="handleSubmit('url')">更新</Button>
             </FormItem>
-        </Form>
+        </Form> -->
     </div>
 </template>
 
 <script>
+import GlobalSetting from './setting/GlobalSetting'
+import StorageSetting from './setting/StorageSetting'
+import MailSetting from './setting/MailSetting'
 export default {
     created() {
         this.getSetting()
@@ -92,6 +114,9 @@ export default {
         }
     },
     methods: {
+        goTo(name) {
+            this.$router.push('?action='+name)
+        },
         getSetting() {
             this.$http.get('/setting', {
                 params: {
@@ -133,12 +158,28 @@ export default {
                 this.$Message.success(res.message)
             })
         }
+    },
+    computed: {
+        getActive() {
+            let action = this.$route.query.action
+            if (action == undefined)
+                return 'global'
+            else 
+                return action 
+        }
+    },
+    components: {
+        'global': GlobalSetting,
+        'storage': StorageSetting,
+        'mail': MailSetting
     }
 }
 </script>
 
 
 <style lang="stylus" scoped>
+    .content
+        padding 10px
     .little-title
         text-align center
         margin 10px 0
