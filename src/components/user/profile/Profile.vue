@@ -12,9 +12,6 @@
 
         <div class="edit">
             <Form ref="edit" :model="user" :label-width="80" :rules="validate">
-                <FormItem label="邮箱">
-                    <Input v-model="user.email" disabled></Input>
-                </FormItem>
                 <FormItem label="昵称" prop="nickname">
                     <Input v-model="user.nickname" :maxlength="20"></Input>
                 </FormItem>
@@ -67,7 +64,6 @@ export default {
             },
             user: {
                 avatar: '',
-                email: '',
                 nickname: '',
                 motto: '',
                 gender: 0,
@@ -87,7 +83,6 @@ export default {
         initial() {
             let temp = this.$store.state.userInfo
             this.user.avatar = temp.avatar
-            this.user.email = temp.email
             this.user.nickname = temp.nickname
             this.user.motto = temp.motto
             this.user.gender = temp.gender

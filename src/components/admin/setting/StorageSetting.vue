@@ -4,7 +4,7 @@
             存储功能说明
             <template slot="desc">存储功能能够用于保存用户的头像和提交代码，暂时只支持阿里云OSS</template>
         </Alert>
-        <Form ref="form" :model="form" :rules="rules">
+        <Form ref="form" :model="form">
             <FormItem label="存储功能">
                 <i-switch v-model="form.isOpenStorage" size="large">
                     <span slot="open">开启</span>
@@ -50,12 +50,6 @@ export default {
                 bucket: '',
                 url: ''
             },
-            rules: {
-                title: [
-                    { required: true, message: '网站名称不能为空' },
-                    { type: 'string', max: 20, message: '长度不得超出20' }
-                ]
-            }
         }
     },
     methods: {
