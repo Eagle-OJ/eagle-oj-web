@@ -6,7 +6,6 @@
 				<router-link to="/login" active-class="active" class="login">登入</router-link>
 			</div>
 			<Form key="register" v-if="getSwitch=='register'" ref="registerForm" :model="registerForm" :rules="registerForm.ruleValidate" @keyup.enter.native="handleRegister()">
-
 				<FormItem prop="nickname">
 					<Input v-model="registerForm.nickname" placeholder="昵称"><Icon type="ios-person-outline" slot="prepend"></Icon></Input>
 				</FormItem>
@@ -31,6 +30,9 @@
 					<Button type="error" @click="handleLogin()" :loading="isLoading" long>登 入</Button>
 				</FormItem>
 			</Form>
+			<div class="bottom">
+				<router-link :to="{path: '/forget_password'}">找回密码</router-link>
+			</div>
 		</div>
 	</div>
 </template>
@@ -41,7 +43,7 @@ import Cookie from 'js-cookie'
 export default {
 	data() {
 		return {
-            isLoading: false,
+			isLoading: false,
 			registerForm: {
 				nickname: '',
 				eamil: '',
@@ -85,18 +87,18 @@ export default {
 		handleRegister() {
 			this.$refs['registerForm'].validate((valid) => {
 				if (valid) {
-                    this.isLoading = true
-                    this.$http.post('/account/register', {
-                        'email': this.registerForm.email,
-                        'nickname': this.registerForm.nickname,
-                        'password': this.registerForm.password
-                    }).then(res => {
-                        this.$Message.success(res.message)
-                        this.$router.push('/login')
-                        this.isLoading = false
-                    }).catch(res => {
-                        this.isLoading = false
-                    })
+					this.isLoading = true
+					this.$http.post('/account/register', {
+						'email': this.registerForm.email,
+						'nickname': this.registerForm.nickname,
+						'password': this.registerForm.password
+					}).then(res => {
+						this.$Message.success(res.message)
+						this.$router.push('/login')
+						this.isLoading = false
+					}).catch(res => {
+						this.isLoading = false
+					})
 				} else {
 					this.$Message.error('请按照规则填写');
 				}
@@ -105,33 +107,33 @@ export default {
 		handleLogin() {
 			this.$refs['loginForm'].validate((valid) => {
 				if (valid) {
-                    this.isLoading = true
-                    this.$http.post('/account/login', {
-                        'email': this.loginForm.email,
-                        'password': this.loginForm.password
-                    }).then(res => {
-                        // 保存token到cookie
-                        Cookie.set('token', res.data)
-                        // 保存信息到vuex中
-                        this.$store.dispatch('getUserInfo')
-                        // 判断是否有redirect，无跳转到dashboard
-                        let redirect = this.$route.query.redirect
-                        if (redirect) {
-                            this.$router.push(redirect)
-                        } else {
-                            // 跳转到dashboard
-                            this.$router.push('/dashboard')
-                        }
-                        this.$Message.success(res.message)
-                        this.isLoading = false
-                    }).catch(res => {
-                        this.isLoading = false
-                    })
+					this.isLoading = true
+					this.$http.post('/account/login', {
+						'email': this.loginForm.email,
+						'password': this.loginForm.password
+					}).then(res => {
+						// 保存token到cookie
+						Cookie.set('token', res.data)
+						// 保存信息到vuex中
+						this.$store.dispatch('getUserInfo')
+						// 判断是否有redirect，无跳转到dashboard
+						let redirect = this.$route.query.redirect
+						if (redirect) {
+							this.$router.push(redirect)
+						} else {
+							// 跳转到dashboard
+							this.$router.push('/dashboard')
+						}
+						this.$Message.success(res.message)
+						this.isLoading = false
+					}).catch(res => {
+						this.isLoading = false
+					})
 				} else {
 					this.$Message.error('请按照规则填写');
 				}
 			})
-        }
+		}
 	},
 }
 </script>
@@ -164,6 +166,9 @@ export default {
 					&.active
 						color #2d8cf0
 						border-bottom 2px solid #2d8cf0
+			.bottom
+				margin-top: 10px
+				text-align right 
 </style>
 
 

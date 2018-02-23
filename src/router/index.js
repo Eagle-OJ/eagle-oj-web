@@ -35,6 +35,28 @@ const router = new Router({
                     }
                 },
                 {
+                    path: '/email_verified',
+                    component: () => import('@/components/index/email_verified/EmailVerified'),
+                    meta: {
+                        title: '邮箱确认',
+                        requireAuth: true
+                    }
+                },
+                {
+                    path: '/forget_password',
+                    component: () => import('@/components/index/forget/ForgetPassword'),
+                    meta: {
+                        title: '找回密码'
+                    }
+                },
+                {
+                    path: '/reset_password',
+                    component: () => import('@/components/index/forget/ResetPassword'),
+                    meta: {
+                        title: '重设密码'
+                    }
+                },
+                {
                     path: '/contest',
                     component: () => import('@/components/index/contest/Contest'),
                     meta: {
