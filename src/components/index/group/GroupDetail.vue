@@ -166,8 +166,6 @@ export default {
         init() {
             this.getGroup()
             this.getGroupUserInfo()
-            this.getMembers(1)
-            this.getGroupContests()
         },
         getGroup() {
             this.$http.get('/group/'+this.getGid+'/info').then(res => {
@@ -180,6 +178,8 @@ export default {
                     if(res.data) {
                         this.user = res.data
                         this.isIn = true
+                        this.getMembers(1)
+                        this.getGroupContests()
                     } else {
                         this.isIn = false
                     }    
