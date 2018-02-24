@@ -18,8 +18,9 @@ Vue.prototype.$cookie = Cookie
 Vue.config.productionTip = false
 
 // config axios
-Axios.defaults.baseURL = Config.API_URL
-
+if (process.env.NODE_ENV == 'development') {
+    Axios.defaults.baseURL = Config.API_URL
+}
 // Add a request interceptor
 Axios.interceptors.request.use(function (config) {
         // Do something before request is sent
@@ -32,7 +33,6 @@ Axios.interceptors.request.use(function (config) {
         // Do something with request error
         return Promise.reject(error);
 });
-
 // Add a response interceptor
 Axios.interceptors.response.use(function (response) {
         // Do something with response data
@@ -58,12 +58,12 @@ Axios.interceptors.response.use(function (response) {
                     break
                 case 404:
                     iView.Message.error('无法找到请求页面')
-                    break    
+                    break
                 case 500:
                     iView.Message.error('服务器出错')
                     break
             }
-        return Promise.reject(error.response.data);                
+        return Promise.reject(error.response.data);
     } else {
         return Promise.reject(error); 
     }
