@@ -300,7 +300,7 @@ const router = new Router({
                 },
                 {
                     path: 'cache',
-                    component: () => import('@/components/admin/cache'),
+                    component: () => import('@/components/admin/Cache'),
                     meta: {
                         title: '缓存管理'
                     }
