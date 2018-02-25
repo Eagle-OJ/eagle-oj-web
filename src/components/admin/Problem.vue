@@ -1,6 +1,9 @@
 <template>
     <div class="problem">
-        <Table :columns="columns" :data="data"></Table>
+        <div class="tool">
+            <Button type="ghost" @click="exportProblems()">导出选中题目</Button>
+        </div>
+        <Table :columns="columns" :data="data" @on-selection-change="select"></Table>
         <Page :total="total" simple @on-change="getData" style="margin-top: 10px;text-align: center"></Page>
     </div>
 </template>
@@ -15,8 +18,14 @@ export default {
         return {
             total: 0,
             pageSize: 10,
+            selections: [],
             data: [],
             columns: [
+                {
+                    type: 'selection',
+                    width: 60,
+                    align: 'center'
+                },
                 {
                     title: '标题',
                     render: (h, params) => {
@@ -105,6 +114,22 @@ export default {
                     })
                 },
             });
+        },
+        select(selection) {
+            this.selections = selection
+        },
+        exportProblems() {
+            if (this.selections.length == 0) {
+                this.$Message.warning('请至少选择一题')
+                return
+            }
+            let pid = []
+            for(let i=0; i<this.selections.length; i++) {
+                pid.push(this.selections[i].pid)
+            }
+            this.$http.post('/problems/export', {pidList: pid}).then(res => {
+                this.$Message.success(res.message)
+            })
         }
     }
 }
@@ -112,5 +137,6 @@ export default {
 
 
 <style lang="stylus" scoped>
-
+    .tool
+        margin-bottom 10px
 </style>
