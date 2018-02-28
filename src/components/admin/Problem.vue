@@ -1,21 +1,26 @@
 <template>
     <div class="problem">
         <div class="tool">
-            <Button type="ghost" @click="exportProblems()">导出选中题目</Button>
+            <Button type="ghost" @click="exportProblems()" icon="archive">导出选中题目</Button>
+            <Upload class="upload" :before-upload="importProblems" action="" :show-upload-list="false">
+                <Button type="ghost" icon="upload" :loading="uploading">导入题目</Button>
+            </Upload>
         </div>
-        <Table :columns="columns" :data="data" @on-selection-change="select"></Table>
+        <Table ref="selection" :columns="columns" :data="data" @on-selection-change="select"></Table>
         <Page :total="total" simple @on-change="getData" style="margin-top: 10px;text-align: center"></Page>
     </div>
 </template>
 
 <script>
 import Difficult from '@/components/common/Difficult'
+import Util from '@/util'
 export default {
     created() {
         this.getData(1)
     },
     data() {
         return {
+            uploading: false,
             total: 0,
             pageSize: 10,
             selections: [],
@@ -57,6 +62,12 @@ export default {
                         } else {
                             return '分享中'
                         }
+                    }
+                },
+                {
+                    title: '时间',
+                    render: (h, params) => {
+                        return this.getTime(params.row.create_time)
                     }
                 },
                 {
@@ -128,8 +139,27 @@ export default {
                 pid.push(this.selections[i].pid)
             }
             this.$http.post('/problems/export', {pidList: pid}).then(res => {
+                this.$refs.selection.selectAll(false);
                 this.$Message.success(res.message)
             })
+        },
+        importProblems(file) {
+            this.uploading = true
+            let form = new FormData();
+            form.append('file', file)
+            this.$http.post('/problems/import', form, {
+                headers: {'Content-Type': 'multipart/form-data'}
+            }).then(res => {
+                this.$Message.success(res.message)
+                this.getData(1)
+                this.uploading = false
+            }).catch(res => {
+                this.uploading = false
+            })
+            return false
+        },
+        getTime(time) {
+            return Util.getDistanceTime(time)
         }
     }
 }
@@ -139,4 +169,6 @@ export default {
 <style lang="stylus" scoped>
     .tool
         margin-bottom 10px
+        .upload
+            display inline
 </style>
