@@ -6,11 +6,11 @@
         <Table :columns="columns" :data="data"></Table>
         <Modal class="modal" v-model="showModal" title="测试用例编辑">
             <div class="each-line">
-                <label for="input">输入(最大长度1000)</label>
+                <label for="input">输入(最大长度65535)</label>
                 <div class="code-editor" id="stdin-editor"></div>
             </div>
             <div class="each-line">
-                <label for="output">输出(最大长度1000)</label>
+                <label for="output">输出(最大长度65535)</label>
                 <div class="code-editor" id="stdout-editor"></div>
             </div>
             <div class="each-line">

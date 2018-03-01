@@ -53,7 +53,7 @@
 			</div>
 		</Row>
 
-		<Modal class="test_case" v-model="testCases.isOpen" ok-text="运行" title="进行测试运行" @on-ok="submitCode(true)">
+		<Modal class="test_case" v-model="testCases.isOpen" title="进行测试运行">
 			<Alert>至少添加一组测试数据，输入字符串无可不填</Alert>
 			<div class="body">
 				<div class="line" v-for="(item,index) of testCases.data">
@@ -72,6 +72,9 @@
 			<p>
 				<Button size="small" @click="addTestCase">添加一组</Button>
 			</p>
+            <div slot="footer">
+                <Button type="primary" @click="submitCode(true)">运行</Button>
+            </div>
 		</Modal>
 
 	</div>
@@ -158,6 +161,7 @@ export default {
 						id: res.data
 					})
                     this.isSubmit = false
+                    this.testCases.isOpen = false
 				}).catch(res => {
                     this.isSubmit = false
                 })
