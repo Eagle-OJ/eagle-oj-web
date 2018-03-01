@@ -19,7 +19,7 @@
 						<ProblemResult :result="item.response.result"></ProblemResult>
 						<Tag color="green">{{item.response.memory}} M</Tag>
 						<Tag color="green">{{item.response.time}} S</Tag>
-						<router-link :to="{path: '/submission/'+item.id}">
+						<router-link :to="{path: '/submission/'+item.id}" target="_blank">
 							<Button type="primary" size="small">查看详情</Button>
 						</router-link>
 					</div>
