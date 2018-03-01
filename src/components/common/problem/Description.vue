@@ -157,9 +157,8 @@ export default {
 						url: path,
 						id: res.data
 					})
+                    this.isSubmit = false
 				}).catch(res => {
-                    this.$Message.error(res.message)
-                }).finally(() => {
                     this.isSubmit = false
                 })
 			} else {
@@ -180,9 +179,8 @@ export default {
                         url: path,
                         id: res.data
                     })
+                    this.isSubmit = false
                 }).catch(res => {
-                    this.$Message.error(res.message)
-                }).finally(() => {
                     this.isSubmit = false
                 })
 			}
