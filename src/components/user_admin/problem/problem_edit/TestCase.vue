@@ -7,11 +7,11 @@
         <Modal class="modal" v-model="showModal" title="测试用例编辑">
             <div class="each-line">
                 <label for="input">输入</label>
-                <Input id="input" v-model="test_case.stdin" type="textarea" :autosize="{minRows: 3,maxRows: 5}" :maxlength="1000"></Input>
+                <div class="code-editor" id="stdin-editor"></div>
             </div>
             <div class="each-line">
                 <label for="output">输出</label>
-                <Input id="output" v-model="test_case.stdout" type="textarea" :autosize="{minRows: 3,maxRows: 5}" :maxlength="1000"></Input>
+                <div class="code-editor" id="stdout-editor"></div>
             </div>
             <div class="each-line">
                 <label for="strength">分值比</label>
@@ -30,6 +30,18 @@
 import Util from '@/util'
 export default {
     props: ['pid', 'isEditable'],
+    mounted() {
+        let stdin = ace.edit('stdin-editor')
+        let stdout = ace.edit('stdout-editor')
+        this.test_case.stdin = stdin
+        this.test_case.stdout = stdout
+        stdin.setTheme("ace/theme/github");
+        stdin.setShowPrintMargin(false)
+        stdout.setTheme("ace/theme/github");
+        stdout.setShowPrintMargin(false)
+        document.getElementById('stdin-editor').style.fontSize='14px';
+        document.getElementById('stdout-editor').style.fontSize='14px';
+    },
     created() {
         this.getTestCases()
     },
@@ -108,8 +120,8 @@ export default {
             showModal: false,
             test_case: {
                 tid: 0,
-                stdin: '',
-                stdout: '',
+                stdin: null,
+                stdout: null,
                 strength: 1
             },
             isEdit: false,
@@ -129,8 +141,8 @@ export default {
             this.isEdit = true
             this.showModal = true
             this.test_case.tid = this.data[index].tid
-            this.test_case.stdin = this.data[index].stdin
-            this.test_case.stdout = this.data[index].stdout
+            this.test_case.stdin.setValue(this.data[index].stdin)
+            this.test_case.stdout.setValue(this.data[index].stdout)
             this.test_case.strength = this.data[index].strength
         },
         save() {
@@ -141,8 +153,8 @@ export default {
             if(this.isEdit) {
                 // edit testCase
                 this.$http.put('/problem/'+this.pid+'/test_case/'+this.test_case.tid, {
-                    stdin: this.test_case.stdin,
-                    stdout: this.test_case.stdout,
+                    stdin: this.test_case.stdin.getValue(),
+                    stdout: this.test_case.stdout.getValue(),
                     strength: this.test_case.strength
                 }).then(res => {
                     this.$Message.success(res.message)
@@ -152,8 +164,8 @@ export default {
             } else {
                 // add testCase
                 this.$http.post('/problem/'+this.pid+"/test_case", {
-                    stdin: this.test_case.stdin,
-                    stdout: this.test_case.stdout,
+                    stdin: this.test_case.stdin.getValue(),
+                    stdout: this.test_case.stdout.getValue(),
                     strength: this.test_case.strength
                 }).then(res => {
                     this.$Message.success(res.message)
@@ -182,8 +194,8 @@ export default {
         },
         resetTestCase() {
             this.test_case.tid = 0
-            this.test_case.stdin = ''
-            this.test_case.stdout = ''
+            this.test_case.stdin.setValue('')
+            this.test_case.stdout.setValue('')
             this.test_case.strength = 1
         },
     },
@@ -205,6 +217,11 @@ export default {
             margin-bottom 10px
             label
                 font-size 14px
+            .code-editor
+                border 1px solid #dddee1
+                border-radius 1px
+                width 100%
+                height 100px
 </style>
 
 
