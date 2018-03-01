@@ -7,11 +7,11 @@
         <Modal class="modal" v-model="showModal" title="测试用例编辑">
             <div class="each-line">
                 <label for="input">输入</label>
-                <Input id="input" v-model="test_case.stdin" type="textarea" :maxlength="1000"></Input>
+                <Input id="input" v-model="test_case.stdin" type="textarea" :autosize="{minRows: 3,maxRows: 5}" :maxlength="1000"></Input>
             </div>
             <div class="each-line">
                 <label for="output">输出</label>
-                <Input id="output" v-model="test_case.stdout" type="textarea" :maxlength="1000"></Input>
+                <Input id="output" v-model="test_case.stdout" type="textarea" :autosize="{minRows: 3,maxRows: 5}" :maxlength="1000"></Input>
             </div>
             <div class="each-line">
                 <label for="strength">分值比</label>
@@ -37,6 +37,13 @@ export default {
         return {
             columns: [
                 {
+                    title: '编号',
+                    render: (h, params) => {
+                        return params.index+1
+                    },
+                    width: '80'
+                },
+                {
                     title: '输入',
                     key: 'stdin',
                     ellipsis: true
@@ -48,7 +55,8 @@ export default {
                 },
                 {
                     title: '分值比',
-                    key: 'strength'
+                    key: 'strength',
+                    width: '100'
                 },
                 {
                     title: '创建时间',
@@ -56,7 +64,8 @@ export default {
                     render: (h, params) => {
                         return h('span', {
                         }, this.getTime(params.row.create_time))
-                    }
+                    },
+                    width: '150'
                 },
                 {
                     title: '操作',
@@ -91,7 +100,8 @@ export default {
                                 }
                             }, '删除')
                         ])
-                    }
+                    },
+                    width: '150'
                 }
             ],
             data: [],
