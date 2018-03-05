@@ -108,10 +108,14 @@ export default {
                 toolbar: [ 
                     ['bold', 'italic', 'underline'],
                     ['blockquote', 'code-block'],
-                    ['formula'],
+                    ['formula', 'image'],
                     [{ 'script': 'sub'}, { 'script': 'super' }],
                     [{ 'list': 'ordered'}, { 'list': 'bullet' }],
                 ],
+                history: {       
+                    delay: 2500,
+                    userOnly: true
+                },
                 formula: true
             }
         }
@@ -143,17 +147,17 @@ export default {
                 return
             }
 
-            if(this.editor.description.getLength() <5 || this.editor.description.getLength()>10000) {
+            if(this.editor.description.getLength() <5) {
                 this.$Message.warning('描述长度不符合要求')
                 return
             }
 
-            if(this.editor.input_format.getLength() <2 || this.editor.description.getLength()>10000) {
+            if(this.editor.input_format.getLength() <2) {
                 this.$Message.warning('输入规范长度不符合要求')
                 return
             }
 
-            if(this.editor.output_format.getLength() <2 || this.editor.description.getLength()>10000) {
+            if(this.editor.output_format.getLength() <2) {
                 this.$Message.warning('输出规范长度不符合要求')
                 return
             }

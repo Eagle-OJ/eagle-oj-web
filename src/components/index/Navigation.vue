@@ -1,9 +1,9 @@
 <template>
 	<div id="navigation" class="navigation">
 		<div id="container">
-			<div class="logo">
+			<div class="title">
                 <router-link to="/">
-                	<img src="/static/logo.png" style="height: 60px; margin-top: 6px"/>
+                    <h1>{{getTitle}}</h1>
                 </router-link>
 			</div>
 			<ul class="nav">
@@ -55,6 +55,16 @@ export default {
                 this.$router.push(name)
             }
         }
+    },
+    computed: {
+        getTitle() {
+            let title = this.$store.state.setting.web_title
+            if (title.length == 0) {
+                return 'EagleOJ'
+            } else {
+                return title
+            }
+        }
     }
 }
 </script>
@@ -66,11 +76,14 @@ export default {
         height 70px
         box-shadow 8px 1px 3px 0 rgba(0,34,77,.1)
         margin-bottom 20px
-        .logo
+        .title
             margin-right 50px
             height 70px
-            width 120px
             float left
+            h1
+                line-height 70px
+                font-weight 500
+                letter-spacing 1px
         .nav
             line-height 70px
             li
