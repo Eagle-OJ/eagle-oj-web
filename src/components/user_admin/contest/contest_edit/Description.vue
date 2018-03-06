@@ -21,7 +21,7 @@
             </FormItem>
             <FormItem label="比赛模式">
                 <RadioGroup v-model="form.contestType">
-                    <Radio :label="0">普通</Radio>
+                    <Radio :label="0">OI</Radio>
                     <Radio :label="1">ACM</Radio>
                 </RadioGroup>
             </FormItem>

@@ -8,7 +8,7 @@
 			</div>
 			<ul class="nav">
 				<li>
-					<router-link to="/dashboard" active-class="active">主页</router-link>
+					<router-link to="/dashboard" active-class="active" v-if="isLogin">主页</router-link>
 				</li>
 				<li>
 					<router-link to="/problems" active-class="active">题目</router-link>
@@ -16,11 +16,14 @@
                 <li>
 					<router-link to="/contest" active-class="active">比赛</router-link>
 				</li>
+                <li>
+                    <router-link to="/groups" active-class="active" v-if="isLogin">小组</router-link>
+                </li>
 				<li>
 					<router-link to="/leaderboard" active-class="active">排行榜</router-link>
 				</li>
 			</ul>
-			<div class="account" v-if="! $store.state.userInfo.isLogin">
+			<div class="account" v-if="! isLogin">
 				<router-link to="/login" class="button-style" style="margin-right: 30px">登录</router-link>
 				<router-link to="/register" class="button-style">注册</router-link>
 			</div>
@@ -59,11 +62,14 @@ export default {
     computed: {
         getTitle() {
             let title = this.$store.state.setting.web_title
-            if (title.length == 0) {
+            if (title == undefined || title.length == 0) {
                 return 'EagleOJ'
             } else {
                 return title
             }
+        },
+        isLogin() {
+            return this.$store.state.userInfo.isLogin
         }
     }
 }

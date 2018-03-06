@@ -31,6 +31,19 @@ export default {
                     }
                 },
                 {
+                    title: '邀请码',
+                    render: (h, params) => {
+                        return h('span', {
+                            style: {
+                                background: '#19be6b',
+                                color: '#fff',
+                                borderRadius: '3px',
+                                padding: '2px 5px'
+                            }
+                        }, this.getSecret(params.row.gid, params.row.password))
+                    }
+                },
+                {
                     title: '操作',
                     key: 'handle',
                     render: (h, params) => {
@@ -67,6 +80,13 @@ export default {
             }).catch(res => {
                 this.loading = false
             })
+        },
+        getSecret(gid, password) {
+            if (password == undefined) {
+                return gid+'-'+'000000'
+            } else {
+                return gid+'-'+password
+            }
         }
     }
 }

@@ -64,6 +64,14 @@ const router = new Router({
                     }
                 },
                 {
+                    path: '/groups',
+                    component: () => import('@/components/index/group/Group'),
+                    meta: {
+                        title: '小组',
+                        requireAuth: true
+                    }
+                },
+                {
                     path: '/submission/:id',
                     component: () => import('@/components/index/submission/Submission'),
                     meta: {
