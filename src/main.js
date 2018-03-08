@@ -88,8 +88,10 @@ Vue.prototype.$getUrl = function(url) {
 Vue.prototype.$getAvatar = function(aid) {
     if(aid == 0 || !store.state.setting.is_open_storage) {
         return '/static/default_avatar.jpg'
-    } else {
+    } else if (process.env.NODE_ENV == 'development') {
         return '/api/avatar?aid='+aid
+    } else {
+        return '/avatar?aid='+aid
     }
 }
 
