@@ -55,10 +55,12 @@ export default {
             this.$http.get('/setting/mail').then(res => {
                 let data = res.data
                 this.form.isOpenMail = data.is_open_mail == 'true'
-                this.form.host = data.mail_host
-                this.form.port = parseInt(data.mail_port)
-                this.form.username = data.mail_username
-                this.form.password = data.mail_password
+                if(this.form.isOpenMail) {
+                    this.form.host = data.mail_host
+                    this.form.port = parseInt(data.mail_port)
+                    this.form.username = data.mail_username
+                    this.form.password = data.mail_password
+                }
             })
         },
         update() {

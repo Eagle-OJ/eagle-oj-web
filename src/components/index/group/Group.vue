@@ -5,7 +5,8 @@
             <Button type="info" class="button" icon="plus" @click="()=>{this.modal=true}">邀请码加入</Button>
         </div>
         <div class="groups">
-            <Row :gutter="8">
+            <div class="none" v-if="data.length == 0">你还没有归属</div>
+            <Row v-else :gutter="8">
                 <Col span="6" class="each" v-for="item in data" :key="item.gid">
                     <Card>
                         <p slot="title">
@@ -36,7 +37,7 @@
                     </Card>
                 </Col>
             </Row>
-            <Page :total="total" :page-size="pageSize" simple style="text-align: center; margin-top: 10px" @on-change="getData"></Page>
+            <Page v-if="data.length > 0" :total="total" :page-size="pageSize" simple style="text-align: center; margin-top: 10px" @on-change="getData"></Page>
         </div>
         <Modal v-model="modal">
             <p slot="header">加入小组</p>
