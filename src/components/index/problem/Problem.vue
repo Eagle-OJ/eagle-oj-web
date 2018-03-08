@@ -30,7 +30,7 @@
                 <div class="problems">
                     <Table :loading="loading" :columns="problems.columns" :data="problems.data"></Table>
                     <div class="page">
-                        <Page :total="problems.total" :page-size="problems.pageSize" size="small" show-total></Page>
+                        <Page :total="problems.total" :page-size="problems.pageSize" size="small" show-total @on-change="getProblems"></Page>
                     </div>
                 </div>
             </Col>

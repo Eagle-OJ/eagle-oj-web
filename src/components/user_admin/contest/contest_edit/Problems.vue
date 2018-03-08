@@ -12,6 +12,7 @@
             <Table :columns="columns" :data="data"></Table>
         </Card>
         <Modal v-model="addProblemModal" title="添加题目" width="650" >
+            <Input v-model="query" @on-enter="getCommonProblems(1)" placeholder="搜索关键词" style="width: 360px; margin-bottom: 10px"></Input>
             <Table :columns="problems.columns" :data="problems.data"></Table>
             <Page :page-size="problems.pageSize" :total="problems.total" @on-change="getCommonProblems" simple style="margin-top: 10px; text-align: center"></Page>
             <p slot="footer"></p>
@@ -48,6 +49,7 @@ export default {
             addProblemModal: false,
             editModal: false,
             isEdit: false,
+            query: '',
             data: [],
             columns: [
                 {
@@ -59,11 +61,15 @@ export default {
                     key: 'pid',
                 },
                 {
-                    title: '名称',
+                    title: '标题',
                     render: (h, params) => {
+                        console.log(h)
                         return h('router-link', {
                             props: {
                                 to: '/problem/'+params.row.pid
+                            },
+                            attrs: {
+                                target: '_blank'
                             }
                         }, params.row.title)
                     }
@@ -74,7 +80,7 @@ export default {
                         return h('Tag', {
                             props: {
                                 color: 'green'
-                            }
+                            },
                         }, params.row.score)
                     },
                 },
@@ -118,7 +124,10 @@ export default {
                         render: (h, params) => {
                             return h('router-link', {
                                 props: {
-                                    to: '/problem/'+params.row.pid
+                                    to: '/problem/'+params.row.pid,
+                                },
+                                attrs: {
+                                    target: '_blank'
                                 }
                             }, params.row.title)
                         }
@@ -192,6 +201,7 @@ export default {
                 params: {
                     page: page,
                     page_size: this.problems.pageSize,
+                    query: this.query
                 }
             }).then(res => {
                 this.problems.data = res.data.data
