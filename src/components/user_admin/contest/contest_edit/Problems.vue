@@ -63,7 +63,6 @@ export default {
                 {
                     title: '标题',
                     render: (h, params) => {
-                        console.log(h)
                         return h('router-link', {
                             props: {
                                 to: '/problem/'+params.row.pid
