@@ -14,7 +14,7 @@
 					<router-link to="/problems" active-class="active">题目</router-link>
 				</li>
                 <li>
-					<router-link to="/contest" active-class="active">比赛</router-link>
+					<router-link to="/contest" active-class="active" v-if="isLogin">比赛</router-link>
 				</li>
                 <li>
                     <router-link to="/groups" active-class="active" v-if="isLogin">小组</router-link>

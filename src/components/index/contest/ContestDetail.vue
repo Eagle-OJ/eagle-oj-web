@@ -11,10 +11,11 @@
                 <b>{{getTime(data.end_time)}}</b>
             </div>
             <div class="button">
-                <button class="closed" v-if="getStatus() == 'closed'" @click="goContest()">已结束</button>
-                <button class="pending" v-else-if="getStatus() == 'pending'">即将开始</button>
-                <button class="entered" v-else-if="isEnter" @click="goContest()">开始做题</button>
-                <button class="entering" v-else-if="getStatus() == 'entering'" @click="goContest()">参加比赛</button>
+                <Button type="info" v-if="getStatus() == 'closed' && isEnter" @click="goContest()">查看结果</Button>
+                <Button disabled v-else-if="getStatus() == 'closed' && ! isEnter">已结束</Button>
+                <Button type="primary" v-else-if="getStatus() == 'pending'">即将开始</Button>
+                <Button type="success" v-else-if="isEnter" @click="goContest()">开始做题</Button>
+                <Button v-else-if="getStatus() == 'entering'" @click="goContest()">参加比赛</Button>
             </div>
         </div>
         <div class="countdown">
@@ -64,10 +65,6 @@ export default {
     methods: {
         goContest() {
             if (! this.isEnter) {
-                if (! this.$store.state.userInfo.isLogin) {
-                    this.$Message.warning('请先登入')
-                    return
-                }
                 if (this.data.password) {
                     this.$Modal.confirm({
                         render: (h) => {

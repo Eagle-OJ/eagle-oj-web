@@ -10,14 +10,6 @@
                     <Icon type="locked"></Icon>
                     账号安全
                 </MenuItem>
-                <MenuItem name="my_contest">
-                    <Icon type="compose"></Icon>
-                    加入的比赛
-                </MenuItem>
-                <MenuItem name="my_group">
-                    <Icon type="ios-people"></Icon>
-                    加入的小组
-                </MenuItem>
                 <MenuItem name="my_zone">
                     <Icon type="aperture"></Icon>
                     我的主页

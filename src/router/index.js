@@ -60,7 +60,8 @@ const router = new Router({
                     path: '/contest',
                     component: () => import('@/components/index/contest/Contest'),
                     meta: {
-                        title: '比赛'
+                        title: '比赛',
+                        requireAuth: true
                     }
                 },
                 {
@@ -82,7 +83,8 @@ const router = new Router({
                     path: '/contest/:cid',
                     component: () => import('@/components/index/contest/ContestDetail'),
                     meta: {
-                        title: '比赛详情'
+                        title: '比赛详情',
+                        requireAuth: true
                     }
                 },
                 {
@@ -197,26 +199,12 @@ const router = new Router({
                     }
                 },
                 {
-                    path: 'my_contest',
-                    component: () => import('@/components/user/my_contest/MyContest'),
-                    meta: {
-                        title: '我的比赛'
-                    }
-                },
-                {
                     path: 'group',
                     component: () => import('@/components/user/group_admin/GroupAdmin'),
                     meta: {
                         title: '小组管理'
                     }
                 },
-                {
-                    path: 'my_group',
-                    component: () => import('@/components/user/my_group/MyGroup'),
-                    meta: {
-                        title: '我的小组'
-                    }
-                }
             ]
         },
         {
