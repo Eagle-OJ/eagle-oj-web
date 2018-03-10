@@ -9,6 +9,10 @@
                 <Icon type="ios-paper"></Icon>
                 组员管理
             </MenuItem>
+            <MenuItem name="contests">
+                <Icon type="flag"></Icon>
+                组内比赛
+            </MenuItem>
             <MenuItem name="setting">
                 <Icon type="settings"></Icon>
                 设置
@@ -32,6 +36,7 @@
 import Description from './Description'
 import Members from './Members'
 import Setting from './Setting'
+import Contests from './Contests'
 export default {
     created() {
         this.getGroup()
@@ -64,6 +69,7 @@ export default {
         Description,
         Members,
         Setting,
+        Contests
     },
     computed: {
         getActive() {

@@ -200,8 +200,14 @@ export default {
             })
         },
         getGroupContests() {
-            this.$http.get('/group/'+this.getGid+'/contests').then(res => {
-                this.contests = res.data
+            this.$http.get('/group/'+this.getGid+'/contests', {
+                params: {
+                    page: 1,
+                    page_size: 10,
+                    is_valid: true
+                }
+            }).then(res => {
+                this.contests = res.data.data
             })
         },
         joinGroup() {
@@ -259,11 +265,6 @@ export default {
                         this.$Message.success('退出成功')
                     })
                 },
-            })
-        },
-        getTime(time) {
-            return Format(new Date(time), 'YYYY-MM-DD', {
-                locale: cn
             })
         },
         getTime(time) {

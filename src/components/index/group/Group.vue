@@ -88,13 +88,18 @@ export default {
             }
 
             let str = this.secret.split('-')
-            if(str.length != 2) {
+            if(str.length < 2) {
                 this.$Message.error('非法邀请码')
                 return
             }
-
+            str.splice(0, 1)
+            let tempSecret = ''
+            for(let i=0; i<str.length; i++) {
+                tempSecret = tempSecret+str[i]+'-'
+            }
+            tempSecret = tempSecret.substring(0, tempSecret.length-1)
             this.$http.post('/group/'+str[0]+'/enter', {
-                password: str[1]
+                password: tempSecret
             }).then(res => {
                 this.$Message.success('小组加入成功')
                 this.getData(1)

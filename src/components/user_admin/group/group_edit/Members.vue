@@ -1,13 +1,12 @@
 <template>
     <div id="container">
         <Table stripe :columns="columns" :data="data"></Table>
-        <Page :current="1" :total="total" :page-size="pageSize" simple style="margin-top: 20px; text-align:center"></Page>
+        <Page @on-change="getMembers" :total="total" :page-size="pageSize" simple style="margin-top: 20px; text-align:center"></Page>
     </div>
 </template>
 
 <script>
-import Format from 'date-fns/format'
-import cn from 'date-fns/locale/zh_cn'
+import Util from '@/util'
 export default {
     props: ['gid'],
     created() {
@@ -119,9 +118,7 @@ export default {
             });
         },
         getTime(time) {
-            return Format(new Date(time), 'YYYY-MM-DD', {
-                locale: cn
-            })
+            return Util.getFormatTime(time, 'YYYY-MM-DD')
         }
     }
 }
