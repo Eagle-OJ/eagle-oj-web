@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import util from '@/util'
+import Util from '@/util'
 export default {
     created() {
         this.getUserContests(1)
@@ -30,16 +30,6 @@ export default {
                                 to: '/contest/'+params.row.cid
                             }
                         }, params.row.name)
-                    }
-                },
-                {
-                    title: '类型',
-                    render: (h, params) => {
-                        if(params.row.group > 0) {
-                            return '小组赛'
-                        } else {
-                            return '普通'
-                        }
                     }
                 },
                 {
@@ -75,6 +65,12 @@ export default {
                         }
                     },
                     width: 100
+                },
+                {
+                    title: '创建时间',
+                    render: (h, params) => {
+                        return this.getTime(params.row.create_time)
+                    }
                 },
                 {
                     title: '操作',
@@ -117,10 +113,13 @@ export default {
             })
         },
         getTimeType(type, totalTime) {
-            return util.getContestTimeType(type, totalTime)
+            return Util.getContestTimeType(type, totalTime)
         },
         getContestType(type) {
-            return util.getContestType(type)
+            return Util.getContestType(type)
+        },
+        getTime(time) {
+            return Util.getFormatTime(time, 'YYYY-MM-DD HH:MM')
         }
     }
 }

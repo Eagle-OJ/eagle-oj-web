@@ -6,7 +6,7 @@
                 小组编辑
             </MenuItem>
             <MenuItem name="members">
-                <Icon type="ios-paper"></Icon>
+                <Icon type="ios-people"></Icon>
                 组员管理
             </MenuItem>
             <MenuItem name="contests">
@@ -25,9 +25,7 @@
 
         <div class="content" style="margin-top: 20px; position: relative">
             <Spin size="large" fix v-if="loading"></Spin>
-            <keep-alive>
-                <component v-if="group != null" :is="getActive" :gid="getGid" :group="group"></component>
-            </keep-alive>
+            <component v-if="group != null" :is="getActive" :gid="getGid" :group="group"></component>
         </div>
     </div>
 </template>

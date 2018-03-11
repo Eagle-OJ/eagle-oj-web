@@ -30,9 +30,7 @@
 
         <div class="content" style="margin-top: 20px; position: relative">
             <Spin size="large" fix v-if="loading"></Spin>
-            <keep-alive >
-                <component :is="getActive" :pid="getPid" :problem="problem" :isEditable="isEditable" v-if="! loading"></component>
-            </keep-alive>
+            <component :is="getActive" :pid="getPid" :problem="problem" :isEditable="isEditable" v-if="! loading"></component>
         </div>
     </div>
 </template>

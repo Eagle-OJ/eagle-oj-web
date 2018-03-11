@@ -12,17 +12,6 @@
             </Col>
         </Row>
         <Row class="each">
-            <Col span="5" class="title">创建小组赛</Col>
-            <Col span="19" class="content">
-                <p>
-                    <Alert>创建只有本小组成员才可以加入的小组比赛</Alert>
-                    <router-link :to="{path: '/user_admin/contest/add?group='+gid}">
-                        <Button type="ghost">创建小组赛</Button>
-                    </router-link>
-                </p>
-            </Col>
-        </Row>
-        <Row class="each">
             <Col span="5" class="title">解散小组</Col>
             <Col span="19" class="content">
                 <p>

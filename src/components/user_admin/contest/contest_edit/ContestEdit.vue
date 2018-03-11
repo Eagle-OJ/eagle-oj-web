@@ -22,9 +22,7 @@
 
         <div class="content" style="margin-top: 20px; position: relative">
             <Spin size="large" fix v-if="loading"></Spin>
-            <keep-alive>
-                <component :is="getActive" :cid="getCid" :contest="contest" v-if="! loading"></component>
-            </keep-alive>
+            <component :is="getActive" :cid="getCid" :contest="contest" v-if="! loading"></component>
         </div>
     </div>
 </template>
@@ -46,7 +44,11 @@ export default {
     methods: {
         goTo(name) {
             if (name == 'back') {
-                this.$router.push('/user/contest')
+                if(this.contest.group > 0) {
+                    this.$router.push('/user_admin/group/'+this.contest.group+'/edit?action=contests')
+                } else {
+                    this.$router.push('/user/contest')
+                }
             } else {
                 this.$router.push('/user_admin/contest/'+this.getCid+'/edit?action='+name)
             }

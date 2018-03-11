@@ -11,6 +11,7 @@
 </template>
 
 <script>
+import Util from '@/util'
 export default {
     props: ['gid'],
     created() {
@@ -28,6 +29,64 @@ export default {
                             }
                         }, params.row.name)
                     }
+                },
+                {
+                    title: '模式',
+                    render: (h, params) => {
+                        return h('div', [
+                            h('Tag', {
+                                props: {
+                                    color: 'green'
+                                }
+                            }, this.getContestType(params.row.type)),
+                            h('Tag', {
+                                style: {
+                                    marginRight: '5px'
+                                },
+                                props: {
+                                    color: 'blue'
+                                }
+                            }, this.getTimeType(params.row.type, params.row.total_time)),
+                        ])
+                    }
+                },
+                {
+                    title: '状态',
+                    render: (h, params) => {
+                        let status  = params.row.status
+                        if (status == 0) {
+                            return '编辑中'
+                        } else if (status == 1) {
+                            return '启用中'
+                        } else {
+                            return '已关闭'
+                        }
+                    },
+                    width: 100
+                },
+                {
+                    title: '创建时间',
+                    render: (h, params) => {
+                        return this.getTime(params.row.create_time)
+                    }
+                },
+                {
+                    title: '操作',
+                    key: 'handle',
+                    render: (h, params) => {
+                        return h('Button', {
+                            props: {
+                                type: 'ghost',
+                                size: 'small'
+                            },
+                            on: {
+                                click: () => {
+                                    this.$router.push('/user_admin/contest/'+params.row.cid+'/edit')
+                                }
+                            }
+                        }, '管理')
+                    },
+                    width: 100
                 }
             ],
             data: [],
@@ -47,6 +106,15 @@ export default {
                 this.total = res.data.total
                 this.data = res.data.data
             })
+        },
+        getTimeType(type, totalTime) {
+            return Util.getContestTimeType(type, totalTime)
+        },
+        getContestType(type) {
+            return Util.getContestType(type)
+        },
+        getTime(time) {
+            return Util.getFormatTime(time, 'YYYY-MM-DD HH:MM')
         }
     }
 }

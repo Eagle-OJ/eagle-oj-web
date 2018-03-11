@@ -11,6 +11,7 @@
 </template>
 
 <script>
+import Util from '@/util'
 export default {
     created() {
         this.getOwnGroup(1)
@@ -41,6 +42,12 @@ export default {
                                 padding: '2px 5px'
                             }
                         }, this.getSecret(params.row.gid, params.row.password))
+                    }
+                },
+                {
+                    title: '创建时间',
+                    render: (h, params) => {
+                        return this.getTime(params.row.create_time)
                     }
                 },
                 {
@@ -87,6 +94,9 @@ export default {
             } else {
                 return gid+'-'+password
             }
+        },
+        getTime(time) {
+            return Util.getFormatTime(time, 'YYYY-MM-DD HH:MM')
         }
     }
 }
