@@ -64,7 +64,6 @@
 <script>
 import Util from '@/util'
 import ContestType from '@/components/common/ContestType'
-
 export default {
     created() {
         this.getContests(1),
