@@ -128,7 +128,8 @@ const router = new Router({
                     path: '/group/:gid',
                     component: () => import('@/components/index/group/GroupDetail'),
                     meta: {
-                        title: '加入小组'
+                        title: '加入小组',
+                        requireAuth: true
                     }
                 },
                 {
