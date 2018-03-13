@@ -12,7 +12,7 @@
 
 <script>
 export default {
-    props: ['cid', 'uid'],
+    props: ['gid', 'uid'],
     data() {
         return {}
     },

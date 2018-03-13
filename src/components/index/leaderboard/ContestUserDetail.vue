@@ -1,8 +1,6 @@
 <template>
     <div class="detail">
-        <Table :columns="columns" :data="data">
-
-        </Table>
+        <Table :columns="columns" :data="data"></Table>
     </div>
 </template>
 
@@ -30,7 +28,7 @@ export default {
                     title: '状态',
                     key: 'status',
                     render: (h, params) => {
-                        return this.getStatus(params.row.status)
+                        return h('div', {}, this.getStatus(params.row.status))
                     }
                 },
                 {
@@ -44,13 +42,13 @@ export default {
                 {
                     title: '用时',
                     render: (h, params) => {
-                        return this.getParsedTime(params.row.used_time)
+                        return h('div', {}, this.getParsedTime(params.row.used_time))
                     }
                 },
                 {
                     title: '解出时间',
                     render: (h, params) => {
-                        return this.getTime(params.row.solved_time)
+                        return h('div', {}, this.getTime(params.row.solved_time))
                     }
                 }
             ],

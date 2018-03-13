@@ -55,19 +55,21 @@ export default {
                     title: '状态',
                     render: (h, params) => {
                         let status = params.row.status
+                        let text = ''
                         if(status == 0) {
-                            return '自用'
+                            text = '自用'
                         } else if (status == 1) {
-                            return '审核中'
+                            text = '审核中'
                         } else {
-                            return '分享中'
+                            text = '分享中'
                         }
+                        return h('div', {}, text)
                     }
                 },
                 {
                     title: '时间',
                     render: (h, params) => {
-                        return this.getTime(params.row.create_time)
+                        return h('div', {}, this.getTime(params.row.create_time))
                     }
                 },
                 {

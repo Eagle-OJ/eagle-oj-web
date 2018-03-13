@@ -113,11 +113,13 @@ export default {
                     {
                         title: '通过率',
                         render: (h, params) => {
+                            let data = ''
                             if (params.row.submit_times == 0) {
-                                return '0.00%'
+                                data = '0.00%'
                             } else {
-                                return ((params.row.ac_times / params.row.submit_times)*100).toFixed(2)+'%'
+                                data = ((params.row.ac_times / params.row.submit_times)*100).toFixed(2)+'%'
                             }
+                            return h('div', {}, data)
                         },
                         width: 100
                     },

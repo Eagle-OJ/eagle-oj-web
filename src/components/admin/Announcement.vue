@@ -43,7 +43,7 @@ export default {
                 {
                     title: '发布日期',
                     render: (h, params) => {
-                        return this.getTime(params.row.create_time)
+                        return h('div', {}, this.getTime(params.row.create_time))
                     }
                 },
                 {

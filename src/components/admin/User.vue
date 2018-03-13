@@ -72,13 +72,13 @@ export default {
                 {
                     title: '角色',
                     render: (h, params) => {
-                        return this.getRole(params.row.role)
+                        return h('div', {}, this.getRole(params.row.role))
                     }
                 },
                 {
                     title: '注册时间',
                     render: (h, params) => {
-                        return this.getTime(params.row.register_time)
+                        return h('div', {}, this.getTime(params.row.register_time))
                     }
                 },
                 {

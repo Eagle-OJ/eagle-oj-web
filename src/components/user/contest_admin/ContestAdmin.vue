@@ -56,20 +56,22 @@ export default {
                     title: '状态',
                     render: (h, params) => {
                         let status  = params.row.status
+                        let text = ''
                         if (status == 0) {
-                            return '编辑中'
+                            text = '编辑中'
                         } else if (status == 1) {
-                            return '启用中'
+                            text = '启用中'
                         } else {
-                            return '已关闭'
+                            text = '已关闭'
                         }
+                        return h('div', {}, text)
                     },
                     width: 100
                 },
                 {
                     title: '创建时间',
                     render: (h, params) => {
-                        return this.getTime(params.row.create_time)
+                        return h('div', {}, this.getTime(params.row.create_time))
                     }
                 },
                 {

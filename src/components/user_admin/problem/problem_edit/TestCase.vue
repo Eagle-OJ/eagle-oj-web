@@ -51,7 +51,7 @@ export default {
                 {
                     title: '编号',
                     render: (h, params) => {
-                        return params.index+1
+                        return h('div', {}, params.index+1)
                     },
                     width: '80'
                 },

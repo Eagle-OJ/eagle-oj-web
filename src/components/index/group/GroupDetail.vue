@@ -10,7 +10,7 @@
         </div>
         <div id="container">
             <Card dis-hover class="body">
-                <Menu mode="horizontal" :active-name="getActive" @on-select="(name) => {this.$router.push('?action='+name)}">
+                <Menu v-if="isIn" mode="horizontal" :active-name="getActive" @on-select="(name) => {this.$router.push('?action='+name)}">
                     <MenuItem name="contests">
                         <Icon type="ios-paper"></Icon>
                         比赛查看
@@ -24,7 +24,7 @@
                         设置
                     </MenuItem>
                 </Menu>
-                <component :is="getActive" :gid="getGid" :uid="getUid"></component>
+                <component :is="getActive" :gid="getGid" :uid="getUid" :group="group" :user="user" @refreshUser="getUserInfo"></component>
             </Card>
         </div>
     </div>
@@ -34,20 +34,39 @@
 import Util from '@/util'
 import Contests from './child/Contests'
 import Members from './child/Members'
+import Join from './child/Join'
 import Settings from './child/Settings'
 export default {
     created() {
         this.getGroup()
+        this.getUserInfo()
     },
     data() {
         return {
             group: {},
+            user: {},
+            isIn: false,
         }
     },
     methods: {
         getGroup() {
             this.$http.get('/group/'+this.getGid+'/info').then(res => {
                 this.group = res.data
+            })
+        },
+        getUserInfo() {
+            if(this.getUid == undefined) {
+                return
+            }
+            this.$http.get('/group/'+this.getGid+'/user/'+this.getUid).then(res => {
+                if(! res.data) {
+                    this.$router.push('?action=join')
+                } else {
+                    this.isIn = true
+                    this.user = res.data
+                }
+            }).catch(res => {
+                this.$router.push('/groups')
             })
         },
         getTime(time) {
@@ -57,6 +76,7 @@ export default {
     components: {
         Contests,
         Members,
+        Join,
         Settings,
     },
     computed: {
@@ -74,6 +94,11 @@ export default {
                 return action 
         },
     },
+    watch: {
+        getUid: () => {
+            this.getUserInfo()
+        }
+    }
 }
 </script>
 

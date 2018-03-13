@@ -37,7 +37,7 @@ export default {
                 {
                     title: '排名',
                     render: (h, params) => {
-                        return params.index+1
+                        return h('div', {}, params.index+1)
                     }
                 },
                 {
@@ -69,7 +69,7 @@ export default {
                 {
                     title: '耗时',
                     render: (h, params) => {
-                        return this.getParsedTime(params.row.total_used_time)
+                        return h('div', {}, this.getParsedTime(params.row.total_used_time))
                     }
                 },
             ],
@@ -90,13 +90,13 @@ export default {
                     this.columns.push({
                         title: '罚时',
                         render: (h, params) => {
-                            return this.getParsedTime(params.row.penalty_time)
+                            return h('div', {}, this.getParsedTime(params.row.penalty_time))
                         }
                     })
                     this.columns.push({
                         title: '总耗时',
                         render: (h, params) => {
-                            return this.getParsedTime(params.row.penalty_time + params.row.total_used_time)
+                            return h('div', {}, this.getParsedTime(params.row.penalty_time + params.row.total_used_time))
                         }  
                     })  
                 }

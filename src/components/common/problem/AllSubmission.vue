@@ -37,19 +37,19 @@ export default {
                 {
                     title: '编程语言',
                     render: (h, params) => {
-                        return this.$getLang(params.row.lang)
+                        return h('div', {}, this.$getLang(params.row.lang))
                     }
                 },
                 {
                     title: '时间',
                     render: (h, params) => {
-                        return params.row.time+' S'
+                        return h('div', {}, params.row.time+' S')
                     }
                 },
                 {
                     title: '内存',
                     render: (h, params) => {
-                        return params.row.memory+ ' MB'
+                        return h('div', {}, params.row.memory+ ' MB')
                     }
                 },
                 {
@@ -65,7 +65,7 @@ export default {
                 {
                     title: '提交时间',
                     render: (h, params) => {
-                        return this.parseTime(params.row.submit_time)
+                        return h('div', {}, this.parseTime(params.row.submit_time))
                     },
                 },
                 {

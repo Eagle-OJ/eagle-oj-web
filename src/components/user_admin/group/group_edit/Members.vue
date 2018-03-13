@@ -66,7 +66,7 @@ export default {
                 {
                     title: '加入时间',
                     render: (h, params) => {
-                        return this.getTime(params.row.join_time)
+                        return h('div', {}, this.getTime(params.row.join_time))
                     }
                 },
                 {

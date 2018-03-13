@@ -19,7 +19,7 @@
                     <Page :total="total" :page-size="pageSize" @on-change="getMembers" style="text-align: center; margin-top: 10px" simple></Page>
                 </ul>
             </Col>  
-            <Col span="16" class="user" v-if="user">
+            <Col span="16" class="user" v-if="user.avatar">
                 <div class="info">
                     <img class="avatar" :src="$getAvatar(user.avatar)"/>
                     <div class="name">
@@ -82,17 +82,16 @@
 import Util from '@/util'
 import CountTo from '@/components/common/CountTo'
 export default {
-    props: ['gid', 'uid'],
+    props: ['gid', 'uid', 'user'],
     created() {
         this.getMembers(1)
-        this.getUserInfo()
     },
     data() {
         return {
             data: [],
+            groupName: this.user.group_name,
             pageSize: 10,
             total: 0,
-            user: null,
             mainStyle: {
                 fontSize: '15px'
             },
@@ -115,40 +114,33 @@ export default {
                 this.total = res.data.total
             })
         },
-        getUserInfo() {
-            this.$http.get('/group/'+this.gid+'/user/'+this.uid).then(res => {
-                this.user = res.data
-            }).catch(res => {
-                this.$router.push('/groups')
-            })
-        },
         changeGroupName() {
             this.$Modal.confirm({
                 render: (h) => {
                     return h('Input', {
                         props: {
-                            value: this.user.group_name,
+                            value: this.groupName,
                             autofocus: true,
                             maxlength: 20,
                             placeholder: '请输入组内名称'
                         },
                         on: {
                             input: (val) => {
-                                this.user.group_name = val;
+                                this.groupName = val;
                             }
                         }
                     })
                 },
                 onOk: () => {
-                    if(this.user.group_name.length ==0 || this.user.group_name.length >20) {
+                    if(this.groupName.length ==0 || this.groupName.length >20) {
                         this.$Message.warning('组内姓名不符合要求')
                         return
                     }
                     this.$http.put('/group/'+this.gid+'/user/'+this.uid, {
-                        group_name: this.user.group_name
+                        group_name: this.groupName
                     }).then(res => {
                         this.$Message.success(res.message)
-                        this.getUserInfo()
+                        this.$emit('refreshUser')
                         this.getMembers(1)
                     })
                 }
