@@ -19,7 +19,7 @@
                     <Page :total="total" :page-size="pageSize" @on-change="getMembers" style="text-align: center; margin-top: 10px" simple></Page>
                 </ul>
             </Col>  
-            <Col span="16" class="user" v-if="user.avatar">
+            <Col span="16" class="user" v-if="user.group_name">
                 <div class="info">
                     <img class="avatar" :src="$getAvatar(user.avatar)"/>
                     <div class="name">
