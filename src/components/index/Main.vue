@@ -1,7 +1,9 @@
 <template>
 	<div>
 		<v-nav></v-nav>
-		<router-view/>
+        <transition enter-active-class="animated fadeIn">
+            <router-view/>
+        </transition>
 	</div>
 </template>
 

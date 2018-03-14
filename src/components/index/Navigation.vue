@@ -98,16 +98,14 @@ export default {
                     display block
                     padding 0 15px
                     height 70px
-                    color #ed3f14
-                    font-family "Helvetica"
+                    color #1c2438
                     font-size 16px
                     font-weight 600
                     margin-left 15px
                     &:hover
-                        color white
-                        background #ed3f14
+                        color #5cadff
                     &.active
-                        border-bottom  solid #ed3f14 4px
+                        color #2b85e4
         .account
             float right 
             height 70px

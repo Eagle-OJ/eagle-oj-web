@@ -1,48 +1,67 @@
 <template>
     <div id="container" class="dashboard">
-        <Row>
+        <Card shadow class="nav" :padding="0">
+            <ul>
+                <li @click="randomDoProblem()">
+                    <Icon type="shuffle"></Icon>
+                    随机做题
+                </li>
+                <li>
+                    <Icon type="help-circled"></Icon>
+                    帮助
+                </li>
+            </ul>
+        </Card>
+        <Row :gutter="16">
             <Col span="16" class="left">
-                <div class="none-message" v-if="message.data.length==0">暂无消息</div>
-                <template v-for="item in message.data">
-                    <div class="message" v-if="item.type == 0">
-                        <Row>
-                            <Col span="3" class="img">
-                                <Icon type="ios-email" color="#4b3a76"></Icon>
-                            </Col>
-                            <Col span="21" class="content">
-                                <div class="time">{{getTime(item.create_time)}}</div>
-                                <div class="detail">
-                                    <span v-html="item.content"></span>
-                                </div>
-                            </Col>
-                        </Row>
-                    </div>
+                <Card class="each" shadow v-if="message.data.length==0">
+                    <div class="none-message">暂无消息</div>
+                </Card>
+                <template v-else>
+                    <Card class="each" shadow v-for="item in message.data" :key="item.mid">
+                        <div class="message" v-if="item.type == 0">
+                            <Row>
+                                <Col span="2" class="img">
+                                    <Icon type="ios-email" color="#4b3a76"></Icon>
+                                </Col>
+                                <Col span="22" class="content">
+                                    <div class="time">{{getTime(item.create_time)}}</div>
+                                    <div class="detail">
+                                        <span v-html="item.content"></span>
+                                    </div>
+                                </Col>
+                            </Row>
+                        </div>
 
-                    <div class="contest" v-if="item.type == 1">
-                        <Row>
-                            <Col span="3" class="img">
-                                <Icon type="trophy" color="#fea116"></Icon>
-                            </Col>
-                            <Col span="21" class="content">
-                                <div class="time">{{getTime(item.create_time)}}</div>
-                                <div class="detail">
-                                    一起来看看<router-link :to="{path: '/contest/'+item.json_content.cid}">{{item.json_content.name}}</router-link>的<router-link :to="{path: '/contest/'+item.json_content.cid+'/leaderboard'}">排行榜</router-link>
-                                </div>
-                                <div class="description">
-                                    前三名：
-                                    <template v-if="item.json_content.rank[0]">
-                                        <Icon type="ribbon-a" color="#c37e00"></Icon><router-link :to="{path: '/profile/'+item.json_content.rank[0].uid}">{{item.json_content.rank[0].nickname}}</router-link>
-                                    </template>
-                                    <template v-if="item.json_content.rank[1]">
-                                        <Icon type="ribbon-a" color="#a1a3a6"></Icon><router-link :to="{path: '/profile/'+item.json_content.rank[1].uid}">{{item.json_content.rank[1].nickname}}</router-link>
-                                    </template>
-                                    <template v-if="item.json_content.rank[2]">
-                                        <Icon type="ribbon-a" color="#78331e"></Icon><router-link :to="{path: '/profile/'+item.json_content.rank[2].uid}">{{item.json_content.rank[2].nickname}}</router-link>
-                                    </template>
-                                </div>
-                            </Col>
-                        </Row>
-                    </div>
+                        <div class="contest" v-if="item.type == 1">
+                            <Row>
+                                <Col span="2" class="img">
+                                    <Icon type="trophy" color="#fea116"></Icon>
+                                </Col>
+                                <Col span="22" class="content">
+                                    <div class="time">{{getTime(item.create_time)}}</div>
+                                    <div class="detail">
+                                        一起来看看<router-link :to="{path: '/contest/'+item.json_content.cid}">{{item.json_content.name}}</router-link>的<router-link :to="{path: '/contest/'+item.json_content.cid+'/leaderboard'}">排行榜</router-link>
+                                    </div>
+                                    <div class="description">
+                                        前三名：
+                                        <template v-if="item.json_content.rank[0]">
+                                            <Icon type="ribbon-a" color="#c37e00"></Icon><router-link :to="{path: '/profile/'+item.json_content.rank[0].uid}">{{item.json_content.rank[0].nickname}}</router-link>
+                                        </template>
+                                        <template v-if="item.json_content.rank[1]">
+                                            <Icon type="ribbon-a" color="#a1a3a6"></Icon><router-link :to="{path: '/profile/'+item.json_content.rank[1].uid}">{{item.json_content.rank[1].nickname}}</router-link>
+                                        </template>
+                                        <template v-if="item.json_content.rank[2]">
+                                            <Icon type="ribbon-a" color="#78331e"></Icon><router-link :to="{path: '/profile/'+item.json_content.rank[2].uid}">{{item.json_content.rank[2].nickname}}</router-link>
+                                        </template>
+                                    </div>
+                                </Col>
+                            </Row>
+                        </div>
+                    </Card>
+                    <Card shadow>
+                        <Page style="text-align:center" :total="message.total" :page-size="message.pageSize" @on-change="getMessage" show-elevator></Page>
+                    </Card>
                 </template>
                 <div class="sloved" v-if="false">
                     <Row>
@@ -82,13 +101,10 @@
                             </div>
                         </Col>
                     </Row>
-                </div>
-                <div class="pager">
-                    <Page :current="1" :total="message.total" :page-size="message.pageSize" @on-change="getMessage" simple></Page>
-                </div>
+                </div> 
             </Col>
             <Col span="8" class="right">
-                <div class="user" v-if="$store.state.userInfo.isLogin">
+                <Card shadow class="user" v-if="isLogin">
                     <Avatar class="avatar" shape="square" size="large" :src="$getAvatar($store.state.userInfo.avatar)" />
                     <div class="detail">
                         <h3><router-link :to="{path: '/profile/'+$store.state.userInfo.uid}">{{$store.state.userInfo.nickname}}</router-link></h3>
@@ -98,24 +114,24 @@
                             <span>AC {{util.getACRate($store.state.userInfo.ac_times,$store.state.userInfo.submit_times)}}</span>
                         </p>
                     </div>
-                </div>
-                <div class="random">
-                    <Button icon="shuffle" long type="ghost" @click="randomDoProblem()">随机做题</Button>
-                </div>
-                <div class="announcement">
-                    <div class="header"><Icon type="information-circled"></Icon>公告</div>
+                </Card>
+                <Card shadow class="announcements">
+                    <p slot="title">
+                        <Icon type="speakerphone"></Icon>
+                        公告
+                    </p>
                     <ul>
-                        <li style="text-align: center" v-if="announcement.list.length == 0">暂无公告</li>
-                        <li v-for="(item, index) in announcement.list" @click="showAnnouncement(index)">
-                            <span>{{index+1}}.</span>{{item.title}}
+                        <li style="text-align: center" v-if="announcements.list.length == 0">暂无公告</li>
+                        <li class="announcement" v-for="(item, index) in announcements.list" @click="showAnnouncement(index)">
+                            {{item.title}}
                         </li>
                     </ul>
-                </div>
+                </Card>
             </Col>
         </Row>
-        <Modal v-model="announcement.switch" :title="announcement.title" class="announcement-detail">
-            <p class="time">发布时间：{{getTime(announcement.time)}}</p>
-            <p class="content">{{announcement.content}}</p>
+        <Modal v-model="announcements.switch" :title="announcements.title" class="announcement-detail">
+            <p class="time">发布时间：{{getTime(announcements.time)}}</p>
+            <p class="content">{{announcements.content}}</p>
             <div slot="footer">
                 <Button type="success" size="large" long @click="closeAnnouncement">我知道了</Button>
             </div>
@@ -126,13 +142,13 @@
 <script>
 import Util from '@/util'
 export default {
-    created() {
+    mounted() {
         this.getMessage(1)
-        this.getAnnouncement()
+        this.getAnnouncements()
     },
     data() {
         return {
-            announcement: {
+            announcements: {
                 list: [],
                 title: '',
                 content: '',
@@ -163,17 +179,17 @@ export default {
             return Util.getDistanceTime(time)
         },
         showAnnouncement(index) {
-            this.announcement.switch = true
-            this.announcement.title = this.announcement.list[index].title
-            this.announcement.content = this.announcement.list[index].content
-            this.announcement.time = this.announcement.list[index].create_time
+            this.announcements.switch = true
+            this.announcements.title = this.announcements.list[index].title
+            this.announcements.content = this.announcements.list[index].content
+            this.announcements.time = this.announcements.list[index].create_time
         },
         closeAnnouncement() {
-            this.announcement.switch = false
+            this.announcements.switch = false
         },
-        getAnnouncement() {
+        getAnnouncements() {
             this.$http.get('/announcements').then(res => {
-                this.announcement.list = res.data
+                this.announcements.list = res.data
             })
         },
         randomDoProblem() {
@@ -181,6 +197,11 @@ export default {
                 this.$Message.success('祝你好运')
                 this.$router.push('/problem/'+res.data)
             })
+        }
+    },
+    computed: {
+        isLogin() {
+            return this.$store.state.userInfo.isLogin
         }
     }
 }
