@@ -27,6 +27,13 @@ const router = new Router({
                     },
                 },
                 {
+                    path: '/help',
+                    component: () => import('@/components/index/Help'),
+                    meta: {
+                        title: '帮助中心'
+                    }
+                },
+                {
                     path: '/dashboard',
                     component: () => import('@/components/index/dashboard/Dashboard'),
                     meta: {

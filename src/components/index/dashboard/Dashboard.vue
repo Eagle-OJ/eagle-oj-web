@@ -6,7 +6,7 @@
                     <Icon type="shuffle"></Icon>
                     随机做题
                 </li>
-                <li>
+                <li @click="() => {this.$router.push('/help')}">
                     <Icon type="help-circled"></Icon>
                     帮助
                 </li>
