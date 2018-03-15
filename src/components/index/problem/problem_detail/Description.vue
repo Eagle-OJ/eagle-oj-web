@@ -86,13 +86,8 @@ import Util from '@/util'
 import Cookie from 'js-cookie'
 export default {
     props: ['cid', 'pid', 'gid', 'data'],
-    created() {
-        this.langList = this.data.problem.lang
-    },
 	mounted() {
-	   	this.mountEditor()
-        this.mountQuill()
-        this.mountChart()
+	   	this.init()
 	},
 	data() {
 		return {
@@ -112,6 +107,12 @@ export default {
 		}
 	},
 	methods: {
+        init() {
+            this.langList = this.data.problem.lang
+            this.mountEditor()
+            this.mountQuill()
+            this.mountChart()
+        },
 		changeLang(value) {
 			let editor = this.editor
 			switch(value) {
@@ -287,6 +288,11 @@ export default {
             } else {
                 return true
             }
+        }
+    },
+    watch: {
+        '$route': function() {
+            this.init()
         }
     }
 }

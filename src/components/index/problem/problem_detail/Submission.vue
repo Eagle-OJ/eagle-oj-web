@@ -3,7 +3,7 @@
         <p class="refresh">
             <Button @click="getSubmissions(1)" type="primary" icon="refresh" shape="circle">刷新</Button>
         </p>
-        <Table :loading="loading" :columns="column" :data="data"></Table>
+        <Table @on-sort-change="changeSort" :loading="loading" :columns="column" :data="data"></Table>
         <div style="text-align:center; margin-top:10px">
             <Page :current="1" :total="total" :page-size="pageSize" @on-change="getSubmissions" simple></Page>
         </div>
@@ -25,7 +25,38 @@ export default {
                     title: '编程语言',
                     render: (h, params) => {
                         return h('div', {}, this.$getLang(params.row.lang))
-                    }
+                    },
+                    filters: [
+                        {
+                            label: this.$getLang('JAVA8'),
+                            value: 'JAVA8'
+                        },
+                        {
+                            label: this.$getLang('CPP'),
+                            value: 'CPP'
+                        },
+                        {
+                            label: this.$getLang('C'),
+                            value: 'C'
+                        },
+                        {
+                            label: this.$getLang('PYTHON27'),
+                            value: 'PYTHON27'
+                        },
+                        {
+                            label: this.$getLang('PYTHON35'),
+                            value: 'PYTHON35'
+                        }
+                    ],
+                    filterMultiple: false,
+                    filterRemote: (a) => {
+                        if (a.length > 0) {
+                            this.query.lang = a[0]
+                        } else {
+                            this.query.lang = null
+                        }
+                        
+                    },
                 },
                 {
                     title: '时间',
@@ -47,13 +78,45 @@ export default {
                                 result: params.row.status
                             }
                         })
-                    }
+                    },
+                    filters: [
+                        {
+                            label: this.convertProblemStatus('AC'),
+                            value: 'AC'
+                        },
+                        {
+                            label: this.convertProblemStatus('WA'),
+                            value: 'WA'
+                        },
+                        {
+                            label: this.convertProblemStatus('RTE'),
+                            value: 'RTE'
+                        },
+                        {
+                            label: this.convertProblemStatus('TLE'),
+                            value: 'TLE'
+                        },
+                        {
+                            label: this.convertProblemStatus('CE'),
+                            value: 'CE'
+                        }
+                    ],
+                    filterMultiple: false,
+                    filterRemote: (a) => {
+                        if (a.length > 0) {
+                            this.query.result = a[0]
+                        } else {
+                            this.query.result = null
+                        }
+                    },
                 },
                 {
                     title: '提交时间',
+                    key: 'submit_time',
                     render: (h, params) => {
                         return h('div', {}, this.parseTime(params.row.submit_time))
                     },
+                    sortable: 'custom'
                 },
                 {
                     title: '操作',
@@ -76,19 +139,23 @@ export default {
             pageSize: 5,
             total: 0,
             loading: false,
+            query: {
+                lang: null,
+                result: null,
+                sort: null
+            }
         }
     },
     methods: {
         getSubmissions(page) {
-            if (! this.$store.state.userInfo.isLogin) {
-                this.$Message.warning('请先登入')
-                return
-            }
             this.loading = true
             this.$http.get('/submissions', {
                 params: {
                     cid: this.cid,
                     pid: this.pid,
+                    lang: this.query.lang,
+                    result: this.query.result,
+                    sort: this.query.sort,
                     page: page,
                     page_size: this.pageSize
                 }
@@ -109,11 +176,23 @@ export default {
             } else {
                 this.$Message.warning('此代码没有储存，无法查看')
             }
+        },
+        changeSort(sort) {
+            this.query.sort = sort.key+'.'+sort.order
+        },
+        convertProblemStatus(text) {
+            return Util.convertProblemStatus(text)
         }
     },
     watch: {
-        '$store.state.userInfo.isLogin': function() {
+        '$route': function() {
             this.getSubmissions(1)
+        },
+        query: {
+            handler: function() {
+                this.getSubmissions(1)
+            },
+            deep: true
         }
     }
 }

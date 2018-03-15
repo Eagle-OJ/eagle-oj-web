@@ -1,13 +1,16 @@
 <template>
     <div class="all-submissions">
+        <div class="tool">
+            <Input v-model="queryNickname" style="width: 200px; margin-right: 10px" placeholder="搜索作者" @keyup.enter.native="getData(1)"></Input><Button type="ghost" @click="clearNicknameQuery">清除</Button>
+            <Button style="float: right" @click="getData(1)" type="primary" icon="refresh" shape="circle">刷新</Button>
+        </div>
         <p class="refresh">
-            <Button @click="getData(1)" type="primary" icon="refresh" shape="circle">刷新</Button>
         </p>
         <div class="no" v-if="data == null">
             只有你解出这道题或者是管理才能查看他人解答
         </div>
         <div class="yes" v-else>
-            <Table :loading="loading" :data="data" :columns="columns"></Table>
+            <Table @on-sort-change="changeSort" :loading="loading" :data="data" :columns="columns"></Table>
             <Page :total="total" :page-size="pageSize" @on-change="getData" simple style="text-align: center; margin-top: 10px"></Page>
         </div>
     </div>
@@ -18,7 +21,7 @@ import ProblemResult from '@/components/common/ProblemResult'
 import Util from '@/util'
 export default {
     props: ['cid', 'pid'],
-    created() {
+    mounted() {
         this.getData(1)
     },
     data() {
@@ -38,7 +41,38 @@ export default {
                     title: '编程语言',
                     render: (h, params) => {
                         return h('div', {}, this.$getLang(params.row.lang))
-                    }
+                    },
+                    filters: [
+                        {
+                            label: this.$getLang('JAVA8'),
+                            value: 'JAVA8'
+                        },
+                        {
+                            label: this.$getLang('CPP'),
+                            value: 'CPP'
+                        },
+                        {
+                            label: this.$getLang('C'),
+                            value: 'C'
+                        },
+                        {
+                            label: this.$getLang('PYTHON27'),
+                            value: 'PYTHON27'
+                        },
+                        {
+                            label: this.$getLang('PYTHON35'),
+                            value: 'PYTHON35'
+                        }
+                    ],
+                    filterMultiple: false,
+                    filterRemote: (a) => {
+                        if (a.length > 0) {
+                            this.query.lang = a[0]
+                        } else {
+                            this.query.lang = null
+                        }
+                        
+                    },
                 },
                 {
                     title: '时间',
@@ -60,13 +94,45 @@ export default {
                                 result: params.row.status
                             }
                         })
-                    }
+                    },
+                    filters: [
+                        {
+                            label: this.convertProblemStatus('AC'),
+                            value: 'AC'
+                        },
+                        {
+                            label: this.convertProblemStatus('WA'),
+                            value: 'WA'
+                        },
+                        {
+                            label: this.convertProblemStatus('RTE'),
+                            value: 'RTE'
+                        },
+                        {
+                            label: this.convertProblemStatus('TLE'),
+                            value: 'TLE'
+                        },
+                        {
+                            label: this.convertProblemStatus('CE'),
+                            value: 'CE'
+                        }
+                    ],
+                    filterMultiple: false,
+                    filterRemote: (a) => {
+                        if (a.length > 0) {
+                            this.query.result = a[0]
+                        } else {
+                            this.query.result = null
+                        }
+                    },
                 },
                 {
                     title: '提交时间',
+                    key: 'submit_time',
                     render: (h, params) => {
                         return h('div', {}, this.parseTime(params.row.submit_time))
                     },
+                    sortable: 'custom'
                 },
                 {
                     title: '操作',
@@ -88,7 +154,13 @@ export default {
             data: [],
             pageSize: 5,
             total: 0,
-            loading: false
+            loading: false,
+            query: {
+                lang: null,
+                result: null,
+                sort: null
+            },
+            queryNickname: ''
         }
     },
     methods: {
@@ -98,6 +170,10 @@ export default {
                 params: {
                     pid: this.pid,
                     cid: this.cid,
+                    lang: this.query.lang,
+                    result: this.query.result,
+                    sort: this.query.sort,
+                    nickname: this.queryNickname.length==0? null: this.queryNickname,
                     page: page,
                     page_size: this.pageSize
                 }
@@ -113,6 +189,10 @@ export default {
                 this.loading = false
             })
         },
+        clearNicknameQuery() {
+            this.queryNickname = ''
+            this.getData(1)
+        },
         parseTime(time) {
             return Util.getDistanceTime(time)
         },
@@ -122,6 +202,23 @@ export default {
             } else {
                 this.$Message.warning('此代码没有储存，无法查看')
             }
+        },
+        changeSort(sort) {
+            this.query.sort = sort.key+'.'+sort.order
+        },
+        convertProblemStatus(text) {
+            return Util.convertProblemStatus(text)
+        }
+    },
+    watch: {
+        '$route': function() {
+            this.getData(1)
+        },
+        query: {
+            handler: function() {
+                this.getData(1)
+            },
+            deep: true
         }
     }
 }

@@ -1,6 +1,5 @@
 <template>
     <div class="problem">
-        <Spin size="large" fix v-if="dataLoading"></Spin>
         <div class="header" v-if="data">
             <h1>{{data.problem.title}}</h1>
             <Difficult :difficult="data.problem.difficult"></Difficult>
@@ -16,27 +15,30 @@
         </div>
         <div class="tags">
             <span>知识点：</span>
-            <router-link :to="{path: '/problems?difficult=-1&tag='+item.name}" v-for="item in tags" :key="item.tid">{{item.name}}</router-link>
+            <router-link :to="{path: '/problems?tag='+item.name}" v-for="item in tags" :key="item.tid">{{item.name}}</router-link>
             </div>
-        <div class="nav">
-            <Menu mode="horizontal" :active-name="getActive" @on-select="goTo">
-                <MenuItem name="description">
-                    <Icon type="ios-paper"></Icon>
-                    题目
-                </MenuItem>
-                <MenuItem name="submission" v-if="isLogin">
-                    <Icon type="code"></Icon>
-                    我的提交
-                </MenuItem>
-                <MenuItem name="all-submission" v-if="isLogin">
-                    <Icon type="code-working"></Icon>
-                    所有提交
-                </MenuItem>
-            </Menu>
-        </div>
-        <div class="content" v-if="data">
-            <component :is="getActive" :cid="getCid" :pid="getPid" :gid="getGid" :data="data"></component>
-        </div>
+        <Card shadow>
+            <Spin size="large" fix v-if="dataLoading"></Spin>
+            <div class="nav">
+                <Menu mode="horizontal" :active-name="getActive" @on-select="goTo">
+                    <MenuItem name="description">
+                        <Icon type="ios-paper"></Icon>
+                        题目
+                    </MenuItem>
+                    <MenuItem name="submission" v-if="isLogin">
+                        <Icon type="code"></Icon>
+                        我的提交
+                    </MenuItem>
+                    <MenuItem name="all-submission" v-if="isLogin">
+                        <Icon type="code-working"></Icon>
+                        所有提交
+                    </MenuItem>
+                </Menu>
+            </div>
+            <div class="content" v-if="data">
+                <component :is="getActive" :cid="getCid" :pid="getPid" :gid="getGid" :data="data"></component>
+            </div>
+        </Card>
     </div>
 </template>
 
@@ -46,7 +48,7 @@ import Submission from './Submission.vue'
 import AllSubmission from './AllSubmission.vue'
 import Difficult from '@/components/common/Difficult'
 export default {
-    created() {
+    mounted() {
         this.getData()
     },
     data() {
@@ -113,7 +115,7 @@ export default {
         }
     },
     watch: {
-        'getPid': function() {
+        '$route': function() {
             this.getData()
         }
     },

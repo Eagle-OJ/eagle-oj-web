@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import Problem from '@/components/common/problem/Problem'
+import Problem from './problem_detail/Problem'
 export default {
     components: {
         'v-problem': Problem

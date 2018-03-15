@@ -1,6 +1,6 @@
 <template>
     <div id="container">
-        <Card class="my">
+        <Card class="my" shadow>
             <Spin fix v-if="my.loading"></Spin>
             <p slot="title">已加入的比赛</p>
             <ul>
@@ -26,7 +26,7 @@
             </ul>
             <Page v-if="my.data.length != 0" :total="my.total" @on-change="getJoinedContests" simple style="text-align: center; margin-top: 10px"></Page>
         </Card>
-        <Card class="other">
+        <Card class="other" shadow>
             <Spin fix v-if="other.loading"></Spin>
             <p slot="title">比赛列表</p>
             <ul>
