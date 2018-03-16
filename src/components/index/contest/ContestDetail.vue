@@ -18,29 +18,26 @@
                 <Button v-else-if="getStatus() == 'entering'" @click="goContest()">参加比赛</Button>
             </div>
         </div>
-        <div class="countdown">
+        <Card shadow class="countdown">
             <count-down v-if="getStatus() == 'pending'" :deadline="getTime(data.start_time)" end_text="开始"></count-down>
             <count-down v-else :deadline="getTime(data.end_time)" end_text="结束"></count-down>
-        </div>
-        <div class="description">
-            <h2 class="des-title">比赛说明</h2>
-            <div class="des-body">{{data.description}}</div>
-        </div>
-        <div class="mode">
-            <div class="mode-title">模式说明<div style="width: 70%;border: 2px gray solid;margin: 0 auto"></div></div>
-            <div class="contest-mode">
-                本次比赛：
-                <ContestType :type="data.type" :total_time="data.total_time"></ContestType>
+        </Card>
+        <Card shadow class="info">
+            <div class="description">
+                <h3>比赛说明</h3>
+                <p>{{data.description}}</p>
             </div>
-            <div class="mode-des">
-                <p><b>OI模式</b> 按照测试点得分来计算</p>
-                <p><b>ACM模式</b> 如果题目的一个测试点错误，则判整体都是错误</p>
-                <p><b>不限时</b> 开始比赛后没有时间限制</p>
-                <p><b>限时</b> 在选手加入比赛为计时开始时间，比赛时间到即比赛结束</p>
+            <div class="mode">
+                <h3>比赛模式
+                    <router-link to="/helper#contest-mode">
+                        <Icon type="help-circled"></Icon>
+                    </router-link>
+                </h3>
+                <p>
+                    <ContestType :type="data.type" :total_time="data.total_time"></ContestType>
+                </p>
             </div>
-        </div>
-        <div></div>
-        <div style="clear: both"></div>
+        </Card>
     </div>
 
 </template>

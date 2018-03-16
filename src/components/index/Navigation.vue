@@ -14,13 +14,16 @@
 					<router-link to="/problems" active-class="active">题目</router-link>
 				</li>
                 <li>
-					<router-link to="/contest" active-class="active" v-if="isLogin">比赛</router-link>
+					<router-link to="/contests" active-class="active" v-if="isLogin">比赛</router-link>
 				</li>
                 <li>
                     <router-link to="/groups" active-class="active" v-if="isLogin">小组</router-link>
                 </li>
 				<li>
 					<router-link to="/leaderboard" active-class="active">排行榜</router-link>
+				</li>
+                <li>
+					<router-link to="/helper" active-class="active">帮助</router-link>
 				</li>
 			</ul>
 			<div class="account" v-if="! isLogin">

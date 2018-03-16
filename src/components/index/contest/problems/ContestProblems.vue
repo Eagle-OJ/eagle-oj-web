@@ -1,48 +1,60 @@
 <template>
 	<div id="container">
         <Spin fix v-if="loading"></Spin>
-        <h1 class="title">{{contest.name}}</h1>
+        <Card class="title" shadow>{{contest.name}}</Card>
         <Row :gutter="20">
             <Col span="16" class="left">
-                <table cellspacing="0" cellpadding="0" class="problem-table">
-                    <thead class="problem-head">
-                        <tr>
-                            <td>状态</td>
-                            <td>名称</td>
-                            <td>难度</td>
-                            <td>提交</td>
-                            <td>AC率</td>
-                            <td v-if="contest.type==0 || contest==1">分值</td>
-                        </tr>
-                    </thead>
-                    <tbody class="problem-list">
-                        <tr v-for="item in problems">
-                            <td>
-                                <Icon v-if="item.status=='AC'" type="checkmark" style="color: #19be6b"></Icon>
-                                <Icon v-else-if="item.status!=undefined" type="minus-round" style="color: #ff9900"></Icon>
-                            </td>
-                            <td>
-                                <router-link :to="{ path:'/contest/'+getCid+'/problem/'+item.pid }">{{item.title}}</router-link>
-                            </td>
-                            <td>
-                                <difficult :difficult="item.difficult"></difficult>
-                            </td>
-                            <td>{{item.submit_times}}</td>
-                            <td>{{util.getACRate(item.ac_times, item.submit_times)}}</td>
-                            <td v-if="contest.type==0 || contest==1">{{item.score}}</td>
-                        </tr>
-                    </tbody>
-                </table>
+                <Card :padding="0" shadow>
+                    <table cellspacing="0" cellpadding="0" class="problem-table">
+                        <thead class="problem-head">
+                            <tr>
+                                <td>状态</td>
+                                <td>名称</td>
+                                <td>难度</td>
+                                <td>提交</td>
+                                <td>AC率</td>
+                                <td v-if="contest.type==0 || contest==1">分值</td>
+                            </tr>
+                        </thead>
+                        <tbody class="problem-list">
+                            <tr v-for="item in problems">
+                                <td>
+                                    <Icon v-if="item.status=='AC'" type="checkmark" style="color: #19be6b"></Icon>
+                                    <Icon v-else-if="item.status!=undefined" type="minus-round" style="color: #ff9900"></Icon>
+                                </td>
+                                <td>
+                                    <router-link :to="{ path:'/contest/'+getCid+'/problem/'+item.pid }">{{item.title}}</router-link>
+                                </td>
+                                <td>
+                                    <difficult :difficult="item.difficult"></difficult>
+                                </td>
+                                <td>{{item.submit_times}}</td>
+                                <td>{{util.getACRate(item.ac_times, item.submit_times)}}</td>
+                                <td v-if="contest.type==0 || contest==1">{{item.score}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </Card>
             </Col>
             <Col span="8" class="right">
-                <div class="each">
+                <Card shadow class="each">
                     <p class="info" >
-                        <Icon type="compass" style="color: dodgerblue"></Icon>
+                        <Icon type="grid"></Icon>
+                        比赛详情
+                    </p>
+                    <div>
+                        <Tag color="blue">{{util.getContestType(contest.type)}}</Tag>
+                        <Tag color="green">{{util.getContestTimeType(contest.type, contest.total_time)}}</Tag>
+                    </div>
+                </Card>
+                <Card shadow class="each">
+                    <p class="info" >
+                        <Icon type="clock" style="color: dodgerblue"></Icon>
                         剩余时间
                     </p>
                     <count-down class="countdown" :deadline="getCountDown" end_text=""></count-down>
-                </div>
-                <div class="each">
+                </Card>
+                <Card shadow class="each">
                     <p class="info" >
                         <Icon type="compass" style="color: dodgerblue"></Icon>
                         数据
@@ -73,8 +85,8 @@
                             <span class="text">CE</span>
                         </div>
                     </div>
-                </div>
-                <div class="each">
+                </Card>
+                <Card shadow class="each">
                     <p class="info" >
                         <Icon type="trophy" style="color: #ff9900"></Icon>
                         当前排名
@@ -85,23 +97,14 @@
                         <span style="font-size: 60px" v-else>{{userMeta.rank}}/<span style="font-size: 35px">{{userMeta.total}}</span></span>
                         <span class="update-time">{{getTime(userMeta.create_time)}}更新</span>
                     </div>
-                </div>
-                <div class="each">
-                    <p class="info" >
-                        <Icon type="alert-circled" style="color: red"></Icon>
-                        比赛模式
-                    </p>
-                    <div>
-                        <Tag color="blue">{{util.getContestType(contest.type)}}</Tag>
-                        <Tag color="green">{{util.getContestTimeType(contest.type, contest.total_time)}}</Tag>
-                    </div>
-                </div>
+                </Card>
             </Col>
         </Row>
 	</div>
 </template>
 
 <script>
+// todo
 import CountDown from '@/components/index/contest/CountDown'
 import Difficult from '@/components/common/Difficult'
 import Util from '@/util'
@@ -169,5 +172,3 @@ export default {
 <style lang="stylus" scoped>
     @import 'ContestProblem.styl'
 </style>
-
-

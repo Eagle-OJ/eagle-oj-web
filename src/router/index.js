@@ -27,8 +27,8 @@ const router = new Router({
                     },
                 },
                 {
-                    path: '/help',
-                    component: () => import('@/components/index/Help'),
+                    path: '/helper',
+                    component: () => import('@/components/index/Helper'),
                     meta: {
                         title: '帮助中心'
                     }
@@ -64,8 +64,8 @@ const router = new Router({
                     }
                 },
                 {
-                    path: '/contest',
-                    component: () => import('@/components/index/contest/Contest'),
+                    path: '/contests',
+                    component: () => import('@/components/index/contest/Contests'),
                     meta: {
                         title: '比赛',
                         requireAuth: true
