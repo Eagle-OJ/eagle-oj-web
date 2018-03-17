@@ -7,7 +7,7 @@
             </router-link>
         </Menu>
 
-        <div class="layout-content">
+        <Card :padding="0" shadow class="layout-content">
             <Row>
                 <Col span="5">
                     <Menu width="auto" @on-select="goTo" :active-name="getActiveName">
@@ -67,7 +67,7 @@
                     </div>
                 </Col>
             </Row>
-        </div>
+        </Card>
     </div>
 </template>
 
@@ -109,7 +109,6 @@ export default {
 
 <style lang="stylus" scoped>
 .main
-    border: 1px solid #d7dde4;
     background: #f5f7f9;
     .top
         .layout-logo
@@ -132,8 +131,8 @@ export default {
             right: 20px
     .layout-content
         min-height: 200px
-        margin: 15px
         overflow: hidden
+        margin 15px
         background: #fff
         border-radius: 4px
         .layout-content-main

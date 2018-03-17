@@ -7,7 +7,11 @@
                     <v-left-nav></v-left-nav>
                 </Col>
                 <Col span="19">
-                    <router-view/>
+                    <Card shadow>
+                        <transition enter-active-class="animated fadeIn">
+                            <router-view/>
+                        </transition>
+                    </Card>
                 </Col>
             </Row>
         </div>

@@ -43,8 +43,7 @@
                         比赛详情
                     </p>
                     <div>
-                        <Tag color="blue">{{util.getContestType(contest.type)}}</Tag>
-                        <Tag color="green">{{util.getContestTimeType(contest.type, contest.total_time)}}</Tag>
+                        <ContestType :type="contest.type" :total_time="contest.total_time"></ContestType>
                     </div>
                 </Card>
                 <Card shadow class="each">
@@ -104,7 +103,7 @@
 </template>
 
 <script>
-// todo
+import ContestType from '@/components/common/ContestType'
 import CountDown from '@/components/index/contest/CountDown'
 import Difficult from '@/components/common/Difficult'
 import Util from '@/util'
@@ -164,7 +163,8 @@ export default {
     },
     components: {
         CountDown,
-        Difficult
+        Difficult,
+        ContestType
     }
 }
 </script>

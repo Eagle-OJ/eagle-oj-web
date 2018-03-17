@@ -30,7 +30,9 @@ export default {
                                 to: '/contest/'+params.row.cid
                             }
                         }, params.row.name)
-                    }
+                    },
+                    ellipsis: true,
+                    width: 200
                 },
                 {
                     title: '模式',
@@ -72,7 +74,8 @@ export default {
                     title: '创建时间',
                     render: (h, params) => {
                         return h('div', {}, this.getTime(params.row.create_time))
-                    }
+                    },
+                    width: 140
                 },
                 {
                     title: '操作',
@@ -90,7 +93,7 @@ export default {
                             }
                         }, '管理')
                     },
-                    width: 100
+                    width: 80
                 }
             ],
             data: [],

@@ -7,8 +7,12 @@ export default {
         if (type == 1 || type == 3) {
             let time = totalTime/1000
             let h = Math.floor(time/3600)
-            let m = Math.floor(time/60)
-            return '限时'+h+'时'+m+'分'
+            let m = Math.floor((time-h*3600)/60)
+            let text = '限时'+h+'小时'
+            if(m != 0) {
+                text = text +m+'分钟'
+            } 
+            return text
         } else {
             return '到比赛结束'
         }

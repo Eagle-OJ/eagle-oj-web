@@ -2,7 +2,9 @@
     <div>
         <v-nav></v-nav>
         <div id="container">
-            <router-view/>
+            <Card shadow>
+                <router-view/>
+            </Card>
         </div>
     </div>
 </template>
