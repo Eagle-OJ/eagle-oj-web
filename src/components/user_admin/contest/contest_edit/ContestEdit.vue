@@ -4,14 +4,18 @@
         <Menu mode="horizontal" :active-name="getActive" @on-select="goTo">
             <MenuItem name="description">
                 <Icon type="ios-paper"></Icon>
-                比赛管理
+                比赛编辑
             </MenuItem>
             <MenuItem name="problems">
                 <Icon type="document-text"></Icon>
                 题目管理
             </MenuItem>
+            <MenuItem name="competitors">
+                <Icon type="ios-people"></Icon>
+                参赛者管理
+            </MenuItem>
             <MenuItem name="setting">
-                <Icon type="document-text"></Icon>
+                <Icon type="settings"></Icon>
                 比赛设置
             </MenuItem>
             <MenuItem name="back">
@@ -22,7 +26,9 @@
 
         <div class="content" style="margin-top: 20px; position: relative">
             <Spin size="large" fix v-if="loading"></Spin>
-            <component :is="getActive" :cid="getCid" :contest="contest" v-if="! loading"></component>
+            <transition enter-active-class="animated fadeIn">
+                <component :is="getActive" :cid="getCid" :contest="contest" v-if="! loading"></component>
+            </transition>
         </div>
     </div>
 </template>
@@ -31,6 +37,7 @@
 import Description from './Description'
 import Problems from './Problems'
 import Setting from './Setting'
+import Competitors from './Competitors'
 export default {
     created() {
         this.getContest()
@@ -66,7 +73,8 @@ export default {
     components: {
         Description,
         Setting,
-        Problems
+        Problems,
+        Competitors
     },
     computed: {
         getActive() {

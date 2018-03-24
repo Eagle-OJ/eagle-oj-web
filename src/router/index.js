@@ -73,7 +73,7 @@ const router = new Router({
                 },
                 {
                     path: '/groups',
-                    component: () => import('@/components/index/group/Group'),
+                    component: () => import('@/components/index/group/Groups'),
                     meta: {
                         title: '小组',
                         requireAuth: true

@@ -7,10 +7,7 @@
         <div class="add" style="text-align:right">
             <Button type="primary" @click="showAddProblem()">添加题目</Button>
         </div>
-        <Card>
-            <p slot="title">已添加题目</p>
-            <Table :columns="columns" :data="data"></Table>
-        </Card>
+        <Table :columns="columns" :data="data"></Table>
         <Modal v-model="addProblemModal" title="添加题目" width="650" >
             <Input v-model="query" @on-enter="getCommonProblems(1)" placeholder="搜索关键词" style="width: 360px; margin-bottom: 10px"></Input>
             <Table :columns="problems.columns" :data="problems.data"></Table>
@@ -35,9 +32,10 @@
 
 <script>
 import Difficult from '@/components/common/Difficult'
+import Util from '@/util'
 export default {
     props: ['cid'],
-    created() {
+    mounted() {
         this.getProblems()
     },
     data() {
@@ -65,7 +63,7 @@ export default {
                     render: (h, params) => {
                         return h('router-link', {
                             props: {
-                                to: '/problem/'+params.row.pid
+                                to: '/contest/'+this.cid+'/problem/'+params.row.pid
                             },
                             attrs: {
                                 target: '_blank'
@@ -74,11 +72,34 @@ export default {
                     }
                 },
                 {
+                    title: '难度',
+                    render: (h, params) => {
+                        return h(Difficult, {
+                            props: {
+                                difficult: params.row.difficult
+                            }
+                        })
+                    }
+                },
+                {
+                    title: '提交次数',
+                    key: 'submit_times'
+                },
+                {
+                    title: 'AC%',
+                    render: (h, params) => {
+                        return h('div', {}, this.getACRate(params.row.ac_times, params.row.submit_times))
+                    }
+                },
+                {
                     title: '分值',
                     render: (h, params) => {
                         return h('Tag', {
                             props: {
                                 color: 'green'
+                            },
+                            style: {
+                                'cursor': 'default'
                             },
                         }, params.row.score)
                     },
@@ -139,11 +160,7 @@ export default {
                     {
                         title: '通过率',
                         render: (h, params) => {
-                            if (params.row.submit_times == 0) {
-                                return '0.00%'
-                            } else {
-                                return ((params.row.ac_times / params.row.submit_times)*100).toFixed(2)+'%'
-                            }
+                            return h('div', {}, this.getACRate(params.row.ac_times, params.row.submit_times))
                         },
                         width: 100
                     },
@@ -276,6 +293,9 @@ export default {
                 }
             });
         },
+        getACRate(ac, total){
+            return Util.getACRate(ac, total)
+        }
     }
 }
 </script>

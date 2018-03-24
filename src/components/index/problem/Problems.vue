@@ -23,7 +23,7 @@
                 <div class="random">
                     <Button icon="shuffle" long type="info" @click="randomDoProblem()">随机做题</Button>
                 </div>
-                <Card class="tags">
+                <Card shadow class="tags">
                     <p slot="title">
                         <Icon type="pricetags"></Icon>
                         标签

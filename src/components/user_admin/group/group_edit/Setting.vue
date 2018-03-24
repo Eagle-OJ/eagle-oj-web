@@ -72,6 +72,8 @@ export default {
             .content
                 p
                     margin-bottom 10px
+            &:last-child
+                border-bottom none
 </style>
 
 

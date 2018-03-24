@@ -1,6 +1,6 @@
 <template>
 	<div id="container">
-        <Card class="user-info" v-if="profile!=null">
+        <Card shadow class="user-info" v-if="profile!=null">
             <div class="nickname">{{profile.nickname}}
                 <Icon type="male" v-if="profile.gender==1" color="#2d8cf0"></Icon>
                 <Icon type="female" v-else-if="profile.gender==2" color="hotpink"></Icon>
@@ -23,7 +23,7 @@
         </Card>
         <Row class="middle" :gutter="20">
             <Col span="9">
-                <Card class="left">
+                <Card shadow class="left">
                     <p slot="title">
                         提交次数
                         <Badge v-if="profile!=null" :count="profile.submit_times"></Badge>
@@ -34,14 +34,15 @@
                 </Card>
             </Col>
             <Col span="15">
-                <Card class="right">
+                <Card shadow class="right">
                     <p slot="title">最近做题</p>
-                    <Table :show-header="false" :data="userProblems.data" :columns="userProblems.columns"></Table>
+                    <Table size="small" :show-header="false" :data="userProblems.data" :columns="userProblems.columns"></Table>
+                    <Page style="text-align: center; margin-top: 10px" @on-change="getUserProblem" :total="userProblems.total" :page-size="userProblems.pageSize" simple></Page>
                 </Card>
             </Col>
         </Row>
 		
-        <Card class="user_log">
+        <Card shadow class="user_log">
             <p slot="title">提交统计</p>
             <p>
                 <span style="float: right">
@@ -71,6 +72,8 @@ export default {
             profile: null,
             userProblems: {
                 data: [],
+                total: 0,
+                pageSize: 8,
                 columns: [
                     {
                         render: (h, params) => {
@@ -108,7 +111,7 @@ export default {
     },
     methods: {
         initial() {
-            this.getUserProblem()
+            this.getUserProblem(1)
             this.getUserProfile()
             this.getUserLog('week')
         },
@@ -118,15 +121,16 @@ export default {
                 this.updateTimesChart()
             })
         },
-        getUserProblem() {
+        getUserProblem(page) {
             this.$http.get('/user_log/problem_history', {
                 params: {
                     uid: this.getUid,
-                    page: 1,
-                    page_size: 10
+                    page: page,
+                    page_size: this.userProblems.pageSize
                 }
             }).then(res => {
                 this.userProblems.data = res.data.data
+                this.userProblems.total = res.data.total
             })
         },
         getUserLog(type) {

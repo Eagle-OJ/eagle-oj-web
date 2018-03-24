@@ -35,6 +35,8 @@ export default {
             margin-bottom 5px
             border-bottom 1px solid #e9eaec
             padding 10px 0
+            &:last-child
+                border-bottom none
 </style>
 
 
